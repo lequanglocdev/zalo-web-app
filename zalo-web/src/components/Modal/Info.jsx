@@ -1,7 +1,8 @@
+import React from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-
+import Modal from "@mui/material/Modal";
 import CloseIcon from "@mui/icons-material/Close";
 import CardMedia from "@mui/material/CardMedia";
 import Avatar from "@mui/material/Avatar";
@@ -36,7 +37,7 @@ const Info = ({ handleCloseModal }) => {
             Thông tin tài khoản
           </Typography>
           <Button onClick={handleOpenModal}>
-            <CloseIcon sx={{ color: "#333" }} />
+            <CloseIcon sx={{color:"#333"}}/>
           </Button>
         </Box>
         <Box>
@@ -78,6 +79,7 @@ const Info = ({ handleCloseModal }) => {
             <Typography sx={{ fontSize: "16px", fontWeight: 500 }}>
               Thông tin cá nhân
             </Typography>
+            
           </Box>
         </Box>
       </Box>

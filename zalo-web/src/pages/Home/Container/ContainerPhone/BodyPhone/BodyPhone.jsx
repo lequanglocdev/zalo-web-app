@@ -12,7 +12,7 @@ import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
 import Select from "@mui/material/Select";
 import Avatar from "@mui/material/Avatar";
-import { deepOrange } from "@mui/material/colors";
+import { deepOrange, deepPurple } from "@mui/material/colors";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
@@ -42,7 +42,7 @@ const BodyPhone = () => {
         padding: "16px",
         display: "flex",
         flexDirection: "column",
-        height: (theme) => theme.zalo.heightList,
+        height:(theme) => theme.zalo.heightList,
         gap: 1,
         overflow: "hidden",
         overflowY: "auto",
