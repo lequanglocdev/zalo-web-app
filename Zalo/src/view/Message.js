@@ -11,8 +11,7 @@ import React, { useState, useEffect } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome6 } from "@expo/vector-icons";
 
-export default function Message({ route }) {
-  const { selectedLanguage } = route.params || "vi";
+export default function Message({ navigation }) {
   var [data, setData] = useState([]);
 
   useEffect(() => {
@@ -38,7 +37,7 @@ export default function Message({ route }) {
             ></Image>
             <View style={{ marginLeft: 20, marginTop: 2 }}>
               <TextInput
-                placeholder={selectedLanguage === "vi" ? "Tìm Kiếm" : "Search"}
+                placeholder="Tìm Kiếm"
                 style={{
                   width: 200,
                   fontSize: 18,
@@ -61,7 +60,10 @@ export default function Message({ route }) {
       <Pressable>
         {data.map((item, index) => {
           return (
-            <View
+            <Pressable
+              onPress={() => {
+                navigation.navigate("SendMessager");
+              }}
               style={{
                 flexDirection: "row",
                 alignItems: "center",
@@ -95,7 +97,7 @@ export default function Message({ route }) {
                   {item.description}
                 </Text>
               </View>
-            </View>
+            </Pressable>
           );
         })}
       </Pressable>
