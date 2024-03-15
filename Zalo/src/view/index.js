@@ -7,6 +7,7 @@ import Login from "./Login";
 import ScreenLogin from "./ScreenLogin";
 import ScreenRegister from "./ScreenRegister";
 import Setting from "./Setting";
+import SendMessager from "./SendMessager";
 
 export {
   Message,
@@ -18,4 +19,5 @@ export {
   ScreenLogin,
   ScreenRegister,
   Setting,
+  SendMessager,
 };

@@ -10,6 +10,7 @@ import {
 } from "react-native";
 import axios from "axios";
 import { Ionicons, AntDesign, Entypo, Feather } from "@expo/vector-icons";
+import localStorage from "@react-native-async-storage/async-storage";
 
 export default function ScreenLogin({ navigation, route }) {
   const { selectedLanguage } = route.params || { selectedLanguage: "vi" };
@@ -26,7 +27,11 @@ export default function ScreenLogin({ navigation, route }) {
   const Login = async () => {
     try {
       const response = await axios.post(
+<<<<<<< HEAD
         "http://localhost:5000/v1/auth/login",
+=======
+        "http://192.168.0.42:5000/v1/auth/login",
+>>>>>>> 5c9cf6b568c727752a436cc4a234bc8ddfed77b0
         data,
         {
           headers: { "Content-type": "application/json" },
