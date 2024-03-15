@@ -2,22 +2,8 @@ import React, { memo } from "react";
 import TextField from "@mui/material/TextField";
 import FormControl from "@mui/material/FormControl";
 import Box from "@mui/material/Box";
-const InputForm = ({ label, value, setValue, type }) => {
+const InputForm = ({ label, value, setValue, keyPayload, type }) => {
   return (
-    // <div>
-    //   <label htmlFor="phone" className="text-xs">
-    //     {label}
-    //   </label>
-    //   <input
-    //     type="text"
-    //     id="phone"
-    //     className=""
-    //     value={value}
-    //     onChange={(e) =>
-    //       setValue((prev) => ({ ...prev, [type]: e.target.value }))
-    //     }
-    //   />
-    // </div>
     <Box
       component="form"
       sx={{
@@ -26,7 +12,15 @@ const InputForm = ({ label, value, setValue, type }) => {
       noValidate
       autoComplete="off"
     >
-      <TextField id="outlined-multiline-flexible" label={label} />
+      <TextField
+        id="outlined-multiline-flexible"
+        type={type || "text"}
+        label={label}
+        value={value}
+        onChange={(e) =>
+          setValue((prev) => ({ ...prev, [type]: e.target.value }))
+        }
+      />
     </Box>
   );
 };

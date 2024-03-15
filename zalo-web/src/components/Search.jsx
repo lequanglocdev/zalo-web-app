@@ -10,7 +10,7 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import Modal from "@mui/material/Modal";
 
-import AddFriend from "../Modal/AddFriend";
+import AddFriend from "./AddFriend";
 
 const SearchStyle = styled("div")(({ theme }) => ({
   position: "relative",

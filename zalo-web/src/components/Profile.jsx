@@ -8,8 +8,8 @@ import Divider from "@mui/material/Divider";
 import Typography from "@mui/material/Typography";
 import { Box } from "@mui/material";
 import Modal from "@mui/material/Modal";
-import Info from "../Modal/Info";
-import Logout from "../Modal/Logout";
+import Info from "./Info";
+import Logout from "./Logout";
 const style = {
   position: "absolute",
   top: "50%",

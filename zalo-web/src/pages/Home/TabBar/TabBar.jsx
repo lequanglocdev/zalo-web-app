@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box";
-import Profile from "../../../components/TabBars/Profile";
+import Profile from "../../../components/Profile";
 import PermContactCalendarIcon from "@mui/icons-material/PermContactCalendar";
 import TextsmsIcon from "@mui/icons-material/Textsms";
 import PropTypes from "prop-types";

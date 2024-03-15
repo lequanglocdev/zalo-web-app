@@ -3,7 +3,7 @@ import PersonIcon from "@mui/icons-material/Person";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import DraftsIcon from "@mui/icons-material/Drafts";
 import Typography from "@mui/material/Typography";
-import Search from "~/components/Search/Search";
+import Search from "~/components/Search";
 
 const ListPhone = () => {
   return (

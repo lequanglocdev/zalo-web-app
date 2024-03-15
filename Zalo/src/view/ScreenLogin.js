@@ -13,7 +13,7 @@ import { Ionicons, AntDesign, Entypo, Feather } from "@expo/vector-icons";
 
 export default function ScreenLogin({ navigation, route }) {
   const { selectedLanguage } = route.params || { selectedLanguage: "vi" };
-  const [data, setData] = useState({ name: "123456", password: "1111" });
+  const [data, setData] = useState({ phone: "0907990331", password: "123456" });
   const [showPassword, setShowPassword] = useState(false);
   const [language, setLanguage] = useState(selectedLanguage);
   // State hook để theo dõi trạng thái của nội dung trong ô nhập tên
@@ -26,13 +26,17 @@ export default function ScreenLogin({ navigation, route }) {
   const Login = async () => {
     try {
       const response = await axios.post(
-        "http://localhost:8000/api/user/login",
+        "http://localhost:5000/v1/auth/login",
         data,
         {
           headers: { "Content-type": "application/json" },
         }
       );
+      //console.log("res", response);
       localStorage.setItem("userData", JSON.stringify(response.data));
+      // const data1 = response.data
+      // console.log("data:",data1)
+      // console.log("res",response)
       navigation.navigate("Message", { selectedLanguage });
     } catch (error) {
       console.log(error);
@@ -83,9 +87,9 @@ export default function ScreenLogin({ navigation, route }) {
             placeholder={
               selectedLanguage === "vi" ? "Tên đăng nhập" : "Username"
             }
-            value={data.name}
+            value={data.phone}
             onChangeText={(text) => {
-              setData({ ...data, name: text });
+              setData({ ...data, phone: text });
               setHasContent(!!text.trim());
             }}
             style={{
@@ -100,7 +104,7 @@ export default function ScreenLogin({ navigation, route }) {
           />
           <Pressable
             onPress={() => {
-              setData({ ...data, name: "" });
+              setData({ ...data, phone: "" });
             }}
             style={{ marginLeft: 120 }}
           >
