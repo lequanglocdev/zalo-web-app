@@ -1,9 +1,9 @@
 import Box from "@mui/material/Box";
 
-import Search from "../../../../components/Search";
-import ListUser from "./ListUser/ListUser";
+import Search from "../../../components/Search";
+import ListUser from "~/components/ListUser";
 
-const ChatHome = ({ chat }) => {
+const ChatHome = () => {
   return (
     <Box
       sx={{
@@ -14,7 +14,7 @@ const ChatHome = ({ chat }) => {
       }}
     >
       <Search sx={{ height: (theme) => theme.zalo.heightSearch }} />
-      <ListUser users={chat?.[0]?.users} />
+      <ListUser />
     </Box>
   );
 };

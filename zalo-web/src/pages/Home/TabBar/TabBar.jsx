@@ -7,8 +7,8 @@ import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import * as React from "react";
-import ChatHome from "./Chat/Chat";
-import PhoneBook from "./PhoneBook/PhoneBook";
+import ChatHome from "./Chat";
+import PhoneBook from "./PhoneBook";
 
 function TabPanel(props) {
   const { children, value, index, ...other } = props;
@@ -109,7 +109,7 @@ const TabBar = ({ message, selectedTabIndex, onTabChange }) => {
         <Box sx={{ width: "100%" }}>
           <TabPanel value={value} index={0}></TabPanel>
           <TabPanel value={value} index={1}>
-            <ChatHome chat={message?.listUsers} />
+            <ChatHome />
           </TabPanel>
           <TabPanel value={value} index={2}>
             <PhoneBook />

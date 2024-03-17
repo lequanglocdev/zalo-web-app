@@ -19,7 +19,7 @@ const options = [
 ];
 const ITEM_HEIGHT = 48;
 
-const User = ({ user }) => {
+const User = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -32,7 +32,7 @@ const User = ({ user }) => {
 
   const handleClickCard = (event) => {
     event.stopPropagation();
-    console.log("Tên của card:", user.name);
+    console.log("Tên của card:");
   };
   return (
     <Box>
@@ -83,20 +83,12 @@ const User = ({ user }) => {
                   },
                 }}
               >
-                {options.map((option) => (
-                  <MenuItem
-                    key={option}
-                    selected={option === "Pyxis"}
-                    onClick={handleClose}
-                  >
-                    {option}
-                  </MenuItem>
-                ))}
+                <MenuItem>Profile</MenuItem>
               </Menu>
             </Box>
           }
-          title={user.name}
-          subheader={user.description}
+          title="name"
+          subheader="description"
         />
       </Card>
     </Box>

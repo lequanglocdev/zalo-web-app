@@ -8,7 +8,7 @@ import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
-import User from "./User/User";
+import User from "./User";
 
 const options = [
   "Đánh dấu tin nhắn đã đọc",
@@ -17,7 +17,7 @@ const options = [
 ];
 const ITEM_HEIGHT = 48;
 
-const ListUser = ({ users }) => {
+const ListUser = () => {
   // console.log("User",users)
   const [value, setValue] = React.useState(0);
 
@@ -110,9 +110,7 @@ const ListUser = ({ users }) => {
           "&::-webkit-scrollbar-thumb:hover": { backgroundColor: "#bfc2cf" },
         }}
       >
-        {users?.map((user) => (
-          <User key={user._id} user={user} />
-        ))}
+        <User />
       </Box>
     </Box>
   );

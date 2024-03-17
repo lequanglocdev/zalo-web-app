@@ -1,5 +1,5 @@
 import Box from "@mui/material/Box";
-import ListPhone from "./ListPhone/ListPhone";
+import ListPhone from "~/components/ListPhone";
 
 const PhoneBook = () => {
   return (
@@ -7,7 +7,7 @@ const PhoneBook = () => {
       sx={{
         height: "100vh",
         // width: (theme) => theme.zalo.asideChatWidth,
-        width:"100%",
+        width: "100%",
       }}
     >
       <Box>
