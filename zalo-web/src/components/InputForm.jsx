@@ -10,8 +10,18 @@ const InputForm = ({
   setValue,
   keyPayload,
   type,
-  invalidFiels =[],
+  invalidFiels = [],
+  setInvalidFiels
 }) => {
+  let helperText = null;
+
+  if (invalidFiels.length > 0 && invalidFiels.some((i) => i.name === type)) {
+    helperText = (
+      <Typography variant="span" sx={{ color: "red" }}>
+        {invalidFiels.find((i) => i.name === type)?.message}
+      </Typography>
+    );
+  }
   return (
     <Box
       component="form"
@@ -22,7 +32,6 @@ const InputForm = ({
       autoComplete="off"
     >
       <TextField
-        error
         id="outlined-multiline-flexible"
         type={type || "text"}
         label={label}
@@ -30,13 +39,11 @@ const InputForm = ({
         onChange={(e) =>
           setValue((prev) => ({ ...prev, [type]: e.target.value }))
         }
-        helperText="abc"
+        onFocus={() => setInvalidFiels([])}
+        error={!!helperText} // Đảm bảo rằng error được đặt thành true nếu có lỗi
+        helperText={helperText} // Truyền giá trị của helperText vào
       />
-      {invalidFiels.length > 0 && invalidFiels.some(i => i.name === type) && (
-        <Typography variant="span" sx={{ color: "red" }}>
-          {invalidFiels.find((i) => i.name === type)?.message}
-        </Typography>
-      )}
+    
     </Box>
   );
 };

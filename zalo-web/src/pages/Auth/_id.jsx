@@ -1,19 +1,6 @@
 import React, { useState } from "react";
-import TextField from "@mui/material/TextField";
-import Button from "@mui/material/Button";
-import PhoneIcons from "@mui/icons-material/PhoneAndroid";
-import LockIcons from "@mui/icons-material/Lock";
 import Box from "@mui/material/Box";
 import { useNavigate } from "react-router-dom";
-import MenuItem from "@mui/material/MenuItem";
-import Select from "@mui/material/Select";
-import FormControl from "@mui/material/FormControl";
-
-import Tab from "@mui/material/Tab";
-import TabContext from "@mui/lab/TabContext";
-import TabList from "@mui/lab/TabList";
-import TabPanel from "@mui/lab/TabPanel";
-
 import InputForm from "../../components/InputForm";
 import ButtonComponents from "../../components/Button";
 import Typography from "@mui/material/Typography";
@@ -23,8 +10,8 @@ import axios from "axios";
 const Auth = () => {
   const nav = useNavigate();
 
-  // const [value, setValue] = React.useState("1");
-
+  // location.state?.flag này lúc đầu giá trị của nó là null => false
+  // dùng để check nếu là false thì nó ở trang đăng nhập còn true là trang đăng ký
   const [register, setRegister] = useState(location.state?.flag);
 
   const [data, setData] = useState({
@@ -34,27 +21,39 @@ const Auth = () => {
     email: "",
   });
   const [invalidFiels, setInvalidFiels] = useState([]);
-  const loginUser = async () => {
-    // try {
-    //   const respone = await axios.post(
-    //     "http://localhost:5000/v1/auth/login",
-    //     {
-    //       phone: data.phone, // Lấy giá trị phone từ data
-    //       password: data.password, // Lấy giá trị password từ data
-    //     },
-    //     {
-    //       headers: { "Content-type": "application/json" },
-    //     }
-    //   );
 
-    //   localStorage.setItem("userData", JSON.stringify(respone));
-    //   nav("Home");
-    // } catch (error) {
-    //   console.log("error", error);
-    // }
-    let invalids = validate(data);
-    console.log(invalids);
+  // xử lý đăng nhập tài khoản
+  const loginUser = async () => {
+    try {
+      let invalids = validate(data);
+      console.log(invalids);
+      if (invalids.length > 0) {
+        console.log("Dữ liệu không hợp lệ:", invalids);
+        invalids = false;
+      }
+      if (invalids) {
+        const respone = await axios.post(
+          "http://localhost:5000/v1/auth/login",
+          {
+            phone: data.phone, // Lấy giá trị phone từ data
+            password: data.password, // Lấy giá trị password từ data
+          },
+          {
+            headers: { "Content-type": "application/json" },
+          }
+        );
+
+        localStorage.setItem("userData", JSON.stringify(respone.data));
+        nav("Home");
+      }
+    } catch (error) {
+      console.log("error", error);
+    }
+    // let invalids = validate(data);
+    // console.log(invalids);
   };
+
+  // xử lý đăng ký tài khoản
   const registerUser = async () => {
     try {
       const respone = await axios.post(
@@ -77,6 +76,8 @@ const Auth = () => {
     }
   };
   console.log(invalidFiels);
+
+  // xử lý ràng buộc dữ liệu
   const validate = (data) => {
     let invalids = 0;
     let fields = Object.entries(data);
@@ -144,11 +145,12 @@ const Auth = () => {
       >
         ZaLo
         <div style={{ fontSize: "20px", textAlign: "center" }}>
-          {register ? " Đăng lý tài khoản Zalo" : "Đăng nhập tài khoản Zalo"}{" "}
+          {register ? " Đăng ký tài khoản Zalo" : "Đăng nhập tài khoản Zalo"}{" "}
           <br /> để kết nối với ứng dụng Zalo Web
         </div>
       </div>
 
+      {/* Đăng ký tài khoản */}
       {register ? (
         <Box
           sx={{
@@ -179,6 +181,7 @@ const Auth = () => {
                 setValue={setData}
                 type={"username"}
                 name="username"
+                setInvalidFiels={setInvalidFiels}
                 invalidFiels={invalidFiels}
               />
               <InputForm
@@ -187,6 +190,7 @@ const Auth = () => {
                 setValue={setData}
                 type={"email"}
                 name="email"
+                setInvalidFiels={setInvalidFiels}
                 invalidFiels={invalidFiels}
               />
             </>
@@ -198,6 +202,7 @@ const Auth = () => {
             setValue={setData}
             type={"phone"}
             name="phone"
+            setInvalidFiels={setInvalidFiels}
             invalidFiels={invalidFiels}
           />
           <InputForm
@@ -206,6 +211,7 @@ const Auth = () => {
             setValue={setData}
             type="password"
             name="password"
+            setInvalidFiels={setInvalidFiels}
             invalidFiels={invalidFiels}
           />
           <ButtonComponents
@@ -247,6 +253,7 @@ const Auth = () => {
           </Box>
         </Box>
       ) : (
+        // Đắng nhập tài khoản
         <Box
           sx={{
             width: "400px",
@@ -276,6 +283,8 @@ const Auth = () => {
                 setValue={setData}
                 type={"username"}
                 name="username"
+                setInvalidFiels={setInvalidFiels}
+                invalidFiels={invalidFiels}
               />
               <InputForm
                 label={"Email"}
@@ -283,6 +292,8 @@ const Auth = () => {
                 setValue={setData}
                 type={"email"}
                 name="email"
+                setInvalidFiels={setInvalidFiels}
+                invalidFiels={invalidFiels}
               />
             </>
           )}
@@ -293,6 +304,8 @@ const Auth = () => {
             setValue={setData}
             type={"phone"}
             name="phone"
+            setInvalidFiels={setInvalidFiels}
+            invalidFiels={invalidFiels}
           />
           <InputForm
             label={"Password"}
@@ -300,6 +313,8 @@ const Auth = () => {
             setValue={setData}
             type="password"
             name="password"
+            setInvalidFiels={setInvalidFiels}
+            invalidFiels={invalidFiels}
           />
           <ButtonComponents
             text={register ? "Đăng kí" : "Đăng nhập"}

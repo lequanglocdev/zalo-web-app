@@ -6,6 +6,7 @@ import TextField from "@mui/material/TextField";
 import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import InsertEmoticonIcon from "@mui/icons-material/InsertEmoticon";
 import Typography from "@mui/material/Typography";
+import Message from "~/components/Message";
 const heightBody = "592px";
 const heightChat = "486px";
 const heightText = `calc(${heightBody} - ${heightChat})`;
@@ -27,7 +28,7 @@ const BodyChat = () => {
           "&::-webkit-scrollbar-thumb:hover": { backgroundColor: "#bfc2cf" },
         }}
       >
-        Chat
+        <Message/>
       </Box>
       <Box
         sx={{
