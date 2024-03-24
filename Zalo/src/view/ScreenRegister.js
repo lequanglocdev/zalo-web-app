@@ -5,6 +5,7 @@ import {
   ImageBackground,
   TextInput,
   Pressable,
+  Alert, // Import Alert
 } from "react-native";
 import React, { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
@@ -35,7 +36,14 @@ export default function ScreenRegister({ navigation, route }) {
         }
       );
       localStorage.setItem("userData", JSON.stringify(response.data));
-      navigation.navigate("Login", { selectedLanguage });
+      // Hiển thị thông báo khi đăng ký thành công
+      Alert.alert(
+        selectedLanguage === "vi" ? "Thông báo" : "Notification",
+        selectedLanguage === "vi"
+          ? "Đăng ký thành công!"
+          : "Registration successful!",
+        [{ text: "OK", onPress: () => navigation.navigate("Login") }]
+      );
     } catch (error) {
       console.log(error);
     }

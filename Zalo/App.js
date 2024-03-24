@@ -15,7 +15,9 @@ import {
   ScreenLogin,
   ScreenRegister,
   Setting,
-  SendMessager
+  SendMessager,
+  Friend,
+  CountryListScreen
 } from "./src/view";
 
 const Tab = createBottomTabNavigator();
@@ -71,12 +73,16 @@ function MyTabs({ route }) {
             iconComponent = (
               <Image
                 source={require("./src/image/dashboard-3.png")}
-                style={{ width: 20, tintColor: focused ? "#0000FF" : "black" }}
+                style={{
+                  width: 20,
+                  marginTop: 6,
+                  tintColor: focused ? "#0000FF" : "black",
+                }}
               />
             );
             labelComponent = (
               <Text
-                style={{ color: focused ? "#0000FF" : "black", marginTop: 5 }}
+                style={{ color: focused ? "#0000FF" : "black", marginTop: 4 }}
               >
                 {selectedLanguage === "vi" ? "Khám phá" : "Discovery"}
               </Text>
@@ -98,12 +104,14 @@ function MyTabs({ route }) {
             iconComponent = (
               <FontAwesome
                 name="user-o"
-                size={24}
+                size={22}
                 color={focused ? "#0000FF" : "black"}
               />
             );
             labelComponent = (
-              <Text style={{ color: focused ? "#0000FF" : "black" }}>
+              <Text
+                style={{ marginTop: 5, color: focused ? "#0000FF" : "black" }}
+              >
                 {selectedLanguage === "vi" ? "Cá nhân" : "Me"}
               </Text>
             );
@@ -147,6 +155,8 @@ export default function App() {
         <Stack.Screen name="ScreenRegister" component={ScreenRegister} />
         <Stack.Screen name="Setting" component={Setting} />
         <Stack.Screen name="SendMessager" component={SendMessager} />
+        <Stack.Screen name="Friend" component={Friend} />
+        <Stack.Screen name="CountryListScreen" component={CountryListScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

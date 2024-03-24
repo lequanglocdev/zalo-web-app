@@ -8,6 +8,8 @@ import ScreenLogin from "./ScreenLogin";
 import ScreenRegister from "./ScreenRegister";
 import Setting from "./Setting";
 import SendMessager from "./SendMessager";
+import Friend from "./Friend";
+import CountryListScreen from "./CountryListScreen";
 
 export {
   Message,
@@ -20,4 +22,6 @@ export {
   ScreenRegister,
   Setting,
   SendMessager,
+  Friend,
+  CountryListScreen,
 };

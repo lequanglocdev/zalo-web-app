@@ -7,6 +7,7 @@ import {
   ImageBackground,
   TextInput,
   Pressable,
+  Alert
 } from "react-native";
 import axios from "axios";
 import { Ionicons, AntDesign, Entypo, Feather } from "@expo/vector-icons";
@@ -14,7 +15,7 @@ import localStorage from "@react-native-async-storage/async-storage";
 
 export default function ScreenLogin({ navigation, route }) {
   const { selectedLanguage } = route.params || { selectedLanguage: "vi" };
-  const [data, setData] = useState({ phone: "", password: "" });
+  const [data, setData] = useState({ phone: "0941432773", password: "123456" });
   const [showPassword, setShowPassword] = useState(false);
   const [language, setLanguage] = useState(selectedLanguage);
   // State hook để theo dõi trạng thái của nội dung trong ô nhập tên
@@ -25,6 +26,19 @@ export default function ScreenLogin({ navigation, route }) {
   }, [selectedLanguage]);
 
   const Login = async () => {
+    // Kiểm tra xem có nội dung trong ô nhập liệu không
+    if (!data.phone.trim() || !data.password.trim()) {
+      Alert.alert(
+        // Hiển thị cảnh báo nếu ô nhập liệu trống
+        selectedLanguage === "vi" ? "Thông báo" : "Notification",
+        selectedLanguage === "vi"
+          ? "Vui lòng nhập số điện thoại và mật khẩu."
+          : "Please enter your phone number and password.",
+        [{ text: "OK" }]
+      );
+      return; // Không thực hiện đăng nhập nếu ô nhập liệu trống
+    }
+  
     try {
       const response = await axios.post(
         "http://192.168.0.123:5000/v1/auth/login",
@@ -39,6 +53,7 @@ export default function ScreenLogin({ navigation, route }) {
       console.log(error);
     }
   };
+  
 
   const loginText = selectedLanguage === "vi" ? "Đăng nhập" : "Login";
 

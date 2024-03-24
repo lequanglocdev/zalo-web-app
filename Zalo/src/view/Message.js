@@ -6,14 +6,20 @@ import {
   ImageBackground,
   Pressable,
   TextInput,
+  Modal,
+  StyleSheet,
+  TouchableWithoutFeedback,
 } from "react-native";
 import React, { useState, useEffect } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome6 } from "@expo/vector-icons";
+import { AntDesign } from "@expo/vector-icons";
+import { FontAwesome } from "@expo/vector-icons";
+import { Feather } from "@expo/vector-icons";
 
 export default function Message({ navigation }) {
   var [data, setData] = useState([]);
-
+  const [isModalVisible, setIsModalVisible] = useState(false);
   useEffect(() => {
     fetch("https://654ad3515b38a59f28ee4286.mockapi.io/project")
       .then((response) => response.json())
@@ -22,6 +28,14 @@ export default function Message({ navigation }) {
         setData(json);
       });
   }, []);
+
+  const toggleModal = () => {
+    setIsModalVisible(!isModalVisible);
+  };
+
+  const closeModal = () => {
+    setIsModalVisible(false);
+  };
 
   return (
     <ScrollView>
@@ -50,9 +64,9 @@ export default function Message({ navigation }) {
             <View style={{ marginLeft: 60 }}>
               <MaterialIcons name="qr-code-scanner" size={24} color="white" />
             </View>
-            <View style={{ marginLeft: 20 }}>
+            <Pressable style={{ marginLeft: 20 }} onPress={toggleModal}>
               <FontAwesome6 name="add" size={24} color="white" />
-            </View>
+            </Pressable>
           </View>
         </View>
       </ImageBackground>
@@ -101,6 +115,106 @@ export default function Message({ navigation }) {
           );
         })}
       </Pressable>
+
+      <Modal visible={isModalVisible} transparent={true} animationType="none">
+        <TouchableWithoutFeedback onPress={closeModal}>
+          <View style={styles.modalContainer}>
+            <TouchableWithoutFeedback>
+              <View style={styles.modalContent}>
+                <Pressable style={{ flexDirection: "row" }}>
+                  <View style={{ marginLeft: 10 }}>
+                    <AntDesign name="adduser" size={25} color="#A9A9A9" />
+                  </View>
+                  <Pressable
+                    onPress={() => {
+                      navigation.navigate("Friend");
+                      toggleModal();
+                    }}
+                  >
+                    <View style={{ marginLeft: 10, marginTop: 2 }}>
+                      <Text style={{ fontSize: 20, fontWeight: 400 }}>
+                        Thêm bạn
+                      </Text>
+                    </View>
+                  </Pressable>
+                </Pressable>
+
+                <Pressable style={{ flexDirection: "row", marginTop: 25 }}>
+                  <View style={{ marginLeft: 10 }}>
+                    <AntDesign name="addusergroup" size={25} color="#A9A9A9" />
+                  </View>
+                  <View style={{ marginLeft: 10, marginTop: 2 }}>
+                    <Text style={{ fontSize: 20, fontWeight: 400 }}>
+                      Tạo nhóm
+                    </Text>
+                  </View>
+                </Pressable>
+
+                <Pressable style={{ flexDirection: "row", marginTop: 25 }}>
+                  <View style={{ marginLeft: 10 }}>
+                    <AntDesign name="cloudo" size={25} color="#A9A9A9" />
+                  </View>
+                  <View style={{ marginLeft: 10, marginTop: 2 }}>
+                    <Text style={{ fontSize: 20, fontWeight: 400 }}>
+                      Cloud của tôi
+                    </Text>
+                  </View>
+                </Pressable>
+
+                <Pressable style={{ flexDirection: "row", marginTop: 25 }}>
+                  <View style={{ marginLeft: 12 }}>
+                    <FontAwesome name="calendar" size={25} color="#A9A9A9" />
+                  </View>
+                  <View style={{ marginLeft: 12, marginTop: 2 }}>
+                    <Text style={{ fontSize: 20, fontWeight: 400 }}>
+                      Lịch Zalo
+                    </Text>
+                  </View>
+                </Pressable>
+
+                <Pressable style={{ flexDirection: "row", marginTop: 25 }}>
+                  <View style={{ marginLeft: 10 }}>
+                    <Feather name="video" size={25} color="#A9A9A9" />
+                  </View>
+                  <View style={{ marginLeft: 10, marginTop: 2 }}>
+                    <Text style={{ fontSize: 20, fontWeight: 400 }}>
+                      Tạo cuộc gọi nhóm
+                    </Text>
+                  </View>
+                </Pressable>
+
+                <Pressable style={{ flexDirection: "row", marginTop: 25 }}>
+                  <View style={{ marginLeft: 10 }}>
+                    <FontAwesome name="laptop" size={25} color="#A9A9A9" />
+                  </View>
+                  <View style={{ marginLeft: 10, marginTop: 2 }}>
+                    <Text style={{ fontSize: 20, fontWeight: 400 }}>
+                      Thiết bị đăng nhập
+                    </Text>
+                  </View>
+                </Pressable>
+              </View>
+            </TouchableWithoutFeedback>
+          </View>
+        </TouchableWithoutFeedback>
+      </Modal>
     </ScrollView>
   );
 }
+
+const styles = StyleSheet.create({
+  modalContainer: {
+    flex: 1,
+    // alignItems: "flex-end",
+    // justifyContent: "flex-start",
+    marginTop: 60,
+    marginLeft: 160,
+  },
+  modalContent: {
+    backgroundColor: "white",
+    padding: 20,
+    borderRadius: 10,
+    width: 250,
+    height: 320,
+  },
+});
