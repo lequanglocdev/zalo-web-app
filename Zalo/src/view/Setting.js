@@ -458,7 +458,7 @@ export default function Setting({ navigation }) {
           >
             <Pressable
               onPress={() => {
-                navigation.navigate("ScreenLogin");
+                navigation.navigate("Login");
               }}
               style={{
                 width: 350,

@@ -10,18 +10,37 @@ import React, { useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { AntDesign, Entypo } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
+import localStorage from "@react-native-async-storage/async-storage";
+import axios from "axios";
 
 export default function ScreenRegister({ navigation, route }) {
   const { selectedLanguage } = route.params || "vi";
-  const [inputPass, setInputPass] = useState("");
-  const [inputPass1, setInputPass1] = useState("");
-  const [inputName, setInputName] = useState("");
-  const [inputName1, setInputName1] = useState("");
-  const [inputName2, setInputName2] = useState("");
   const [showPassword, setShowPassword] = useState(false);
-  const [showPassword1, setShowPassword1] = useState(false);
   const [hasContent, setHasContent] = useState(false);
   const registerText = selectedLanguage === "vi" ? "Đăng ký" : "Register";
+  const [data, setData] = useState({
+    username: "",
+    phone: "",
+    password: "",
+    email: "",
+  });
+
+  const Register = async () => {
+    try {
+      const response = await axios.post(
+        "http://192.168.0.123:5000/v1/auth/register",
+        data,
+        {
+          headers: { "Content-type": "application/json" },
+        }
+      );
+      localStorage.setItem("userData", JSON.stringify(response.data));
+      navigation.navigate("Login", { selectedLanguage });
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   return (
     <ScrollView>
       <ImageBackground
@@ -59,92 +78,12 @@ export default function ScreenRegister({ navigation, route }) {
       >
         <View style={{ flexDirection: "row" }}>
           <TextInput
-            placeholder={selectedLanguage === "vi" ? "Email" : "Email"}
-            value={inputName2}
-            onChangeText={(text) => {
-              setInputName2(text);
-              setHasContent(!!text.trim()); // Cập nhật trạng thái dựa trên việc có nội dung hay không
-            }}
-            style={{
-              width: 200,
-              height: 38,
-              fontSize: 15,
-              fontWeight: "bold",
-              color: "#BABABA",
-              outlineStyle: "none",
-              caretColor: "blue", // Set caret color to blue
-            }}
-          ></TextInput>
-          <Pressable
-            onPress={() => {
-              // Xóa nội dung trong inputName khi biểu tượng xóa được nhấn
-              setInputName2("");
-            }}
-            style={{ marginLeft: 120 }}
-          >
-            <Feather name="delete" size={24} color="blue" />
-          </Pressable>
-        </View>
-        <View
-          style={{ width: 350, borderWidth: 1, borderColor: "#DCDCDC" }}
-        ></View>
-      </View>
-
-      <View
-        style={{
-          width: 420,
-          marginLeft: 20,
-          marginTop: 20,
-        }}
-      >
-        <View style={{ flexDirection: "row" }}>
-          <TextInput
-            placeholder={selectedLanguage === "vi" ? "Tên Zalo" : "Zalo Name"}
-            value={inputName1}
-            onChangeText={(text) => {
-              setInputName1(text);
-              setHasContent(!!text.trim()); // Cập nhật trạng thái dựa trên việc có nội dung hay không
-            }}
-            style={{
-              width: 200,
-              height: 38,
-              fontSize: 15,
-              fontWeight: "bold",
-              color: "#BABABA",
-              outlineStyle: "none",
-              caretColor: "blue", // Set caret color to blue
-            }}
-          ></TextInput>
-          <Pressable
-            onPress={() => {
-              // Xóa nội dung trong inputName khi biểu tượng xóa được nhấn
-              setInputName1("");
-            }}
-            style={{ marginLeft: 120 }}
-          >
-            <Feather name="delete" size={24} color="blue" />
-          </Pressable>
-        </View>
-        <View
-          style={{ width: 350, borderWidth: 1, borderColor: "#DCDCDC" }}
-        ></View>
-      </View>
-
-      <View
-        style={{
-          width: 420,
-          marginLeft: 20,
-          marginTop: 20,
-        }}
-      >
-        <View style={{ flexDirection: "row" }}>
-          <TextInput
             placeholder={
-              selectedLanguage === "vi" ? "Tên đăng nhập" : "Username"
+              selectedLanguage === "vi" ? "Tên người dùng" : "UserName"
             }
-            value={inputName}
+            value={data.username}
             onChangeText={(text) => {
-              setInputName(text);
+              setData({ ...data, username: text });
               setHasContent(!!text.trim()); // Cập nhật trạng thái dựa trên việc có nội dung hay không
             }}
             style={{
@@ -160,7 +99,7 @@ export default function ScreenRegister({ navigation, route }) {
           <Pressable
             onPress={() => {
               // Xóa nội dung trong inputName khi biểu tượng xóa được nhấn
-              setInputName("");
+              setData({ ...data, username: "" });
             }}
             style={{ marginLeft: 120 }}
           >
@@ -174,16 +113,57 @@ export default function ScreenRegister({ navigation, route }) {
 
       <View
         style={{
+          width: 420,
           marginLeft: 20,
           marginTop: 20,
         }}
       >
         <View style={{ flexDirection: "row" }}>
           <TextInput
-            placeholder={selectedLanguage === "vi" ? "Mật khẩu" : "Password"}
-            value={inputPass}
+            placeholder={selectedLanguage === "vi" ? "Số điện thoại" : "Phone"}
+            value={data.phone}
             onChangeText={(text) => {
-              setInputPass(text);
+              setData({ ...data, phone: text });
+              setHasContent(!!text.trim()); // Cập nhật trạng thái dựa trên việc có nội dung hay không
+            }}
+            style={{
+              width: 200,
+              height: 38,
+              fontSize: 15,
+              fontWeight: "bold",
+              color: "#BABABA",
+              outlineStyle: "none",
+              caretColor: "blue", // Set caret color to blue
+            }}
+          ></TextInput>
+          <Pressable
+            onPress={() => {
+              // Xóa nội dung trong inputName khi biểu tượng xóa được nhấn
+              setData({ ...data, phone: "" });
+            }}
+            style={{ marginLeft: 120 }}
+          >
+            <Feather name="delete" size={24} color="blue" />
+          </Pressable>
+        </View>
+        <View
+          style={{ width: 350, borderWidth: 1, borderColor: "#DCDCDC" }}
+        ></View>
+      </View>
+
+      <View
+        style={{
+          width: 420,
+          marginLeft: 20,
+          marginTop: 20,
+        }}
+      >
+        <View style={{ flexDirection: "row" }}>
+          <TextInput
+            placeholder={selectedLanguage === "vi" ? "Mật Khẩu" : "Password"}
+            value={data.password}
+            onChangeText={(text) => {
+              setData({ ...data, password: text });
               setHasContent(!!text.trim()); // Cập nhật trạng thái dựa trên việc có nội dung hay không
             }}
             secureTextEntry={!showPassword}
@@ -221,17 +201,12 @@ export default function ScreenRegister({ navigation, route }) {
       >
         <View style={{ flexDirection: "row" }}>
           <TextInput
-            placeholder={
-              selectedLanguage === "vi"
-                ? "Nhập Lại Mật khẩu"
-                : "Confirm Password"
-            }
-            value={inputPass1}
+            placeholder={selectedLanguage === "vi" ? "Email" : "Email"}
+            value={data.email}
             onChangeText={(text) => {
-              setInputPass1(text);
+              setData({ ...data, email: text });
               setHasContent(!!text.trim()); // Cập nhật trạng thái dựa trên việc có nội dung hay không
             }}
-            secureTextEntry={!showPassword1}
             style={{
               width: 200,
               height: 38,
@@ -243,14 +218,13 @@ export default function ScreenRegister({ navigation, route }) {
             }}
           ></TextInput>
           <Pressable
-            onPress={() => setShowPassword1(!showPassword1)}
+            onPress={() => {
+              // Xóa nội dung trong inputName khi biểu tượng xóa được nhấn
+              setData({ ...data, email: "" });
+            }}
             style={{ marginLeft: 120 }}
           >
-            {showPassword1 == true ? (
-              <AntDesign name="eye" size={20} color="#116CF5" />
-            ) : (
-              <Entypo name="eye-with-line" size={20} color="#116CF5" />
-            )}
+            <Feather name="delete" size={24} color="blue" />
           </Pressable>
         </View>
         <View
@@ -265,13 +239,11 @@ export default function ScreenRegister({ navigation, route }) {
         }}
       >
         <Pressable
-          onPress={() => {
-            navigation.navigate("Login");
-          }}
+          onPress={Register}
           style={{
             width: 350,
             height: 50,
-            backgroundColor: hasContent ? "#116CF5" : "#DCDCDC", // Màu nền tùy thuộc vào trạng thái có nội dung hay không
+            backgroundColor: hasContent ? "#116CF5" : "#DCDCDC",
             borderRadius: 20,
             alignItems: "center",
             justifyContent: "center",
