@@ -29,13 +29,13 @@ export default function ScreenRegister({ navigation, route }) {
   const Register = async () => {
     try {
       const response = await axios.post(
-        "http://192.168.0.123:5000/v1/auth/register",
+        "http://192.168.1.53:5000/v1/auth/register",
         data,
         {
           headers: { "Content-type": "application/json" },
         }
       );
-      localStorage.setItem("userData", JSON.stringify(response.data));
+      localStorage.setItem("userData", JSON.stringify(response.data)); 
       // Hiển thị thông báo khi đăng ký thành công
       Alert.alert(
         selectedLanguage === "vi" ? "Thông báo" : "Notification",

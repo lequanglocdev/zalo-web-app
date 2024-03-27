@@ -7,7 +7,7 @@ import {
   TextInput,
   Pressable,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from 'react';
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
@@ -15,8 +15,26 @@ import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 export default function User({ navigation }) {
+  const [userData, setUserData] = useState({ username: '' });
+
+  useEffect(() => {
+    async function fetchUserData() {
+      try {
+        const jsonValue = await AsyncStorage.getItem('userData');
+        if (jsonValue != null) {
+          setUserData(JSON.parse(jsonValue));
+        }
+      } catch (e) {
+        console.error('Error reading user data from AsyncStorage:', e);
+      }
+    }
+
+    fetchUserData();
+  }, []);
+
   return (
     <ScrollView>
       <ImageBackground
@@ -75,7 +93,7 @@ export default function User({ navigation }) {
                   fontWeight: 400,
                 }}
               >
-                Lê Quang Minh
+                {userData.username}
               </Text>
               <Text style={{ fontSize: 15, marginLeft: 20 }}>
                 Xem trang cá nhân
