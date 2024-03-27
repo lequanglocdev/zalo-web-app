@@ -17,7 +17,8 @@ import {
   Setting,
   SendMessager,
   Friend,
-  CountryListScreen
+  CountryListScreen,
+  Otp
 } from "./src/view";
 
 const Tab = createBottomTabNavigator();
@@ -157,6 +158,7 @@ export default function App() {
         <Stack.Screen name="SendMessager" component={SendMessager} />
         <Stack.Screen name="Friend" component={Friend} />
         <Stack.Screen name="CountryListScreen" component={CountryListScreen} />
+        <Stack.Screen name="Otp" component={Otp} />
       </Stack.Navigator>
     </NavigationContainer>
   );
