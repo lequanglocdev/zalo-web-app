@@ -23,10 +23,21 @@ export default function ScreenRegister({ navigation, route }) {
     username: "",
     phone: "",
     password: "",
+    confirmPassword: "",
     email: "",
   });
 
   const Register = async () => {
+    if (data.password !== data.confirmPassword) {
+      Alert.alert(
+        selectedLanguage === "vi" ? "Thông báo" : "Notification",
+        selectedLanguage === "vi"
+          ? "Mật khẩu nhập lại không khớp."
+          : "Passwords do not match."[{ text: "OK" }]
+      );
+      return;
+    }
+
     try {
       const response = await axios.post(
         "http://192.168.1.53:5000/v1/auth/register",
@@ -35,7 +46,7 @@ export default function ScreenRegister({ navigation, route }) {
           headers: { "Content-type": "application/json" },
         }
       );
-      localStorage.setItem("userData", JSON.stringify(response.data)); 
+      localStorage.setItem("userData", JSON.stringify(response.data));
       // Hiển thị thông báo khi đăng ký thành công
       Alert.alert(
         selectedLanguage === "vi" ? "Thông báo" : "Notification",
@@ -172,6 +183,52 @@ export default function ScreenRegister({ navigation, route }) {
             value={data.password}
             onChangeText={(text) => {
               setData({ ...data, password: text });
+              setHasContent(!!text.trim()); // Cập nhật trạng thái dựa trên việc có nội dung hay không
+            }}
+            secureTextEntry={!showPassword}
+            style={{
+              width: 200,
+              height: 38,
+              fontSize: 15,
+              fontWeight: "bold",
+              color: "#BABABA",
+              outlineStyle: "none",
+              caretColor: "blue", // Set caret color to blue
+            }}
+          ></TextInput>
+          <Pressable
+            onPress={() => setShowPassword(!showPassword)}
+            style={{ marginLeft: 120 }}
+          >
+            {showPassword == true ? (
+              <AntDesign name="eye" size={20} color="#116CF5" />
+            ) : (
+              <Entypo name="eye-with-line" size={20} color="#116CF5" />
+            )}
+          </Pressable>
+        </View>
+        <View
+          style={{ width: 350, borderWidth: 1, borderColor: "#DCDCDC" }}
+        ></View>
+      </View>
+
+      <View
+        style={{
+          width: 420,
+          marginLeft: 20,
+          marginTop: 20,
+        }}
+      >
+        <View style={{ flexDirection: "row" }}>
+          <TextInput
+            placeholder={
+              selectedLanguage === "vi"
+                ? "Nhập lại mật Khẩu"
+                : "Confirm Password"
+            }
+            value={data.confirmPassword}
+            onChangeText={(text) => {
+              setData({ ...data, confirmPassword: text });
               setHasContent(!!text.trim()); // Cập nhật trạng thái dựa trên việc có nội dung hay không
             }}
             secureTextEntry={!showPassword}

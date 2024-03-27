@@ -7,7 +7,7 @@ import {
   TextInput,
   Pressable,
 } from "react-native";
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState } from "react";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
@@ -15,20 +15,20 @@ import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function User({ navigation }) {
-  const [userData, setUserData] = useState({ username: '' });
+  const [userData, setUserData] = useState({ username: "" });
 
   useEffect(() => {
     async function fetchUserData() {
       try {
-        const jsonValue = await AsyncStorage.getItem('userData');
+        const jsonValue = await AsyncStorage.getItem("userData");
         if (jsonValue != null) {
           setUserData(JSON.parse(jsonValue));
         }
       } catch (e) {
-        console.error('Error reading user data from AsyncStorage:', e);
+        console.error("Error reading user data from AsyncStorage:", e);
       }
     }
 
@@ -73,7 +73,9 @@ export default function User({ navigation }) {
 
       <View style={{ width: 420, height: 1000, backgroundColor: "#DCDCDC" }}>
         <View style={{ width: 420, height: 470, backgroundColor: "white" }}>
-          <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          >
             <View style={{ flexDirection: "row" }}>
               <Image
                 source={require("../image/hinhcanhan.png")}
@@ -100,12 +102,11 @@ export default function User({ navigation }) {
                   Xem trang cá nhân
                 </Text>
               </View>
-              <View style={{ marginTop: 20, marginRight: 30 }}>
-                <FontAwesome name="exchange" size={24} color="black" />
-              </View>
+            </View>
+            <View style={{ marginTop: 20, marginRight: 30 }}>
+              <FontAwesome name="exchange" size={24} color="black" />
             </View>
           </View>
-
           <View
             style={{
               borderWidth: 3,
