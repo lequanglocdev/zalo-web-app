@@ -73,34 +73,36 @@ export default function User({ navigation }) {
 
       <View style={{ width: 420, height: 1000, backgroundColor: "#DCDCDC" }}>
         <View style={{ width: 420, height: 470, backgroundColor: "white" }}>
-          <View style={{ flexDirection: "row" }}>
-            <Image
-              source={require("../image/hinhcanhan.png")}
-              style={{
-                width: 50,
-                height: 50,
-                marginTop: 10,
-                marginLeft: 20,
-                borderRadius: 90,
-              }}
-            ></Image>
-            <View>
-              <Text
+          <View style={{ flexDirection: "row", justifyContent: "space-between" }}>
+            <View style={{ flexDirection: "row" }}>
+              <Image
+                source={require("../image/hinhcanhan.png")}
                 style={{
+                  width: 50,
+                  height: 50,
                   marginTop: 10,
-                  fontSize: 20,
                   marginLeft: 20,
-                  fontWeight: 400,
+                  borderRadius: 90,
                 }}
-              >
-                {userData.username}
-              </Text>
-              <Text style={{ fontSize: 15, marginLeft: 20 }}>
-                Xem trang cá nhân
-              </Text>
-            </View>
-            <View style={{ marginTop: 20, marginLeft: 130 }}>
-              <FontAwesome name="exchange" size={24} color="black" />
+              ></Image>
+              <View>
+                <Text
+                  style={{
+                    marginTop: 10,
+                    fontSize: 20,
+                    marginLeft: 20,
+                    fontWeight: 400,
+                  }}
+                >
+                  {userData.username}
+                </Text>
+                <Text style={{ fontSize: 15, marginLeft: 20 }}>
+                  Xem trang cá nhân
+                </Text>
+              </View>
+              <View style={{ marginTop: 20, marginRight: 30 }}>
+                <FontAwesome name="exchange" size={24} color="black" />
+              </View>
             </View>
           </View>
 
