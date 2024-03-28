@@ -70,12 +70,26 @@ export default function User({ navigation }) {
                   borderRadius: 90,
                 }}
               >
-                {userData.username}
+                <Text>{userData.username}</Text>
                 <Text style={{ fontSize: 15, marginLeft: 20 }}>
                   Xem trang cá nhân
                 </Text>
-                =======
               </Image>
+              <View>
+                <Text
+                  style={{
+                    marginTop: 10,
+                    fontSize: 20,
+                    marginLeft: 20,
+                    fontWeight: 400,
+                  }}
+                >
+                  {userData.username}
+                </Text>
+                <Text style={{ fontSize: 15, marginLeft: 20 }}>
+                  Xem trang cá nhân
+                </Text>
+              </View>
             </View>
             <View style={{ marginTop: 20, marginRight: 30 }}>
               <FontAwesome name="exchange" size={24} color="black" />

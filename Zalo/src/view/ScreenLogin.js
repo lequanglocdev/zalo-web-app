@@ -25,6 +25,7 @@ export default function ScreenLogin({ navigation, route }) {
     setLanguage(selectedLanguage);
   }, [selectedLanguage]);
 
+
   const loginText = selectedLanguage === "vi" ? "Đăng nhập" : "Login";
 
   return (
