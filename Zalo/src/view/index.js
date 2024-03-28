@@ -10,6 +10,7 @@ import Setting from "./Setting";
 import SendMessager from "./SendMessager";
 import Friend from "./Friend";
 import CountryListScreen from "./CountryListScreen";
+import Otp from "./Otp";
 
 export {
   Message,
@@ -24,4 +25,5 @@ export {
   SendMessager,
   Friend,
   CountryListScreen,
+  Otp
 };

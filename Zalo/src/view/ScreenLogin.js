@@ -25,35 +25,6 @@ export default function ScreenLogin({ navigation, route }) {
     setLanguage(selectedLanguage);
   }, [selectedLanguage]);
 
-  const Login = async () => {
-    // Kiểm tra xem có nội dung trong ô nhập liệu không
-    if (!data.phone.trim() || !data.password.trim()) {
-      Alert.alert(
-        // Hiển thị cảnh báo nếu ô nhập liệu trống
-        selectedLanguage === "vi" ? "Thông báo" : "Notification",
-        selectedLanguage === "vi"
-          ? "Vui lòng nhập số điện thoại và mật khẩu."
-          : "Please enter your phone number and password.",
-        [{ text: "OK" }]
-      );
-      return; // Không thực hiện đăng nhập nếu ô nhập liệu trống
-    }
-
-    try {
-      const response = await axios.post(
-        "http://localhost:5000/v1/auth/login",
-        data,
-        {
-          headers: { "Content-type": "application/json" },
-        }
-      );
-      localStorage.setItem("userData", JSON.stringify(response.data));
-      navigation.navigate("Message", { selectedLanguage});
-    } catch (error) {
-      console.log(error);
-    }
-  };
-
   const loginText = selectedLanguage === "vi" ? "Đăng nhập" : "Login";
 
   return (

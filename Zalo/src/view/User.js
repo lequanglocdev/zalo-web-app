@@ -7,7 +7,7 @@ import {
   TextInput,
   Pressable,
 } from "react-native";
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
@@ -15,27 +15,9 @@ import { Feather } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function User({ navigation }) {
-  //const userData = JSON.parse(localStorage.getItem("userData"));
-  // console.log("userData", userData.username);
-  const userDataString = localStorage.getItem("userData");
-
-  if (!userDataString) {
-    console.error("Không tìm thấy dữ liệu userData trong localStorage");
-
-    return null;
-  }
-
-  let userData;
-  try {
-    userData = JSON.parse(userDataString);
-  } catch (error) {
-    console.error("Lỗi phân tích cú pháp JSON của userData:", error);
-
-    return null;
-  }
-
   return (
     <ScrollView>
       <ImageBackground
@@ -74,37 +56,31 @@ export default function User({ navigation }) {
 
       <View style={{ width: 420, height: 1000, backgroundColor: "#DCDCDC" }}>
         <View style={{ width: 420, height: 470, backgroundColor: "white" }}>
-          <View style={{ flexDirection: "row" }}>
-            <Image
-              source={require("../image/hinhcanhan.png")}
-              style={{
-                width: 50,
-                height: 50,
-                marginTop: 10,
-                marginLeft: 20,
-                borderRadius: 90,
-              }}
-            ></Image>
-            <View>
-              <Text
+          <View
+            style={{ flexDirection: "row", justifyContent: "space-between" }}
+          >
+            <View style={{ flexDirection: "row" }}>
+              <Image
+                source={require("../image/hinhcanhan.png")}
                 style={{
+                  width: 50,
+                  height: 50,
                   marginTop: 10,
-                  fontSize: 20,
                   marginLeft: 20,
-                  fontWeight: 400,
+                  borderRadius: 90,
                 }}
               >
                 {userData.username}
-              </Text>
-              <Text style={{ fontSize: 15, marginLeft: 20 }}>
-                Xem trang cá nhân
-              </Text>
+                <Text style={{ fontSize: 15, marginLeft: 20 }}>
+                  Xem trang cá nhân
+                </Text>
+                =======
+              </Image>
             </View>
-            <View style={{ marginTop: 20, marginLeft: 130 }}>
+            <View style={{ marginTop: 20, marginRight: 30 }}>
               <FontAwesome name="exchange" size={24} color="black" />
             </View>
           </View>
-
           <View
             style={{
               borderWidth: 3,
