@@ -5,6 +5,8 @@ import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
 import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import SearchIcon from "@mui/icons-material/Search";
+import PhoneIcon from "@mui/icons-material/Phone";
+import VideocamIcon from "@mui/icons-material/Videocam";
 const HeadingChat = () => {
   return (
     <Box
@@ -39,8 +41,9 @@ const HeadingChat = () => {
         </Box>
       </Box>
       <Box>
-        <PersonAddAltIcon sx={{ marginRight: "16px", cursor: "pointer" }} />
         <SearchIcon sx={{ marginRight: "16px", cursor: "pointer" }} />
+        <PhoneIcon sx={{ marginRight: "16px", cursor: "pointer" }} />
+        <VideocamIcon sx={{ marginRight: "16px", cursor: "pointer" }} />
       </Box>
     </Box>
   );

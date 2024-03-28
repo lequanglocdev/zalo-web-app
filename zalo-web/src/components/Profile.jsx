@@ -23,6 +23,7 @@ const style = {
 };
 
 const Profile = () => {
+  const userData = JSON.parse(localStorage.getItem("userData"));
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -84,7 +85,7 @@ const Profile = () => {
       >
         <Box sx={{ width: 300 }}>
           <MenuItem onClick={handleClose}>
-            <Typography sx={{ fontWeight: "bold" }}>Lê Quang Lộc</Typography>
+            <Typography sx={{ fontWeight: "bold" }}>{userData?.data?.username}</Typography>
           </MenuItem>
           <Divider />
           <MenuItem onClick={handleOpenModal}>

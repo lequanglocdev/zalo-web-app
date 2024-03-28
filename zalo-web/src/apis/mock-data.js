@@ -134,4 +134,21 @@ const chatHistory = [
   },
 ];
 
-export { mockData ,chatHistory };
+const messageOption = [
+  {
+    title:"Reply"
+  },
+  {
+    title:"React to message"
+  },
+  {
+    title:"Forward message"
+  },
+  {
+    title:"Start message"
+  },
+  {
+    title:"Delete message"
+  },
+]
+export { mockData ,chatHistory , messageOption };

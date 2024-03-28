@@ -10,6 +10,7 @@ const ButtonComponents = ({ text, startIcon, onClick }) => {
       onClick={onClick}
       sx={{
         margin: "auto",
+        marginTop: "10px",
         display: "block",
         width: "380px",
         fontSize: "16px",
