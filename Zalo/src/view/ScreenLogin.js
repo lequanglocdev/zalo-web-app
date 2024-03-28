@@ -41,7 +41,7 @@ export default function ScreenLogin({ navigation, route }) {
 
     try {
       const response = await axios.post(
-        "http://localhost:5000/v1/auth/login",
+
         data,
         {
           headers: { "Content-type": "application/json" },
@@ -51,6 +51,13 @@ export default function ScreenLogin({ navigation, route }) {
       navigation.navigate("Message", { selectedLanguage});
     } catch (error) {
       console.log(error);
+      // Alert.alert(
+      //   selectedLanguage === vi ? "Thông báo" : "Notification",
+      //   selectedLanguage === vi
+      //     ? "Số điện thoại hoặc mật khẩu không chính xác."
+      //     : "Incorrect phone number or password.",
+      //   [{ text: "OK" }]
+      // );
     }
   };
 
