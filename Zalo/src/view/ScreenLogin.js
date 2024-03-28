@@ -7,7 +7,7 @@ import {
   ImageBackground,
   TextInput,
   Pressable,
-  Alert
+  Alert,
 } from "react-native";
 import axios from "axios";
 import { Ionicons, AntDesign, Entypo, Feather } from "@expo/vector-icons";
@@ -38,22 +38,21 @@ export default function ScreenLogin({ navigation, route }) {
       );
       return; // Không thực hiện đăng nhập nếu ô nhập liệu trống
     }
-  
+
     try {
       const response = await axios.post(
-        "http://192.168.0.123:5000/v1/auth/login",
+        "http://localhost:5000/v1/auth/login",
         data,
         {
           headers: { "Content-type": "application/json" },
         }
       );
       localStorage.setItem("userData", JSON.stringify(response.data));
-      navigation.navigate("Message", { selectedLanguage });
+      navigation.navigate("Message", { selectedLanguage});
     } catch (error) {
       console.log(error);
     }
   };
-  
 
   const loginText = selectedLanguage === "vi" ? "Đăng nhập" : "Login";
 

@@ -17,6 +17,25 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 
 export default function User({ navigation }) {
+  //const userData = JSON.parse(localStorage.getItem("userData"));
+  // console.log("userData", userData.username);
+  const userDataString = localStorage.getItem("userData");
+
+  if (!userDataString) {
+    console.error("Không tìm thấy dữ liệu userData trong localStorage");
+
+    return null;
+  }
+
+  let userData;
+  try {
+    userData = JSON.parse(userDataString);
+  } catch (error) {
+    console.error("Lỗi phân tích cú pháp JSON của userData:", error);
+
+    return null;
+  }
+
   return (
     <ScrollView>
       <ImageBackground
@@ -75,7 +94,7 @@ export default function User({ navigation }) {
                   fontWeight: 400,
                 }}
               >
-                Lê Quang Minh
+                {userData.username}
               </Text>
               <Text style={{ fontSize: 15, marginLeft: 20 }}>
                 Xem trang cá nhân

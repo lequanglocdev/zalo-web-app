@@ -7,9 +7,11 @@ import ChatBubbleOutlineIcon from "@mui/icons-material/ChatBubbleOutline";
 import InsertEmoticonIcon from "@mui/icons-material/InsertEmoticon";
 import Typography from "@mui/material/Typography";
 import Message from "~/components/Message";
+import { Stack } from "@mui/material";
 const heightBody = "592px";
 const heightChat = "486px";
 const heightText = `calc(${heightBody} - ${heightChat})`;
+
 const BodyChat = () => {
   return (
     <Box
@@ -28,7 +30,7 @@ const BodyChat = () => {
           "&::-webkit-scrollbar-thumb:hover": { backgroundColor: "#bfc2cf" },
         }}
       >
-        <Message/>
+        <Message />
       </Box>
       <Box
         sx={{
@@ -70,7 +72,10 @@ const BodyChat = () => {
                     right: 0,
                   }}
                 >
-                  <ChatBubbleOutlineIcon sx={{ cursor: "pointer" }} />
+                  <Stack>
+                    <ChatBubbleOutlineIcon sx={{ cursor: "pointer" }} />
+                   
+                  </Stack>
                   <InsertEmoticonIcon
                     sx={{ marginLeft: "20px", cursor: "pointer" }}
                   />
