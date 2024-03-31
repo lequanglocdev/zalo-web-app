@@ -18,7 +18,7 @@ import {
   SendMessager,
   Friend,
   CountryListScreen,
-  Otp
+  Otp,
 } from "./src/view";
 
 const Tab = createBottomTabNavigator();

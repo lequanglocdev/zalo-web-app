@@ -25,5 +25,5 @@ export {
   SendMessager,
   Friend,
   CountryListScreen,
-  Otp
+  Otp,
 };

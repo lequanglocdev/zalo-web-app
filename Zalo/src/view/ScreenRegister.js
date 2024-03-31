@@ -28,6 +28,24 @@ export default function ScreenRegister({ navigation, route }) {
   });
 
   const Register = async () => {
+    // Kiểm tra xem tất cả các trường thông tin đã được điền
+    if (
+      !data.username ||
+      !data.phone ||
+      !data.password ||
+      !data.confirmPassword ||
+      !data.email
+    ) {
+      Alert.alert(
+        selectedLanguage === "vi" ? "Thông báo" : "Notification",
+        selectedLanguage === "vi"
+          ? "Vui lòng nhập đầy đủ thông tin."
+          : "Please enter all required information.",
+        [{ text: "OK" }]
+      );
+      return;
+    }
+
     if (data.password !== data.confirmPassword) {
       Alert.alert(
         selectedLanguage === "vi" ? "Thông báo" : "Notification",
@@ -53,7 +71,7 @@ export default function ScreenRegister({ navigation, route }) {
         selectedLanguage === "vi"
           ? "Đăng ký thành công!"
           : "Registration successful!",
-        [{ text: "OK", onPress: () => navigation.navigate("Login") }]
+        [{ text: "OK", onPress: () => navigation.navigate("Otp") }]
       );
     } catch (error) {
       console.log(error);
