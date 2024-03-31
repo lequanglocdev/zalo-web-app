@@ -1,0 +1,23 @@
+POST  http://localhost:5000/v1/auth/register
+Content-Type: application/json
+
+{
+   "username": "Ha Trong Dt",
+   "phone": "090799031",
+   "password": "123456",
+   "email": "smile442019@gmail.com"
+}
+
+###
+POST http://localhost:5000/v1/auth/login
+Content-Type: application/json
+
+{
+    "phone": "0907990317",
+    "password": "123456"
+}
+
+###
+POST http://localhost:5000/v1/auth/logout
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1ZWVmYWM5Mjg4ZDEwZWRmODQ4MzEyZCIsImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE3MTAxNjg1ODUsImV4cCI6MTcxMDE3MjE4NX0.Gbdhl0QyYe65uVbJX8CM3z82sHdE_rTBCYYjZa_FGos
+
