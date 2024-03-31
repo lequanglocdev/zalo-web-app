@@ -10,12 +10,10 @@ import { api, typeHTTP } from "../../utils/api";
 import { globalContext } from "../../context/globalContext";
 import { Stack } from "@mui/material";
 
-const Login = () => {
+const Register = () => {
   const nav = useNavigate();
   const { data, handler } = useContext(globalContext);
-  // location.state?.flag này lúc đầu giá trị của nó là null => false
-  // dùng để check nếu là false thì nó ở trang đăng nhập còn true là trang đăng ký
-  // const [register, setRegister] = useState(location.state?.flag);
+  // xử lý ràng buộc dữ liệu
 
   const [register, setRegister] = useState({
     username: "",
@@ -39,7 +37,7 @@ const Login = () => {
 
     // localStorage.setItem("userData", JSON.stringify(respone));
   };
-
+  
   const ClickLogin = () => {
     nav("/");
   };
@@ -138,4 +136,4 @@ const Login = () => {
   );
 };
 
-export default Login;
+export default Register;

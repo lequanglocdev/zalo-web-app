@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext } from "react";
 import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
@@ -10,6 +10,8 @@ import { Box } from "@mui/material";
 import Modal from "@mui/material/Modal";
 import Info from "./Info";
 import Logout from "./Logout";
+import { globalContext } from "../context/globalContext";
+
 const style = {
   position: "absolute",
   top: "50%",
@@ -23,7 +25,11 @@ const style = {
 };
 
 const Profile = () => {
-  const userData = JSON.parse(localStorage.getItem("userData"));
+  const { data } = useContext(globalContext); // Lấy dữ liệu từ global context
+
+  // Dùng dữ liệu từ global context
+  const username = data.user?.username;
+
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const handleClick = (event) => {
@@ -85,7 +91,7 @@ const Profile = () => {
       >
         <Box sx={{ width: 300 }}>
           <MenuItem onClick={handleClose}>
-            <Typography sx={{ fontWeight: "bold" }}>{userData?.data?.username}</Typography>
+            <Typography sx={{ fontWeight: "bold" }}>{username}</Typography>
           </MenuItem>
           <Divider />
           <MenuItem onClick={handleOpenModal}>

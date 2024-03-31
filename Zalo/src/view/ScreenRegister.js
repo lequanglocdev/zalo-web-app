@@ -28,6 +28,24 @@ export default function ScreenRegister({ navigation, route }) {
   });
 
   const Register = async () => {
+    // Kiểm tra xem tất cả các trường thông tin đã được điền
+    if (
+      !data.username ||
+      !data.phone ||
+      !data.password ||
+      !data.confirmPassword ||
+      !data.email
+    ) {
+      Alert.alert(
+        selectedLanguage === "vi" ? "Thông báo" : "Notification",
+        selectedLanguage === "vi"
+          ? "Vui lòng nhập đầy đủ thông tin."
+          : "Please enter all required information.",
+        [{ text: "OK" }]
+      );
+      return;
+    }
+
     if (data.password !== data.confirmPassword) {
       Alert.alert(
         selectedLanguage === "vi" ? "Thông báo" : "Notification",
@@ -40,7 +58,7 @@ export default function ScreenRegister({ navigation, route }) {
 
     try {
       const response = await axios.post(
-        "http://192.168.0.117:5000/v1/auth/register",
+        "http://192.168.0.221:5000/v1/auth/register",
         data,
         {
           headers: { "Content-type": "application/json" },

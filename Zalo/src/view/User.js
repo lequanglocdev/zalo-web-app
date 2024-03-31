@@ -18,6 +18,23 @@ import { Entypo } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
 export default function User({ navigation }) {
+  const [userData, setUserData] = useState({ username: "" });
+
+  useEffect(() => {
+    async function fetchUserData() {
+      try {
+        const jsonValue = await AsyncStorage.getItem("userData");
+        if (jsonValue != null) {
+          setUserData(JSON.parse(jsonValue));
+        }
+      } catch (e) {
+        console.error("Error reading user data from AsyncStorage:", e);
+      }
+    }
+
+    fetchUserData();
+  }, []);
+
   return (
     <ScrollView>
       <ImageBackground
@@ -69,12 +86,7 @@ export default function User({ navigation }) {
                   marginLeft: 20,
                   borderRadius: 90,
                 }}
-              >
-                <Text>{userData.username}</Text>
-                <Text style={{ fontSize: 15, marginLeft: 20 }}>
-                  Xem trang cá nhân
-                </Text>
-              </Image>
+              ></Image>
               <View>
                 <Text
                   style={{
