@@ -40,7 +40,7 @@ export default function ScreenRegister({ navigation, route }) {
 
     try {
       const response = await axios.post(
-        "http://192.168.0.117:5000/v1/auth/register",
+        "http://192.168.0.221:5000/v1/auth/register",
         data,
         {
           headers: { "Content-type": "application/json" },
@@ -53,7 +53,7 @@ export default function ScreenRegister({ navigation, route }) {
         selectedLanguage === "vi"
           ? "Đăng ký thành công!"
           : "Registration successful!",
-        [{ text: "OK", onPress: () => navigation.navigate("Otp") }]
+        [{ text: "OK", onPress: () => navigation.navigate("Login") }]
       );
     } catch (error) {
       console.log(error);
