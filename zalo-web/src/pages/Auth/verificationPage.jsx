@@ -8,11 +8,13 @@ import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { api, typeHTTP } from "../../utils/api";
+import Login from "../Auth/Login";
 const VerificationPage = () => {
   const { data } = useContext(globalContext);
   const [confirmation, setConfirmation] = useState();
   const [otp, setOtp] = useState("");
-  // const [isVerified, setIsVerified] = useState(false);
+  const [verificationMessage, setVerificationMessage] = useState("");
+  const [authenticated, setAuthenticated] = useState(false);
 
   useEffect(() => {
     const recaptcha = new RecaptchaVerifier(auth, "recaptcha", {});
@@ -39,14 +41,18 @@ const VerificationPage = () => {
           url: "/user/verification",
           body: { phone: data.user.phone },
         }).then(res =>{
-          console.log(res)
+         setVerificationMessage("Xác thực thành công");
+         console.log(res);
+         setAuthenticated(true);
+        
         });
       })
       .catch((error) => {
         console.error("Error confirming SMS code:", error);
+       setVerificationMessage("Xác thực không thành công ");
       });
   };
-
+  
   return (
     <Stack
       sx={{
@@ -69,7 +75,6 @@ const VerificationPage = () => {
       >
         <MarkEmailReadIcon sx={{ fontSize: "80px", color: "#3498db" }} />
         <Typography variant="span" sx={{ color: "#3498db" }}>
-          tin nhắn đang được gửi đến điện thoại của bạn
         </Typography>
         <Box sx={{ marginTop: "20px" }}>
           <TextField
@@ -84,10 +89,19 @@ const VerificationPage = () => {
         <Button
           variant="contained"
           sx={{ marginTop: "10px", width: "300px" }}
-          onClick={() => handleSubmitOtp()}
+          onClick={() => { handleSubmitOtp()
+          }}
         >
           Submit
         </Button>
+        <Typography variant="span" sx={{ color: "red", marginTop: "10px" }}>
+          {verificationMessage}
+        </Typography>
+        {authenticated && (
+          <Button variant="contained" onClick={() => window.location.href="/"}>
+            Đăng Nhập
+          </Button>
+        )}
       </Box>
     </Stack>
   );
