@@ -33,6 +33,19 @@ export default function Otp({ navigation }) {
       .then((confirmation) => setVerification(confirmation));
   }, [globalData.user]);
 
+  const handleOtpChange = (text, index) => {
+    // Tạo một bản sao của mảng otp để thay đổi giá trị của ô OTP tại vị trí cụ thể.
+    const newOtp = [...otp];
+    // Gán giá trị text vào vị trí cụ thể của mảng newOtp, được xác định bởi chỉ số index.
+    newOtp[index] = text;
+    // Cập nhật giá trị của state otp bằng cách ghép các phần tử trong mảng newOtp thành một chuỗi và gán vào state otp.
+    setOtp(newOtp.join(""));
+    // Xác định xem có nội dung nào được nhập vào ô OTP không bằng cách kiểm tra xem có ký tự nào khác khoảng trắng không trong mảng newOtp.
+    // Nếu có ít nhất một ký tự không phải khoảng trắng, hasContent được đặt thành true, ngược lại hasContent được đặt thành false.
+    // Điều này ảnh hưởng đến việc hiển thị trạng thái của nút Xác nhận.
+    setHasContent(newOtp.some((char) => char.trim().length > 0));
+  };
+
   const handleSubmitOTPWithPhoneNumber = () => {
     const credential = firebase.auth.PhoneAuthProvider.credential(
       verification,
@@ -101,27 +114,27 @@ export default function Otp({ navigation }) {
       <View style={{ alignItems: "center", marginTop: 10 }}>
         {/* Hộp chứa các ô nhập số */}
         <View style={{ flexDirection: "row" }}>
-          <TextInput
-            style={{
-              width: 40,
-              height: 38,
-              fontSize: 15,
-              fontWeight: "bold",
-              color: "#BABABA",
-              borderWidth: 1,
-              borderColor: "#BABABA",
-              textAlign: "center",
-              marginHorizontal: 5,
-              caretColor: "blue",
-            }}
-            keyboardType="numeric"
-            maxLength={1} // Giới hạn độ dài tối đa là 1 chữ số
-            onChangeText={(e) => {
-              setOtp(e);
-              setHasContent(!!e.trim())
-            }}
-            value={otp}
-          />
+          {[...Array(6)].map((_, index) => (
+            <TextInput
+              key={index}
+              style={{
+                width: 40,
+                height: 38,
+                fontSize: 15,
+                fontWeight: "bold",
+                color: "#BABABA",
+                borderWidth: 1,
+                borderColor: "#BABABA",
+                textAlign: "center",
+                marginHorizontal: 5,
+                caretColor: "blue",
+              }}
+              keyboardType="numeric"
+              maxLength={1} // Giới hạn độ dài tối đa là 1 chữ số
+              onChangeText={(text) => handleOtpChange(text, index)}
+              value={otp[index]}
+            />
+          ))}
         </View>
         {/* Đường gạch đứt khúc */}
         <View
@@ -134,7 +147,6 @@ export default function Otp({ navigation }) {
           }}
         />
       </View>
-
 
       <View style={{ alignItems: "center", justifyContent: "center" }}>
         <Pressable

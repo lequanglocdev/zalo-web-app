@@ -5,13 +5,13 @@ import "firebase/compat/auth";
 import "firebase/compat/firestore";
 
 export const firebaseConfig = {
-  apiKey: "AIzaSyCb226Jd6q59rgwdkku8m8JezAIK0VagHc",
-  authDomain: "appzalo-103be.firebaseapp.com",
-  projectId: "appzalo-103be",
-  storageBucket: "appzalo-103be.appspot.com",
-  messagingSenderId: "246019057439",
-  appId: "1:246019057439:web:dd4335611bb359cac4f22a",
-  measurementId: "G-786ESNVEW9",
+  apiKey: "AIzaSyDS5lZHBfu4lq06cE8-f_cOqSYZhCxrIJ4",
+  authDomain: "zaloappwe.firebaseapp.com",
+  projectId: "zaloappwe",
+  storageBucket: "zaloappwe.appspot.com",
+  messagingSenderId: "84538472997",
+  appId: "1:84538472997:web:08a9a9890c21ec1bc71dcc",
+  measurementId: "G-L3KN6C1X1Q",
 };
 if (!firebase.apps.length) {
   firebase.initializeApp(firebaseConfig);
