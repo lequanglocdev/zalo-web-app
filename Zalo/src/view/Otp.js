@@ -6,10 +6,50 @@ import {
   Pressable,
   TextInput,
 } from "react-native";
-import React from "react";
+import React, { useRef, useState, useEffect, useContext } from "react";
 import { Ionicons, AntDesign, Entypo, Feather } from "@expo/vector-icons";
+import { FirebaseRecaptchaVerifierModal } from "expo-firebase-recaptcha";
+import { firebaseConfig } from "../utils/firebase";
+import firebase from "firebase/compat/app";
+import { globalContext } from "../context/globalContext";
+import { formatPhoneByFireBase } from "../utils/call";
+import { api, typeHTTP } from "../utils/api";
 
 export default function Otp({ navigation }) {
+  const recaptchaRef = useRef();
+  const [otp, setOtp] = useState("");
+  const { globalData } = useContext(globalContext);
+  const [verification, setVerification] = useState();
+
+  useEffect(() => {
+    const phoneProvider = new firebase.auth.PhoneAuthProvider();
+    phoneProvider
+      .verifyPhoneNumber(
+        formatPhoneByFireBase(globalData.user.phone),
+        recaptchaRef.current
+      )
+      .then((confirmation) => setVerification(confirmation));
+  }, [globalData.user]);
+
+  const handleSubmitOTPWithPhoneNumber = () => {
+    const credential = firebase.auth.PhoneAuthProvider.credential(
+      verification,
+      otp
+    );
+    firebase
+      .auth()
+      .signInWithCredential(credential)
+      .then(() => {
+        api({
+          method: typeHTTP.POST,
+          url: "/user/verification",
+          body: { phone: globalData.user.phone },
+        }).then((res) => {
+          navigation.navigate("Login");
+        });
+      });
+  };
+
   return (
     <ScrollView>
       <ImageBackground
@@ -45,35 +85,46 @@ export default function Otp({ navigation }) {
             Vui lòng không chia sẻ mã xác thực để tránh mất tài khoản
           </Text>
         </View>
+
+        <FirebaseRecaptchaVerifierModal
+          ref={recaptchaRef}
+          firebaseConfig={firebaseConfig}
+        />
       </View>
 
-      <TextInput placeholder="Nhập mã" />
+      <TextInput
+        placeholder="Nhập mã"
+        onChangeText={(e) => setOtp(e)}
+        value={otp}
+      />
 
-      <Pressable
-        onPress={() => {
-          navigation.navigate("Login");
-        }}
-        style={{
-          width: 350,
-          height: 50,
-          backgroundColor: "#DCDCDC",
-          borderRadius: 20,
-          alignItems: "center",
-          justifyContent: "center",
-          marginTop: 20,
-        }}
-      >
-        <Text
+      <View style={{ alignItems: "center", justifyContent: "center" }}>
+        <Pressable
+          onPress={() => {
+            handleSubmitOTPWithPhoneNumber();
+          }}
           style={{
-            fontSize: 15,
-            fontWeight: "bold",
-            color: "white",
-            fontWeight: 700,
+            width: 350,
+            height: 50,
+            backgroundColor: "#DCDCDC",
+            borderRadius: 20,
+            alignItems: "center",
+            justifyContent: "center",
+            marginTop: 20,
           }}
         >
-          Xác Nhận
-        </Text>
-      </Pressable>
+          <Text
+            style={{
+              fontSize: 18,
+              fontWeight: "bold",
+              color: "white",
+              fontWeight: 700,
+            }}
+          >
+            Xác Nhận
+          </Text>
+        </Pressable>
+      </View>
     </ScrollView>
   );
 }

@@ -20,6 +20,7 @@ import {
   CountryListScreen,
   Otp,
 } from "./src/view";
+import { GlobalContext } from "./src/context/globalContext";
 
 const Tab = createBottomTabNavigator();
 
@@ -144,22 +145,27 @@ function MyTabs({ route }) {
 export default function App() {
   const Stack = createNativeStackNavigator();
   return (
-    <NavigationContainer>
-      <Stack.Navigator screenOptions={{ headerShown: false }}>
-        <Stack.Screen name="Login" component={Login} />
-        <Stack.Screen name="Message" component={MyTabs} />
-        <Stack.Screen name="Phonebook" component={Phonebook} />
-        <Stack.Screen name="Discover" component={Discover} />
-        <Stack.Screen name="Diary" component={Diary} />
-        <Stack.Screen name="User" component={User} />
-        <Stack.Screen name="ScreenLogin" component={ScreenLogin} />
-        <Stack.Screen name="ScreenRegister" component={ScreenRegister} />
-        <Stack.Screen name="Setting" component={Setting} />
-        <Stack.Screen name="SendMessager" component={SendMessager} />
-        <Stack.Screen name="Friend" component={Friend} />
-        <Stack.Screen name="CountryListScreen" component={CountryListScreen} />
-        <Stack.Screen name="Otp" component={Otp} />
-      </Stack.Navigator>
-    </NavigationContainer>
+    <GlobalContext>
+      <NavigationContainer>
+        <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Login" component={Login} />
+          <Stack.Screen name="Message" component={MyTabs} />
+          <Stack.Screen name="Phonebook" component={Phonebook} />
+          <Stack.Screen name="Discover" component={Discover} />
+          <Stack.Screen name="Diary" component={Diary} />
+          <Stack.Screen name="User" component={User} />
+          <Stack.Screen name="ScreenLogin" component={ScreenLogin} />
+          <Stack.Screen name="ScreenRegister" component={ScreenRegister} />
+          <Stack.Screen name="Setting" component={Setting} />
+          <Stack.Screen name="SendMessager" component={SendMessager} />
+          <Stack.Screen name="Friend" component={Friend} />
+          <Stack.Screen
+            name="CountryListScreen"
+            component={CountryListScreen}
+          />
+          <Stack.Screen name="Otp" component={Otp} />
+        </Stack.Navigator>
+      </NavigationContainer>
+    </GlobalContext>
   );
 }

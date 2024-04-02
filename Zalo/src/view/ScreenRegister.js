@@ -7,17 +7,19 @@ import {
   Pressable,
   Alert, // Import Alert
 } from "react-native";
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
 import { AntDesign, Entypo } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
 import localStorage from "@react-native-async-storage/async-storage";
 import axios from "axios";
+import { globalContext } from "../context/globalContext";
 
 export default function ScreenRegister({ navigation, route }) {
   const { selectedLanguage } = route.params || "vi";
   const [showPassword, setShowPassword] = useState(false);
   const [hasContent, setHasContent] = useState(false);
+  const { globalHandler } = useContext(globalContext);
   const registerText = selectedLanguage === "vi" ? "Đăng ký" : "Register";
   const [data, setData] = useState({
     username: "",
@@ -58,7 +60,7 @@ export default function ScreenRegister({ navigation, route }) {
 
     try {
       const response = await axios.post(
-        "http://192.168.0.221:5000/v1/auth/register",
+        "http://192.168.0.226:5000/v1/auth/register",
         data,
         {
           headers: { "Content-type": "application/json" },
@@ -71,7 +73,15 @@ export default function ScreenRegister({ navigation, route }) {
         selectedLanguage === "vi"
           ? "Đăng ký thành công!"
           : "Registration successful!",
-        [{ text: "OK", onPress: () => navigation.navigate("Otp") }]
+        [
+          {
+            text: "OK",
+            onPress: () => {
+              globalHandler.setUser(response.data);
+              navigation.navigate("Otp");
+            },
+          },
+        ]
       );
     } catch (error) {
       console.log(error);
