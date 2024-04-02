@@ -31,7 +31,7 @@ const userSchema = new Schema({
   },
   verification: {
     type: Boolean,
-    defautlt: false
+    defautlt: false,
   },
   friends: {
     type: [

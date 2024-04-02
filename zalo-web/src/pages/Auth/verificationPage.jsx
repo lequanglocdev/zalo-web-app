@@ -3,12 +3,16 @@ import { globalContext } from "../../context/globalContext";
 import { RecaptchaVerifier, signInWithPhoneNumber } from "firebase/auth";
 import { auth } from "../../utils/firebase";
 import { formatPhoneByFireBase } from "../../utils/call";
-import { Box, Stack } from "@mui/material";
-
+import { Box, Stack, Typography } from "@mui/material";
+import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
+import TextField from "@mui/material/TextField";
+import Button from "@mui/material/Button";
+import { api, typeHTTP } from "../../utils/api";
 const VerificationPage = () => {
   const { data } = useContext(globalContext);
   const [confirmation, setConfirmation] = useState();
   const [otp, setOtp] = useState("");
+  // const [isVerified, setIsVerified] = useState(false);
 
   useEffect(() => {
     const recaptcha = new RecaptchaVerifier(auth, "recaptcha", {});
@@ -22,7 +26,7 @@ const VerificationPage = () => {
         setConfirmation(confirmationResult);
       })
       .catch((error) => {
-        console.error("Error sending SMS:", error);
+        console.error(" sendingError SMS:", error);
       });
   }, [data.user]);
 
@@ -30,8 +34,13 @@ const VerificationPage = () => {
     confirmation
       .confirm(otp)
       .then((userCredential) => {
-        // update thong tin user xac thuc tai day
-        // setUseContent
+        api({
+          method: typeHTTP.POST,
+          url: "/user/verification",
+          body: { phone: data.user.phone },
+        }).then(res =>{
+          console.log(res)
+        });
       })
       .catch((error) => {
         console.error("Error confirming SMS code:", error);
@@ -48,10 +57,37 @@ const VerificationPage = () => {
         alignItems: "center",
       }}
     >
-      <Box sx={{ width: "300px", height: "300px", backgroundColor: "#fff" }}>
-        <div id="recaptcha"></div>
-        <input value={otp} onChange={(e) => setOtp(e.target.value)} />
-        <button onClick={() => handleSubmitOtp()}>Submit</button>
+      <div id="recaptcha"></div>
+      <Box
+        sx={{
+          height: "300px",
+          display: "flex",
+          alignItems: "center",
+          flexDirection: "column",
+          backgroundColor: "white"
+        }}
+      >
+        <MarkEmailReadIcon sx={{ fontSize: "80px", color: "#3498db" }} />
+        <Typography variant="span" sx={{ color: "#3498db" }}>
+          tin nhắn đang được gửi đến điện thoại của bạn
+        </Typography>
+        <Box sx={{ marginTop: "20px" }}>
+          <TextField
+            sx={{ width: "300px", fontSize: "20px" }}
+            label="Mã OTP"
+            variant="outlined"
+            value={otp}
+            onChange={(e) => setOtp(e.target.value)}
+          />
+        </Box>
+
+        <Button
+          variant="contained"
+          sx={{ marginTop: "10px", width: "300px" }}
+          onClick={() => handleSubmitOtp()}
+        >
+          Submit
+        </Button>
       </Box>
     </Stack>
   );

@@ -60,6 +60,7 @@ const userRegister = async (req, res) => {
           phone: phone,
           email: email,
           password: hashed,
+          verification:false
         })
         console.log(newUser)
 
