@@ -16,6 +16,8 @@ import { formatPhoneByFireBase } from "../utils/call";
 import { api, typeHTTP } from "../utils/api";
 
 export default function Otp({ navigation }) {
+  const [hasContent, setHasContent] = useState(false);
+
   const recaptchaRef = useRef();
   const [otp, setOtp] = useState("");
   const { globalData } = useContext(globalContext);
@@ -92,11 +94,47 @@ export default function Otp({ navigation }) {
         />
       </View>
 
-      <TextInput
-        placeholder="Nhập mã"
-        onChangeText={(e) => setOtp(e)}
-        value={otp}
-      />
+      <View style={{ alignItems: "center", marginTop: 15 }}>
+        <Feather name="phone-incoming" size={50} color="green" />
+      </View>
+
+      <View style={{ alignItems: "center", marginTop: 10 }}>
+        {/* Hộp chứa các ô nhập số */}
+        <View style={{ flexDirection: "row" }}>
+          <TextInput
+            style={{
+              width: 40,
+              height: 38,
+              fontSize: 15,
+              fontWeight: "bold",
+              color: "#BABABA",
+              borderWidth: 1,
+              borderColor: "#BABABA",
+              textAlign: "center",
+              marginHorizontal: 5,
+              caretColor: "blue",
+            }}
+            keyboardType="numeric"
+            maxLength={1} // Giới hạn độ dài tối đa là 1 chữ số
+            onChangeText={(e) => {
+              setOtp(e);
+              setHasContent(!!e.trim())
+            }}
+            value={otp}
+          />
+        </View>
+        {/* Đường gạch đứt khúc */}
+        <View
+          style={{
+            marginTop: 5,
+            width: 250,
+            borderBottomWidth: 1,
+            borderBottomColor: "#BABABA",
+            borderStyle: "dotted", // Đặt kiểu đường viền là gạch đứt khúc
+          }}
+        />
+      </View>
+
 
       <View style={{ alignItems: "center", justifyContent: "center" }}>
         <Pressable
@@ -106,7 +144,7 @@ export default function Otp({ navigation }) {
           style={{
             width: 350,
             height: 50,
-            backgroundColor: "#DCDCDC",
+            backgroundColor: hasContent ? "#116CF5" : "#DCDCDC",
             borderRadius: 20,
             alignItems: "center",
             justifyContent: "center",

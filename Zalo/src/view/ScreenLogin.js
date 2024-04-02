@@ -41,7 +41,7 @@ export default function ScreenLogin({ navigation, route }) {
 
     try {
       const response = await axios.post(
-        "http://192.168.0.226:5000/v1/auth/login",
+        "http://192.168.1.54:5000/v1/auth/login",
         data,
         {
           headers: { "Content-type": "application/json" },
