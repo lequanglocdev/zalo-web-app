@@ -15,6 +15,10 @@ const Login = () => {
   const { data, handler } = useContext(globalContext);
   const [loading, setLoading] = useState(false);
   const [showLoading, setShowLoading] = useState(false);
+
+  const handleClose = () => {
+    setLoading(false);
+  };
   const [login, setlogin] = useState({
     phone: "",
     password: "",
@@ -23,18 +27,80 @@ const Login = () => {
 
   //xử lý đăng nhập tài khoản
   const loginUser = async () => {
-    setLoading(true);
-    const body = {
-      phone: login.phone,
-      password: login.password,
-    };
-    api({ method: typeHTTP.POST, url: "/auth/login", body }).then((res) => {
-      handler.setUser(res);
-      localStorage.setItem("userData", JSON.stringify(res));
-      // console.log("abasdbakjda", res);
-      setLoading(false);
-      nav("/home");
+    let invalids = validate(login);
+    if (invalids) {
+      setLoading(true);
+      const body = {
+        phone: login.phone,
+        password: login.password,
+      };
+      api({ method: typeHTTP.POST, url: "/auth/login", body }).then((res) => {
+        handler.setUser(res);
+
+        // console.log("status", res.status);
+        setLoading(false);
+        nav("/home");
+      });
+    }
+  };
+
+  // xử lý ràng buộc dữ liệu
+  const validate = (login) => {
+    let invalids = 0;
+    let fields = Object.entries(login);
+    fields.forEach((item) => {
+      if (item[1] === "")
+        setInvalidFiels((prev) => [
+          ...prev,
+          {
+            name: item[0],
+            message: "Bạn không được bỏ trống trường này",
+          },
+        ]);
+      invalids++;
     });
+    fields.forEach((item) => {
+      if (item[1].length > 0)
+        setInvalidFiels((prev) => [
+          ...prev,
+          {
+            name: item[0],
+            message: "Dữ liệu ko hợp lệ",
+          },
+        ]);
+      invalids++;
+    });
+    fields.forEach((item) => {
+      switch (item[0]) {
+        case "password":
+          if (item[1].length < 6) {
+            setInvalidFiels((prev) => [
+              ...prev,
+              {
+                name: item[0],
+                message: "Mật khẩu phải có tối thiểu 6 ký tự",
+              },
+            ]);
+            invalids++;
+          }
+          break;
+        case "phone":
+          if (!+item[1] || item[1].length < 9 || item[1].length > 10) {
+            setInvalidFiels((prev) => [
+              ...prev,
+              {
+                name: item[0],
+                message: "Số điện thoại không hợp lệ",
+              },
+            ]);
+            invalids++;
+          }
+          break;
+        default:
+          break;
+      }
+    });
+    return invalids;
   };
 
   const ClickRegister = () => {
@@ -45,6 +111,7 @@ const Login = () => {
       <Backdrop
         sx={{ color: "#fff", zIndex: (theme) => theme.zIndex.drawer + 1 }}
         open={loading}
+        onClick={handleClose}
       >
         <CircularProgress color="inherit" />
       </Backdrop>
@@ -98,6 +165,7 @@ const Login = () => {
             setInvalidFiels={setInvalidFiels}
             invalidFiels={invalidFiels}
           />
+
           <ButtonComponents text={"Đăng nhập"} onClick={loginUser} />
           <Box
             style={{

@@ -24,22 +24,70 @@ const Register = () => {
   const [invalidFiels, setInvalidFiels] = useState([]);
 
   const registerUser = async () => {
-    const body = {
-      username: register.username,
-      email: register.email,
-      phone: register.phone,
-      password: register.password,
-    };
-    api({ method: typeHTTP.POST, url: "/auth/register", body }).then((res) => {
-      handler.setUser(res);
-      nav("/verification");
+    let invalids = validate(register);
+    if (invalids) {
+      const body = {
+        username: register.username,
+        email: register.email,
+        phone: register.phone,
+        password: register.password,
+      };
+      api({ method: typeHTTP.POST, url: "/auth/register", body }).then(
+        (res) => {
+          handler.setUser(res);
+          console.log("register", res);
+          nav("/verification");
+        }
+      );
+    }
+  };
+  const validate = (register) => {
+    let invalids = 0;
+    let fields = Object.entries(register);
+    fields.forEach((item) => {
+      if (item[1] === "")
+        setInvalidFiels((prev) => [
+          ...prev,
+          {
+            name: item[0],
+            message: "Bạn không được bỏ trống trường này",
+          },
+        ]);
+      invalids++;
     });
 
-    // localStorage.setItem("userData", JSON.stringify(respone));
-  };
-  
-  const ClickLogin = () => {
-    nav("/");
+    fields.forEach((item) => {
+      switch (item[0]) {
+      case "password":
+        if (item[1].length < 6) {
+          setInvalidFiels((prev) => [
+            ...prev,
+            {
+              name: item[0],
+              message: "Mật khẩu phải có tối thiểu 6 ký tự",
+            },
+          ]);
+          invalids++;
+        }
+        break;
+      case "phone":
+        if (!+item[1] || item[1].length < 9 || item[1].length > 10) {
+          setInvalidFiels((prev) => [
+            ...prev,
+            {
+              name: item[0],
+              message: "Số điện thoại không hợp lệ",
+            },
+          ]);
+          invalids++;
+        }
+        break;
+
+      default:
+        break;
+      }
+    });
+    return invalids;
   };
   return (
     <Stack
@@ -115,22 +163,7 @@ const Register = () => {
             display: "flex",
             flexDirection: "column",
           }}
-        >
-          <Typography variant="span" style={{ marginTop: "10px" }}>
-            Bạn đã có tài khoản?
-            <Typography
-              variant="span"
-              style={{
-                marginLeft: "6px",
-                color: "#3498db",
-                cursor: "pointer",
-              }}
-              onClick={ClickLogin}
-            >
-              Đăng nhập
-            </Typography>
-          </Typography>
-        </Box>
+        ></Box>
       </Box>
     </Stack>
   );

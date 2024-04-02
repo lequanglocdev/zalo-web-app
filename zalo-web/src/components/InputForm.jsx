@@ -40,7 +40,7 @@ const InputForm = ({
           setValue((prev) => ({ ...prev, [type]: e.target.value }))
         }
         onFocus={() => setInvalidFiels([])}
-        error={!!helperText} // Đảm bảo rằng error được đặt thành true nếu có lỗi
+        error={!!helperText} // error được đặt thành true nếu có lỗi
         helperText={helperText} // Truyền giá trị của helperText vào
       />
     
