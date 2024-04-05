@@ -4,8 +4,7 @@ import { Navigate, useNavigate } from "react-router-dom";
 import InputForm from "../../components/InputForm";
 import ButtonComponents from "../../components/Button";
 import Typography from "@mui/material/Typography";
-import axios from "axios";
-import Swal from "sweetalert2";
+
 import { api, typeHTTP } from "../../utils/api";
 import { globalContext } from "../../context/globalContext";
 import { Stack } from "@mui/material";

@@ -5,6 +5,7 @@ import Typography from "@mui/material/Typography";
 import Modal from "@mui/material/Modal";
 import CloseIcon from "@mui/icons-material/Close";
 import Divider from "@mui/material/Divider";
+import { useNavigate } from "react-router-dom";
 const style = {
   position: "absolute",
   top: "50%",
@@ -16,9 +17,13 @@ const style = {
   borderRadius: "6px",
 };
 const Logout = ({ handleCloseModalLogout }) => {
+  const nav = useNavigate();
   const handleOpenModal = (event) => {
     handleCloseModalLogout(event);
   };
+  const LogoutUser = () =>{
+    nav("/")
+  }
   return (
     <div>
       <Box sx={style}>
@@ -44,7 +49,7 @@ const Logout = ({ handleCloseModalLogout }) => {
             <Button onClick={handleOpenModal} sx={{ cursor: "pointer" }}>
               Không
             </Button>
-            <Button variant="contained" sx={{ m: 2 }}>
+            <Button variant="contained" sx={{ m: 2 }} onClick={LogoutUser}>
               Đăng xuất
             </Button>
           </Box>

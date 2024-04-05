@@ -36,8 +36,7 @@ const Login = () => {
       };
       api({ method: typeHTTP.POST, url: "/auth/login", body }).then((res) => {
         handler.setUser(res);
-
-        // console.log("status", res.status);
+        console.log("status", res);
         setLoading(false);
         nav("/home");
       });
