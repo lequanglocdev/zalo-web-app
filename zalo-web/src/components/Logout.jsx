@@ -21,9 +21,9 @@ const Logout = ({ handleCloseModalLogout }) => {
   const handleOpenModal = (event) => {
     handleCloseModalLogout(event);
   };
-  const LogoutUser = () =>{
-    nav("/")
-  }
+  const LogoutUser = () => {
+    nav("/");
+  };
   return (
     <div>
       <Box sx={style}>

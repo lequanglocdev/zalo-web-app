@@ -19,6 +19,7 @@ import {
   Friend,
   CountryListScreen,
   Otp,
+  Dateofbirth,
 } from "./src/view";
 import { GlobalContext } from "./src/context/globalContext";
 
@@ -148,6 +149,7 @@ export default function App() {
     <GlobalContext>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
+          <Stack.Screen name="Dateofbirth" component={Dateofbirth} />
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="Message" component={MyTabs} />
           <Stack.Screen name="Phonebook" component={Phonebook} />

@@ -11,6 +11,7 @@ import SendMessager from "./SendMessager";
 import Friend from "./Friend";
 import CountryListScreen from "./CountryListScreen";
 import Otp from "./Otp";
+import Dateofbirth from "./Dateofbirth";
 
 export {
   Message,
@@ -26,4 +27,5 @@ export {
   Friend,
   CountryListScreen,
   Otp,
+  Dateofbirth,
 };
