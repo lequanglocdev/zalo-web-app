@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { View, Text, Image } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -12,6 +12,7 @@ import {
   Diary,
   User,
   Login,
+  Avatar,
   ScreenLogin,
   ScreenRegister,
   Setting,
@@ -25,9 +26,7 @@ import { GlobalContext } from "./src/context/globalContext";
 
 const Tab = createBottomTabNavigator();
 
-function MyTabs({ route }) {
-  const { selectedLanguage } = route.params || "vi";
-
+function MyTabs() {
   return (
     <Tab.Navigator
       screenOptions={({ route }) => ({
@@ -56,7 +55,7 @@ function MyTabs({ route }) {
             );
             labelComponent = (
               <Text style={{ color: focused ? "#0000FF" : "black" }}>
-                {selectedLanguage === "vi" ? "Tin nhắn" : "Messages"}
+                Tin nhắn
               </Text>
             );
           } else if (route.name === "Danh bạ") {
@@ -69,7 +68,7 @@ function MyTabs({ route }) {
             );
             labelComponent = (
               <Text style={{ color: focused ? "#0000FF" : "black" }}>
-                {selectedLanguage === "vi" ? "Danh bạ" : "Contacts"}
+                Danh bạ
               </Text>
             );
           } else if (route.name === "Khám phá") {
@@ -87,7 +86,7 @@ function MyTabs({ route }) {
               <Text
                 style={{ color: focused ? "#0000FF" : "black", marginTop: 4 }}
               >
-                {selectedLanguage === "vi" ? "Khám phá" : "Discovery"}
+                Khám phá
               </Text>
             );
           } else if (route.name === "Nhật ký") {
@@ -100,7 +99,7 @@ function MyTabs({ route }) {
             );
             labelComponent = (
               <Text style={{ color: focused ? "#0000FF" : "black" }}>
-                {selectedLanguage === "vi" ? "Nhật ký" : "Timeline"}
+                Nhật ký
               </Text>
             );
           } else if (route.name === "Cá nhân") {
@@ -115,7 +114,7 @@ function MyTabs({ route }) {
               <Text
                 style={{ marginTop: 5, color: focused ? "#0000FF" : "black" }}
               >
-                {selectedLanguage === "vi" ? "Cá nhân" : "Me"}
+                Cá nhân
               </Text>
             );
           }
@@ -149,7 +148,6 @@ export default function App() {
     <GlobalContext>
       <NavigationContainer>
         <Stack.Navigator screenOptions={{ headerShown: false }}>
-          <Stack.Screen name="Dateofbirth" component={Dateofbirth} />
           <Stack.Screen name="Login" component={Login} />
           <Stack.Screen name="Message" component={MyTabs} />
           <Stack.Screen name="Phonebook" component={Phonebook} />
@@ -166,6 +164,8 @@ export default function App() {
             component={CountryListScreen}
           />
           <Stack.Screen name="Otp" component={Otp} />
+          <Stack.Screen name="Dateofbirth" component={Dateofbirth} />
+          <Stack.Screen name="Avatar" component={Avatar} />
         </Stack.Navigator>
       </NavigationContainer>
     </GlobalContext>

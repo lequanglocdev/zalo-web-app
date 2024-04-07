@@ -12,6 +12,7 @@ import Friend from "./Friend";
 import CountryListScreen from "./CountryListScreen";
 import Otp from "./Otp";
 import Dateofbirth from "./Dateofbirth";
+import Avatar from "./Avatar";
 
 export {
   Message,
@@ -28,4 +29,5 @@ export {
   CountryListScreen,
   Otp,
   Dateofbirth,
+  Avatar,
 };

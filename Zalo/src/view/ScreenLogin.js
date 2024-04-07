@@ -48,7 +48,7 @@ export default function ScreenLogin({ navigation, route }) {
         }
       );
       localStorage.setItem("userData", JSON.stringify(response.data));
-      navigation.navigate("Message", { selectedLanguage });
+      navigation.navigate("Message"); //, { selectedLanguage });
     } catch (error) {
       console.log(error);
       // Alert.alert(

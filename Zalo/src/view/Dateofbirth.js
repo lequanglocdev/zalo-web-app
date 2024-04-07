@@ -25,7 +25,7 @@ for (let i = 1; i <= 31; i++) {
   days.push(i.toString());
 }
 
-export default function Dateofbirth() {
+export default function Dateofbirth({ navigation }) {
   const [selectedYear, setSelectedYear] = useState(
     new Date().getFullYear().toString()
   );
@@ -232,6 +232,9 @@ export default function Dateofbirth() {
 
       <View style={{ alignItems: "center" }}>
         <Pressable
+          onPress={() => {
+            navigation.navigate("Avatar");
+          }}
           style={{
             marginTop: 180,
             width: 250,
