@@ -11,6 +11,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Modal from "@mui/material/Modal";
 
 import AddFriend from "./AddFriend";
+import { Link } from "react-router-dom";
 
 const SearchStyle = styled("div")(({ theme }) => ({
   position: "relative",
@@ -86,6 +87,9 @@ const Search = () => {
             alignItems: "center",
           }}
         >
+          {/* <Link to={"/add-friend"}>
+           
+          </Link> */}
           <Tooltip title="Thêm bạn">
             <IconButton>
               <PersonAddAltIcon onClick={handleOpenModalAddFriend} />
@@ -99,7 +103,6 @@ const Search = () => {
               />
             </Modal>
           </Tooltip>
-
           <Tooltip title="Tạo nhóm chat">
             <IconButton>
               <GroupAddIcon />

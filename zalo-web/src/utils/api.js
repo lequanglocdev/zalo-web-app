@@ -1,4 +1,5 @@
 import axios from "axios";
+export const baseURLOrigin = "http://localhost:5000";
 const baseURL = "http://localhost:5000/v1";
 
 export const typeHTTP = {

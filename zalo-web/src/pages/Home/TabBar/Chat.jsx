@@ -1,7 +1,6 @@
 import Box from "@mui/material/Box";
 
 import Search from "../../../components/Search";
-import ListUser from "~/components/ListUser";
 import Divider from "@mui/material/Divider";
 import ChatBubbleIcon from "@mui/icons-material/ChatBubble";
 import Stack from "@mui/material/Stack";
