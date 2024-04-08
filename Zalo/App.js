@@ -21,6 +21,7 @@ import {
   CountryListScreen,
   Otp,
   Dateofbirth,
+  DataUser,
 } from "./src/view";
 import { GlobalContext } from "./src/context/globalContext";
 
@@ -166,6 +167,7 @@ export default function App() {
           <Stack.Screen name="Otp" component={Otp} />
           <Stack.Screen name="Dateofbirth" component={Dateofbirth} />
           <Stack.Screen name="Avatar" component={Avatar} />
+          <Stack.Screen name="DataUser" component={DataUser} />
         </Stack.Navigator>
       </NavigationContainer>
     </GlobalContext>

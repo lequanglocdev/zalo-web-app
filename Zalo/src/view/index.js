@@ -13,6 +13,7 @@ import CountryListScreen from "./CountryListScreen";
 import Otp from "./Otp";
 import Dateofbirth from "./Dateofbirth";
 import Avatar from "./Avatar";
+import DataUser from "./DataUser";
 
 export {
   Message,
@@ -30,4 +31,5 @@ export {
   Otp,
   Dateofbirth,
   Avatar,
+  DataUser,
 };
