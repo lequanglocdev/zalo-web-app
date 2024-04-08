@@ -149,7 +149,7 @@ export default function Friend({ navigation, route }) {
             <Text style={{ marginRight: 10 }}>
               {selectedCountry ? selectedCountry.dialCode : ""}
             </Text>
-            <View style={{ width: 300 }}>
+            <View style={{ width: 250 }}>
               <TextInput
                 placeholder="Nhập số điện thoại"
                 style={{
@@ -164,7 +164,10 @@ export default function Friend({ navigation, route }) {
               />
             </View>
 
-            <View
+            <Pressable
+              onPress={() => {
+                navigation.navigate("AddFriend");
+              }}
               style={{
                 width: 50,
                 height: 50,
@@ -176,7 +179,7 @@ export default function Friend({ navigation, route }) {
               }}
             >
               <AntDesign name="arrowright" size={24} color="black" />
-            </View>
+            </Pressable>
           </View>
 
           <View

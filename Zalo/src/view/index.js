@@ -14,6 +14,8 @@ import Otp from "./Otp";
 import Dateofbirth from "./Dateofbirth";
 import Avatar from "./Avatar";
 import DataUser from "./DataUser";
+import AddFriend from "./AddFriend";
+import AddFriend2 from "./AddFriend2";
 
 export {
   Message,
@@ -32,4 +34,6 @@ export {
   Dateofbirth,
   Avatar,
   DataUser,
+  AddFriend,
+  AddFriend2,
 };
