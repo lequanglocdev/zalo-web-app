@@ -11,6 +11,7 @@ const Home = () => {
   // const { data } = useContext(globalContext);
   // // const userData = data.user;
   // // console.log(userData.username)
+
   return (
     <MuiContainer
       disableGutters
