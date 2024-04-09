@@ -7,11 +7,14 @@ import {
   Image,
   TextInput,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useContext } from "react";
 import { Feather } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { globalContext } from "../context/globalContext";
 
 export default function AddFriend2({ navigation }) {
+  const [results, setResult] = useState([]);
+  const { data } = useContext(globalContext);
   const [userData, setUserData] = useState({ username: "" });
   const [text, setText] = useState(
     "Xin Chào, mình là Lê Quang Minh. Mình biết bạn qua số điện thoại."
@@ -46,6 +49,80 @@ export default function AddFriend2({ navigation }) {
     setShowClearButton(false);
   };
 
+  const handleSendRequestAddFriend = (toUser) => {
+    const body = {
+      fromUser: data.user,
+      toUser,
+    };
+    api({
+      body: body,
+      url: "/user/send-request-add-friend",
+      method: typeHTTP.POST,
+    }).then((res) => {
+      console.log(res);
+    });
+  };
+
+  const handleRefuse = (toUser) => {
+    const body = {
+      fromUser: data.user,
+      toUser,
+    };
+    api({
+      body: body,
+      url: "/user/refuse-request",
+      method: typeHTTP.POST,
+    }).then((res) => {
+      console.log(res);
+    });
+  };
+
+  const handleAccept = (toUser) => {
+    const body = {
+      fromUser: data.user,
+      toUser,
+    };
+    api({
+      body: body,
+      url: "/user/accept-request",
+      method: typeHTTP.POST,
+    }).then((res) => {
+      console.log(res);
+    });
+  };
+  const checkRelationship = (otherUser) => {
+    if (
+      data.user.friends.map((item) => item.friendId).includes(otherUser._id)
+    ) {
+      const friend = data.user.friends.filter(
+        (item) => item.friendId === otherUser._id
+      )[0];
+      if (friend.status === "pending") {
+        return <Pressable>Đã gửi lời mời kết bạn</Pressable>;
+      } else {
+        if (friend.status === "request") {
+          return (
+            <>
+              <Pressable onPress={() => handleAccept(otherUser)}>
+                Chấp nhận
+              </Pressable>
+              <Pressable onPress={() => handleRefuse(otherUser)}>
+                Từ chối
+              </Pressable>
+            </>
+          );
+        } else {
+          return <Pressable>Ban bè</Pressable>;
+        }
+      }
+    } else {
+      return (
+        <Pressable onPress={() => handleSendRequestAddFriend(otherUser)}>
+          Gửi lời mời kết bạn
+        </Pressable>
+      );
+    }
+  };
   return (
     <ScrollView>
       <ImageBackground

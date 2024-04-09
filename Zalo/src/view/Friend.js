@@ -1,14 +1,18 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { View, Text, ScrollView, Pressable, TextInput } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
+import { api, typeHTTP } from "../utils/api";
+import { globalContext } from "../context/globalContext";
+//import { Avatar, Box, Typography } from "react-native-elements";
 
 export default function Friend({ navigation, route }) {
   const [showCountryList, setShowCountryList] = useState(false);
   const [selectedCountry, setSelectedCountry] = useState(null);
-  const [phoneNumber, setPhoneNumber] = useState("");
+  const { globalData } = useContext(globalContext);
+  // const [phoneNumber, setPhoneNumber] = useState("");
 
   const toggleCountryList = () => {
     setShowCountryList(!showCountryList);
@@ -19,15 +23,119 @@ export default function Friend({ navigation, route }) {
     setShowCountryList(false);
   };
 
-  const handlePhoneNumberChange = (text) => {
-    setPhoneNumber(text);
-  };
+  // const handlePhoneNumberChange = (text) => {
+  //   setPhoneNumber(text);
+  // };
 
   useEffect(() => {
     if (route.params && route.params.selectedCountry) {
       setSelectedCountry(route.params.selectedCountry);
     }
   }, [route.params]);
+
+  const [phone, setPhone] = useState("");
+  const [results, setResult] = useState([]);
+
+  const handleSearch = () => {
+    setResult([]);
+    api({ url: "/user/find", method: typeHTTP.GET }).then((res) => {
+      const arr = [];
+      res.forEach((item) => {
+        if (item.phone.includes(phone.toLowerCase())) {
+          arr.push(item);
+        }
+      });
+      setResult(arr);
+      // Chuyển hướng đến trang AddFriend và truyền kết quả tìm kiếm
+      navigation.navigate("AddFriend", { results: arr });
+    });
+  };
+
+  // const handleSendRequestAddFriend = (toUser) => {
+  //   const body = {
+  //     fromUser: globalData.user,
+  //     toUser,
+  //   };
+  //   api({
+  //     body: body,
+  //     url: "/user/send-request-add-friend",
+  //     method: typeHTTP.POST,
+  //   }).then((res) => {
+  //     console.log(res);
+  //   });
+  // };
+
+  // const handleRefuse = (toUser) => {
+  //   const body = {
+  //     fromUser: globalData.user,
+  //     toUser,
+  //   };
+  //   api({
+  //     body: body,
+  //     url: "/user/refuse-request",
+  //     method: typeHTTP.POST,
+  //   }).then((res) => {
+  //     console.log(res);
+  //   });
+  // };
+
+  // const handleAccept = (toUser) => {
+  //   const body = {
+  //     fromUser: globalData.user,
+  //     toUser,
+  //   };
+  //   api({
+  //     body: body,
+  //     url: "/user/accept-request",
+  //     method: typeHTTP.POST,
+  //   }).then((res) => {
+  //     console.log(res);
+  //   });
+  // };
+
+  // const checkRelationship = (otherUser) => {
+  //   if (
+  //     globalData.user?.friends
+  //       .map((item) => item.friendId)
+  //       .includes(otherUser._id)
+  //   ) {
+  //     const friend = globalData.user?.friends.filter(
+  //       (item) => item.friendId === otherUser._id
+  //     )[0];
+  //     if (friend.status === "pending") {
+  //       return (
+  //         <Pressable>
+  //           <Text>Đã gửi lời mời kết bạn</Text>
+  //         </Pressable>
+  //       );
+  //     } else {
+  //       if (friend.status === "request") {
+  //         return (
+  //           <>
+  //             <Pressable onPress={handleAccept(otherUser)}>
+  //               <Text>Chấp Nhận</Text>
+  //             </Pressable>
+  //             <Pressable onPress={handleRefuse(otherUser)}>
+  //               <Text>Từ Chối</Text>
+  //             </Pressable>
+  //           </>
+  //         );
+  //       } else {
+  //         return (
+  //           <Pressable>
+  //             <Text>Ban bè</Text>
+  //           </Pressable>
+  //         );
+  //       }
+  //     }
+  //   } else {
+  //     return (
+  //       <Pressable onPress={handleSendRequestAddFriend(otherUser)}>
+  //         <Text>Gửi lời mời kết bạn</Text>
+  //       </Pressable>
+  //     );
+  //   }
+  // };
 
   return (
     <ScrollView>
@@ -159,15 +267,13 @@ export default function Friend({ navigation, route }) {
                   borderColor: "black",
                   borderWidth: 1,
                 }}
-                value={phoneNumber}
-                onChangeText={handlePhoneNumberChange}
+                value={phone}
+                onChangeText={setPhone} // Sử dụng onChangeText để cập nhật giá trị của phone
               />
             </View>
 
             <Pressable
-              onPress={() => {
-                navigation.navigate("AddFriend");
-              }}
+              onPress={handleSearch}
               style={{
                 width: 50,
                 height: 50,
@@ -246,6 +352,15 @@ export default function Friend({ navigation, route }) {
             Xem lời mời kết bạn đã gửi tại trang Danh bạ Zalo
           </Text>
         </View>
+
+        {/* {results.map((results, index) => {
+          return (
+            <View key={index}>
+              <Text>{results.username}</Text>
+              {checkRelationship(results)}
+            </View>
+          );
+        })} */}
       </View>
     </ScrollView>
   );

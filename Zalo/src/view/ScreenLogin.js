@@ -1,5 +1,5 @@
 // ScreenLogin.js
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   View,
   Text,
@@ -12,10 +12,12 @@ import {
 import axios from "axios";
 import { Ionicons, AntDesign, Entypo, Feather } from "@expo/vector-icons";
 import localStorage from "@react-native-async-storage/async-storage";
+import { globalContext } from "../context/globalContext";
 
 export default function ScreenLogin({ navigation, route }) {
   const { selectedLanguage } = route.params || { selectedLanguage: "vi" };
   const [data, setData] = useState({ phone: "0941432773", password: "123456" });
+  const { globalHandler } = useContext(globalContext);
   const [showPassword, setShowPassword] = useState(false);
   const [language, setLanguage] = useState(selectedLanguage);
   // State hook để theo dõi trạng thái của nội dung trong ô nhập tên
@@ -41,12 +43,13 @@ export default function ScreenLogin({ navigation, route }) {
 
     try {
       const response = await axios.post(
-        "http://192.168.1.68:5000/v1/auth/login",
+        "http://192.168.1.45:5000/v1/auth/login",
         data,
         {
           headers: { "Content-type": "application/json" },
         }
       );
+      globalHandler.setUser(response.data);
       localStorage.setItem("userData", JSON.stringify(response.data));
       navigation.navigate("Message"); //, { selectedLanguage });
     } catch (error) {

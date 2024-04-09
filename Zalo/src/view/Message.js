@@ -10,24 +10,28 @@ import {
   StyleSheet,
   TouchableWithoutFeedback,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import { MaterialIcons } from "@expo/vector-icons";
 import { FontAwesome6 } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { Feather } from "@expo/vector-icons";
+import { getRemainUserForSingleRoom } from "../utils/getRemainUserForSingleRoom";
+import { globalContext } from "../context/globalContext";
+import { api, typeHTTP } from "../utils/api";
 
 export default function Message({ navigation }) {
-  var [data, setData] = useState([]);
+  const { globalData, globalHandler } = useContext(globalContext);
   const [isModalVisible, setIsModalVisible] = useState(false);
+
   useEffect(() => {
-    fetch("https://654ad3515b38a59f28ee4286.mockapi.io/project")
-      .then((response) => response.json())
-      .then((json) => {
-        console.log(data);
-        setData(json);
-      });
-  }, []);
+    api({
+      url: `/room/get-by-user/${globalData.user?._id}`,
+      method: typeHTTP.GET,
+    }).then((res) => {
+      globalHandler.setRooms(res);
+    });
+  }, [globalData.user]);
 
   const toggleModal = () => {
     setIsModalVisible(!isModalVisible);
@@ -72,45 +76,60 @@ export default function Message({ navigation }) {
       </ImageBackground>
 
       <Pressable>
-        {data.map((item, index) => {
+        {globalData.rooms.map((room, index) => {
           return (
             <Pressable
-              onPress={() => {
-                navigation.navigate("SendMessager");
-              }}
+              onPress={() => globalHandler.setCurrentRoom(room)}
+              key={index}
               style={{
                 flexDirection: "row",
                 alignItems: "center",
                 marginTop: 20,
               }}
             >
-              <View>
-                <Image
-                  src={item.image}
-                  style={{
-                    width: 50,
-                    height: 50,
-                    marginLeft: 20,
-                    borderRadius: 90,
-                  }}
-                ></Image>
-              </View>
-
-              <View
+              <Pressable
+                onPress={() => {
+                  globalHandler.setCurrentRoom(room);
+                  navigation.navigate("SendMessager", {
+                    recipientName: getRemainUserForSingleRoom(
+                      room,
+                      globalData.user?._id
+                    ).username,
+                  });
+                }}
                 style={{
-                  width: 300,
-                  height: 60,
-                  marginLeft: 20,
-                  marginTop: 10,
+                  flexDirection: "row",
+                  alignItems: "center",
                 }}
               >
-                <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-                  {item.name}
-                </Text>
-                <Text style={{ fontSize: 20, fontWeight: 400 }}>
-                  {item.description}
-                </Text>
-              </View>
+                <View>
+                  <Image
+                    source={require("../image/hinhcanhan.png")}
+                    style={{
+                      width: 50,
+                      height: 50,
+                      marginLeft: 20,
+                      borderRadius: 90,
+                    }}
+                  ></Image>
+                </View>
+
+                <View
+                  style={{
+                    width: 300,
+                    height: 60,
+                    marginLeft: 20,
+                    justifyContent: "center",
+                  }}
+                >
+                  <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+                    {
+                      getRemainUserForSingleRoom(room, globalData.user?._id)
+                        .username
+                    }
+                  </Text>
+                </View>
+              </Pressable>
             </Pressable>
           );
         })}
