@@ -1,5 +1,5 @@
 import axios from "axios";
-const baseURL = "http://192.168.0.5:5000/v1";
+const baseURL = "http://192.168.1.68:5000/v1";
 
 export const typeHTTP = {
   POST: "post",
