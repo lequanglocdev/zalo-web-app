@@ -19,10 +19,12 @@ const socket = (server, baseURL) => {
     //   io.emit(`update_seen_${room_id}`, room);
     //   io.emit(`${user_id}`, rooms);
     // });
-
+    console.log(`Client connected: ${socket.id}`);
     socket.on("send_message", async (body) => {
       await Message.create(body);
+      // console.log("Message saved to the database:", body);
       const messages = await Message.find({ room_id: body.room_id }).lean();
+      // console.log("Sending messages to clients:", messages);
       socket.emit(body.room_id, messages);
     });
   });

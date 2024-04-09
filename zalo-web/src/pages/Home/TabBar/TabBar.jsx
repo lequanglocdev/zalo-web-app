@@ -54,7 +54,7 @@ const TabBar = ({ message, selectedTabIndex, onTabChange }) => {
         display: "flex",
         justifyContent: "space-between",
         maxHeight: "100vh",
-        width: "400px",
+        width: "100%",
         flexDirection: "column",
       }}
     >
@@ -107,7 +107,6 @@ const TabBar = ({ message, selectedTabIndex, onTabChange }) => {
         </Tabs>
 
         <Box sx={{ width: "100%" }}>
-          <TabPanel value={value} index={0}></TabPanel>
           <TabPanel value={value} index={1}>
             <ChatHome />
           </TabPanel>

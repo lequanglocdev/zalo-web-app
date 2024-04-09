@@ -6,8 +6,8 @@ import BodyPhone from "./BodyPhone";
 const ContainerPhone = () => {
   return (
     <Box>
-      <HeadingPhone />
-      <BodyPhone />
+      {/* <HeadingPhone />
+      <BodyPhone /> */}
     </Box>
   );
 };

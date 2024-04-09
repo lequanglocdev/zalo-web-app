@@ -15,21 +15,22 @@ const AddFriend = ({ handleCloseModalAddFriend }) => {
   const [results, setResult] = useState([]);
   const { data } = useContext(globalContext);
 
-  // const handleOpenModal = (event) => {
-  //   handleCloseModalAddFriend(event);
-  // };
+  const handleOpenModal = (event) => {
+    handleCloseModalAddFriend(event);
+  };
   const handleSearch = () => {
     setResult([]);
     api({ url: "/user/find", method: typeHTTP.GET }).then((res) => {
       const arr = [];
       res.forEach((item) => {
-        if (item.username.toLowerCase().includes(name.toLowerCase())) {
+        if (item.phone.includes(name.toLowerCase())) {
           arr.push(item);
         }
       });
       setResult(arr);
     });
   };
+
   const handleSendRequestAddFriend = (toUser) => {
     const body = {
       fromUser: data.user,

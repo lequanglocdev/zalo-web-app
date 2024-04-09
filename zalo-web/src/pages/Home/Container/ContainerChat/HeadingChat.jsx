@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useContext, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
@@ -7,7 +7,10 @@ import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import SearchIcon from "@mui/icons-material/Search";
 import PhoneIcon from "@mui/icons-material/Phone";
 import VideocamIcon from "@mui/icons-material/Videocam";
+import { getRemainUserForSingleRoom } from "../../../../utils/getRemainUserForSingleRoom";
+import { globalContext } from "../../../../context/globalContext";
 const HeadingChat = () => {
+  const { data, handler } = useContext(globalContext);
   return (
     <Box
       sx={{
@@ -29,12 +32,18 @@ const HeadingChat = () => {
           >
             <Avatar
               sx={{ width: 40, height: 40 }}
-              src="https://avatars.githubusercontent.com/u/107296302?v=4"
+              alt="Cindy Baker"
+              src="/static/images/avatar/3.jpg"
             ></Avatar>
           </IconButton>
         </Tooltip>
         <Box>
-          <div style={{ fontSize: "18px", fontWeight: "bold" }}>An</div>
+          <div style={{ fontSize: "18px", fontWeight: "bold" }}>
+            {
+              getRemainUserForSingleRoom(data.currentRoom, data.user?._id)
+                .username
+            }
+          </div>
           <div style={{ fontSize: "14px", color: "#7589A3" }}>
             Truy cập cách đây 20 phút trước{" "}
           </div>

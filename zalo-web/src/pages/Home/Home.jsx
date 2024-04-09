@@ -16,17 +16,18 @@ const Home = () => {
     <MuiContainer
       disableGutters
       maxWidth={false}
-      sx={{ height: "100vh", display: "flex" }}
+      // sx={{ height: "100vh", display: "flex" }}
     >
+   
       <TabBar
         message={mockData?.message}
         selectedTabIndex={selectedTabIndex}
         onTabChange={(index) => setSelectedTabIndex(index)}
       />
-      <Container
+      {/* <Container
         message={mockData?.message}
         selectedTabIndex={selectedTabIndex}
-      />
+      /> */}
     </MuiContainer>
   );
 };

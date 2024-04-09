@@ -1,4 +1,4 @@
-import Home from "./pages/Home/TabBarHome";
+import Home from "./pages/Home/Home";
 import { Route, Routes } from "react-router-dom";
 
 import { GlobalContext, globalContext } from "./context/globalContext";

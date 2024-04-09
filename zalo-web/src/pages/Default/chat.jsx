@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from "react";
 import { api, typeHTTP } from "../../utils/api";
 import { globalContext } from "../../context/globalContext";
-import { getRemainUserForSingleRoom } from "./utils";
+import { getRemainUserForSingleRoom } from "../../utils/getRemainUserForSingleRoom";
 import MessageArea from "./messageArea";
 
 const ChatPage = () => {

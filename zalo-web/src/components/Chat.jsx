@@ -1,109 +1,62 @@
+import React, { useContext, useEffect } from "react";
+import { api, typeHTTP } from "../utils/api";
+import { globalContext } from "../context/globalContext";
+import { getRemainUserForSingleRoom } from "../utils/getRemainUserForSingleRoom";
 import Box from "@mui/material/Box";
-import * as React from "react";
-
-import { styled } from "@mui/material/styles";
-import Badge from "@mui/material/Badge";
-import Avatar from "@mui/material/Avatar";
-import Stack from "@mui/material/Stack";
-import { faker } from "@faker-js/faker";
 import Typography from "@mui/material/Typography";
-import { ChatList } from "../apis/mock-data";
-const StyledBadge = styled(Badge)(({ theme }) => ({
-  "& .MuiBadge-badge": {
-    backgroundColor: "#44b700",
-    color: "#44b700",
-    boxShadow: `0 0 0 2px ${theme.palette.background.paper}`,
-    "&::after": {
-      position: "absolute",
-      top: 0,
-      left: 0,
-      width: "100%",
-      height: "100%",
-      borderRadius: "50%",
-      animation: "ripple 1.2s infinite ease-in-out",
-      border: "1px solid currentColor",
-    },
-  },
-  "@keyframes ripple": {
-    "0%": {
-      transform: "scale(.8)",
-      opacity: 1,
-    },
-    "100%": {
-      transform: "scale(2.4)",
-      opacity: 0,
-    },
-  },
-}));
+import Avatar from "@mui/material/Avatar";
 
-const ChatElement = ({ id, name, img, msg, time, unread, online }) => {
+const Chat = () => {
+  const { data, handler } = useContext(globalContext);
+
+  useEffect(() => {
+    api({
+      url: `/room/get-by-user/${data.user?._id}`,
+      method: typeHTTP.GET,
+    }).then((res) => {
+      handler.setRooms(res);
+    });
+  }, [data.user]);
+
   return (
     <Box
       sx={{
         width: "100%",
         height: "60px",
         borderRadius: 1,
+        borderRight:"1px so"
       }}
-      p={1}
     >
-      <Stack direction="row" alignItems="center" justifyContent="space-between">
-        <Stack direction="row" spacing={2} sx={{ height: "100vh",cursor:"pointer" }}>
-          {online ? (
-            <StyledBadge
-              overlap="circular"
-              anchorOrigin={{ vertical: "bottom", horizontal: "right" }}
-              variant="dot"
-            >
-              <Avatar src={img} />
-            </StyledBadge>
-          ) : (
-            <Avatar src={img} />
-          )}
-
-          <Stack spacing={0.3}>
-            <Typography variant="subtitle2">{name}</Typography>
-            <Typography variant="caption">{msg}</Typography>
-          </Stack>
-        </Stack>
-        <Stack spacing={2} alignItems="center">
-          <Typography sx={{ fontWeight: 600 }} variant="caption">
-            {time}
-          </Typography>
-          <Badge color="primary" badgeContent={unread}></Badge>
-        </Stack>
-      </Stack>
+      <Box>
+        <Typography
+          variant="subtitle2"
+          sx={{ color: "#3498db", fontSize: "14px", fontWeight: 600 }}
+          p={2}
+        >
+          Tin nhắn của {data.user?.username}
+        </Typography>
+      </Box>
+      <Box>
+        {data.rooms.map((room, index) => (
+          <Box
+            onClick={() => handler.setCurrentRoom(room)}
+            key={index}
+            style={{
+              display: "flex",
+              alignItems: "center",
+              paddingLeft: "10px",
+              gap: "10px",
+              cursor: "pointer",
+            }}
+          >
+            <Avatar alt="Cindy Baker" src="/static/images/avatar/3.jpg" />
+            <Typography variant="span">
+              {getRemainUserForSingleRoom(room, data.user?._id).username}
+            </Typography>
+          </Box>
+        ))}
+      </Box>
     </Box>
-  );
-};
-
-const Chat = () => {
-  return (
-    <Stack direction="column" sx={{flexGrow:1, overflow: "scroll", height: "100%" }}>
-      <Stack spacing={1}>
-        <Typography
-          variant="subtitle2"
-          sx={{ color: "#3498db", fontSize: "14px", fontWeight: 600 }}
-          p={2}
-        >
-          Tin chưa đọc
-        </Typography>
-        {ChatList.filter((el) => el.pinned).map((el) => {
-          return <ChatElement key={""} {...el} />;
-        })}
-      </Stack>
-      <Stack spacing={1}>
-        <Typography
-          variant="subtitle2"
-          sx={{ color: "#3498db", fontSize: "14px", fontWeight: 600 }}
-          p={2}
-        >
-          Tất cả tin nhắn
-        </Typography>
-        {ChatList.filter((el) => !el.pinned).map((el) => {
-          return <ChatElement key={""} {...el} />;
-        })}
-      </Stack>
-    </Stack>
   );
 };
 
