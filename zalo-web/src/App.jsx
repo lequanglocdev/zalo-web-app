@@ -25,8 +25,6 @@ function App() {
       <Route path="/register" element={<Register />} />
       <Route path="/verification" element={<VerificationPage />} />
       <Route path="home" element={<Home />} />
-      {/* <Route path="/add-friend" element={<Addfriend />} /> */}
-      <Route path="/chat" element={<ChatPage />} />
     </Routes>
   );
 }

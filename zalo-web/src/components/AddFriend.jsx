@@ -11,10 +11,10 @@ import { api, typeHTTP } from "../utils/api";
 
 const style = {};
 const AddFriend = ({ handleCloseModalAddFriend }) => {
-  const [name, setName] = useState("");
+  const [phone, setPhone] = useState("");
   const [results, setResult] = useState([]);
   const { data } = useContext(globalContext);
-
+  const [openModal, setOpenModal] = React.useState(false);
   const handleOpenModal = (event) => {
     handleCloseModalAddFriend(event);
   };
@@ -122,15 +122,14 @@ const AddFriend = ({ handleCloseModalAddFriend }) => {
         top: "50%",
         left: "50%",
         transform: "translate(-50%, -50%)",
-        width: 400,
+        width: "490px",
+        height: "600px",
         bgcolor: "#fff",
         border: "1px solid #333",
         borderRadius: "6px",
         padding: "10px",
-
         display: "flex",
         flexDirection: "column",
-        height: "500px",
       }}
     >
       <Box
@@ -142,7 +141,9 @@ const AddFriend = ({ handleCloseModalAddFriend }) => {
         }}
       >
         <Typography>Thêm bạn</Typography>
-        <CloseIcon sx={{ cursor: "pointer" }} />
+        <Button onClick={handleOpenModal}>
+          <CloseIcon sx={{ color: "#333" }} />
+        </Button>
       </Box>
       <Box
         sx={{
@@ -153,11 +154,11 @@ const AddFriend = ({ handleCloseModalAddFriend }) => {
           height: "10%",
         }}
       >
-        <Typography>Nhập tên</Typography>
+        <Typography>Nhập số điện thoại</Typography>
         <TextField
           variant="filled"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
+          value={phone}
+          onChange={(e) => setPhone(e.target.value)}
         />
       </Box>
       <Box
@@ -192,7 +193,11 @@ const AddFriend = ({ handleCloseModalAddFriend }) => {
           alignItems: "flex-end",
         }}
       >
-        <Button variant="text" sx={{ marginRight: "20px" }}>
+        <Button
+          variant="text"
+          sx={{ marginRight: "20px" }}
+          onClick={handleOpenModal}
+        >
           Hủy
         </Button>
         <Button variant="contained" onClick={() => handleSearch()}>

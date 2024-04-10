@@ -18,7 +18,6 @@ const Home = () => {
       maxWidth={false}
       // sx={{ height: "100vh", display: "flex" }}
     >
-   
       <TabBar
         message={mockData?.message}
         selectedTabIndex={selectedTabIndex}
