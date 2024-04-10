@@ -173,9 +173,9 @@ export default function SendMessager({ navigation, route }) {
             flexDirection: "row",
           }}
         >
-          <Pressable style={{ marginLeft: 10, marginTop: 10 }}>
+          {/* <Pressable style={{ marginLeft: 10, marginTop: 10 }}>
             <Feather name="smile" size={24} color="#808080" />
-          </Pressable>
+          </Pressable> */}
           <TextInput
             ref={textInputRef}
             placeholder="Tin nhắn"
