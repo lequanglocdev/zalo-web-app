@@ -24,7 +24,7 @@ const Chat = () => {
         width: "100%",
         height: "60px",
         borderRadius: 1,
-        borderRight:"1px so"
+        borderRight: "1px so",
       }}
     >
       <Box>
@@ -51,7 +51,9 @@ const Chat = () => {
           >
             <Avatar alt="Cindy Baker" src="/static/images/avatar/3.jpg" />
             <Typography variant="span">
-              {getRemainUserForSingleRoom(room, data.user?._id).username}
+              {room.type === "single"
+                ? getRemainUserForSingleRoom(room, data.user?._id)?.username
+                : room.name}
             </Typography>
           </Box>
         ))}

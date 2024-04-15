@@ -23,6 +23,9 @@ const BodyChat = () => {
   const { data } = useContext(globalContext);
   const [messages, setMessages] = useState([]);
   const chatContainerRef = useRef(null);
+  const [files, setFiles] = useState([]);
+  const fileRef = useRef();
+
   useEffect(() => {
     api({
       method: typeHTTP.GET,
@@ -52,8 +55,7 @@ const BodyChat = () => {
   };
   const handleKeyPress = (event) => {
     if (event.key === "Enter" && !event.shiftKey) {
-      // event.preventDefault(); // Ngăn ngừa việc xuống dòng khi ấn Enter
-      handleSendMessage(); // Gửi tin nhắn khi ấn Enter
+      handleSendMessage();
     }
   };
   useEffect(() => {
@@ -62,12 +64,40 @@ const BodyChat = () => {
         chatContainerRef.current.scrollHeight;
     }
   }, [messages]);
+
+  const handleSendFile = (e) => {
+    const file = e.target.files[0];
+    const formData = new FormData();
+    const types = ["image", "video"];
+    formData.append("room_id", data.currentRoom?._id);
+    formData.append("information", file);
+    formData.append(
+      "typeMessage",
+      types.includes(file.type.split("/")[0]) ? file.type.split("/")[0] : "file"
+    );
+    formData.append("user_id", data.user?._id);
+    formData.append("disabled", false);
+    api({
+      url: "/message/send-file",
+      method: typeHTTP.POST,
+      body: formData,
+    }).then((res) => {
+      socket.emit("send_message_with_file", res);
+    });
+  };
+
   return (
     <Box
       sx={{
         height: heightBody,
       }}
     >
+      <input
+        type="file"
+        ref={fileRef}
+        onChange={(e) => handleSendFile(e)}
+        style={{ display: "none" }}
+      />
       <Box
         sx={{
           height: heightChat,
@@ -108,7 +138,40 @@ const BodyChat = () => {
                   variant="body2"
                   color={item.user_id === data.user._id ? "#ecf0f1" : "#34495e"}
                 >
-                  {item.information}
+                  {item.typeMessage === "text" ? (
+                    item.information
+                  ) : item.information.url.includes("/image___") ? (
+                    <img src={item.information.url} />
+                  ) : item.information.url.includes("/video___") ? (
+                    <video src={item.information.url} />
+                  ) : (
+                    <a href={item.information.url}>
+                      <div
+                        style={{
+                          display: "flex",
+                          alignItems: "center",
+                          gap: 10,
+                        }}
+                      >
+                        <img
+                          style={{ width: "80px" }}
+                          src={`${
+                            item.information.url
+                              .split(".ap-southeast-1.amazonaws.com/")[1]
+                              .split("___")[0]
+                          }.png`}
+                        />
+                        <div
+                          style={{ display: "flex", flexDirection: "column" }}
+                        >
+                          <span>{item.information.name}</span>
+                          <span>
+                            {(item.information.size / 1024).toFixed(2)} MB
+                          </span>
+                        </div>
+                      </div>
+                    </a>
+                  )}
                 </Typography>
               </Box>
             </Stack>
@@ -128,8 +191,11 @@ const BodyChat = () => {
             padding: "0 18px",
           }}
         >
-          <FilterSharpIcon sx={{ margin: "20px" }} />
-          <AttachFileSharpIcon />
+          <FilterSharpIcon
+            onClick={() => fileRef.current.click()}
+            sx={{ margin: "20px" }}
+          />
+          <AttachFileSharpIcon onClick={() => fileRef.current.click()} />
         </Box>
         <Box
           sx={{
@@ -176,10 +242,12 @@ const BodyChat = () => {
                 </Box>
               ),
             }}
-            sx={{
-              // maxHeight: "80px", // Thay đổi giá trị tùy theo nhu cầu
-              // overflowY: "auto", // Thiết lập cuộn dọc khi văn bản vượt quá chiều cao
-            }}
+            sx={
+              {
+                // maxHeight: "80px", // Thay đổi giá trị tùy theo nhu cầu
+                // overflowY: "auto", // Thiết lập cuộn dọc khi văn bản vượt quá chiều cao
+              }
+            }
           />
         </Box>
       </Box>

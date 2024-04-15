@@ -39,13 +39,15 @@ const HeadingChat = () => {
         </Tooltip>
         <Box>
           <div style={{ fontSize: "18px", fontWeight: "bold" }}>
-            {
-              getRemainUserForSingleRoom(data.currentRoom, data.user?._id)
-                .username
-            }
+            {data.currentRoom?.type === "single"
+              ? getRemainUserForSingleRoom(data.currentRoom, data.user?._id)
+                  ?.username
+              : data.currentRoom.name}
           </div>
           <div style={{ fontSize: "14px", color: "#7589A3" }}>
-            Truy cập cách đây 20 phút trước{" "}
+            {data.currentRoom?.type === "group"
+              ? `${data.currentRoom?.users.length} thanh vien`
+              : "Truy cập cách đây 20 phút trước"}
           </div>
         </Box>
       </Box>

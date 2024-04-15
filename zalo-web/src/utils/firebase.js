@@ -2,13 +2,13 @@ import { initializeApp } from "firebase/app";
 import { getAuth } from "firebase/auth";
 
 const firebaseConfig = {
-  apiKey: "AIzaSyCb226Jd6q59rgwdkku8m8JezAIK0VagHc",
-  authDomain: "appzalo-103be.firebaseapp.com",
-  projectId: "appzalo-103be",
-  storageBucket: "appzalo-103be.appspot.com",
-  messagingSenderId: "246019057439",
-  appId: "1:246019057439:web:dd4335611bb359cac4f22a",
-  measurementId: "G-786ESNVEW9",
+  apiKey: "AIzaSyA_qNx_vGl9JzAwwRjpU4XKAlDJxQR7jcM",
+  authDomain: "zalo-e4028.firebaseapp.com",
+  projectId: "zalo-e4028",
+  storageBucket: "zalo-e4028.appspot.com",
+  messagingSenderId: "432621677428",
+  appId: "1:432621677428:web:dc14ff6aa4e2c5c2fada21",
+  measurementId: "G-8KWPYKW9SP",
 };
 
 // Initialize Firebase

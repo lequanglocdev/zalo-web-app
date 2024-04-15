@@ -13,6 +13,9 @@ var RoomSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
+    image: {
+      type: String,
+    },
   },
   { timestamps: true }
 );

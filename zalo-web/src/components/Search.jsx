@@ -12,6 +12,7 @@ import Modal from "@mui/material/Modal";
 
 import AddFriend from "./AddFriend";
 import { Link } from "react-router-dom";
+import AddGroup from "./AddGroup";
 
 const SearchStyle = styled("div")(({ theme }) => ({
   position: "relative",
@@ -63,10 +64,17 @@ const StyledInputBase = styled(InputBase)(({ theme }) => ({
 
 const Search = () => {
   const [openModalAddFriend, setOpenModalAddFriend] = React.useState(false);
+  const [openModalAddGroup, setOpenModalAddGroup] = React.useState(false);
   const handleOpenModalAddFriend = () => setOpenModalAddFriend(true);
+  const handleOpenModalAddGroup = () => setOpenModalAddGroup(true);
+
   const handleCloseModalAddFriend = (event) => {
     event.stopPropagation();
     setOpenModalAddFriend(false);
+  };
+  const handleCloseModalAddGroup = (event) => {
+    event.stopPropagation();
+    setOpenModalAddGroup(false);
   };
   return (
     <Box>
@@ -103,17 +111,16 @@ const Search = () => {
               />
             </Modal>
           </Tooltip>
+
           <Tooltip title="Tạo nhóm chat">
             <IconButton>
-              <GroupAddIcon />
+              <GroupAddIcon onClick={handleOpenModalAddGroup} />
             </IconButton>
             <Modal
-              open={openModalAddFriend}
-              onClose={handleCloseModalAddFriend}
+              open={openModalAddGroup}
+              onClose={handleCloseModalAddGroup}
             >
-              <AddFriend
-                handleCloseModalAddFriend={handleCloseModalAddFriend}
-              />
+              <AddGroup handleCloseModalAddGroup={handleCloseModalAddGroup} />
             </Modal>
           </Tooltip>
         </Box>

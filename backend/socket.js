@@ -20,6 +20,10 @@ const socket = (server, baseURL) => {
     //   io.emit(`${user_id}`, rooms);
     // });
 
+    socket.on("send_message_with_file", async (body) => {
+      io.emit(body.room_id, body);
+    });
+
     socket.on("send_message", async (body) => {
       await Message.create(body);
       const messages = await Message.find({ room_id: body.room_id }).lean();

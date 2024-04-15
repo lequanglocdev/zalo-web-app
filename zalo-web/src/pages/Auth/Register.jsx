@@ -57,33 +57,33 @@ const Register = () => {
 
     fields.forEach((item) => {
       switch (item[0]) {
-      case "password":
-        if (item[1].length < 6) {
-          setInvalidFiels((prev) => [
-            ...prev,
-            {
-              name: item[0],
-              message: "Mật khẩu phải có tối thiểu 6 ký tự",
-            },
-          ]);
-          invalids++;
-        }
-        break;
-      case "phone":
-        if (!+item[1] || item[1].length < 9 || item[1].length > 10) {
-          setInvalidFiels((prev) => [
-            ...prev,
-            {
-              name: item[0],
-              message: "Số điện thoại không hợp lệ",
-            },
-          ]);
-          invalids++;
-        }
-        break;
+        case "password":
+          if (item[1].length < 6) {
+            setInvalidFiels((prev) => [
+              ...prev,
+              {
+                name: item[0],
+                message: "Mật khẩu phải có tối thiểu 6 ký tự",
+              },
+            ]);
+            invalids++;
+          }
+          break;
+        case "phone":
+          if (!+item[1] || item[1].length < 9 || item[1].length > 10) {
+            setInvalidFiels((prev) => [
+              ...prev,
+              {
+                name: item[0],
+                message: "Số điện thoại không hợp lệ",
+              },
+            ]);
+            invalids++;
+          }
+          break;
 
-      default:
-        break;
+        default:
+          break;
       }
     });
     return invalids;

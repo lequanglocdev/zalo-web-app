@@ -11,7 +11,7 @@ export const typeHTTP = {
 
 export const api = ({ method, url, body, sendToken }) =>
   new Promise((resolve, reject) => {
-    const headers = { "Content-type": "application/json" };
+    const headers = {};
 
     if (sendToken) {
       const token = localStorage.getItem("token");

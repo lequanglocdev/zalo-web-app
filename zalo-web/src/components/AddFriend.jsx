@@ -18,12 +18,13 @@ const AddFriend = ({ handleCloseModalAddFriend }) => {
   const handleOpenModal = (event) => {
     handleCloseModalAddFriend(event);
   };
+
   const handleSearch = () => {
     setResult([]);
     api({ url: "/user/find", method: typeHTTP.GET }).then((res) => {
       const arr = [];
       res.forEach((item) => {
-        if (item.phone.includes(name.toLowerCase())) {
+        if (item.phone.includes(phone.toLowerCase())) {
           arr.push(item);
         }
       });

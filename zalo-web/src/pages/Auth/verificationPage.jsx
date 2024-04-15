@@ -16,20 +16,38 @@ const VerificationPage = () => {
   const [verificationMessage, setVerificationMessage] = useState("");
   const [authenticated, setAuthenticated] = useState(false);
 
+  // useEffect(() => {
+  //   const recaptcha = new RecaptchaVerifier(auth, "recaptcha", {});
+  //   // formatPhoneByFireBase(data.user?.phone)
+  //   signInWithPhoneNumber(
+  //     auth,
+  //     formatPhoneByFireBase(data.user?.phone),
+  //     recaptcha
+  //   )
+  //     .then((confirmationResult) => {
+  //       setConfirmation(confirmationResult);
+  //     })
+  //     .catch((error) => {
+  //       console.error(" sendingError SMS:", error);
+  //     });
+  // }, [data.user]);
+
   useEffect(() => {
-    const recaptcha = new RecaptchaVerifier(auth, "recaptcha", {});
-    console.log(formatPhoneByFireBase(data.user.phone));
-    signInWithPhoneNumber(
-      auth,
-      formatPhoneByFireBase(data.user.phone),
-      recaptcha
-    )
-      .then((confirmationResult) => {
-        setConfirmation(confirmationResult);
-      })
-      .catch((error) => {
-        console.error(" sendingError SMS:", error);
-      });
+    if (data?.user?.phone) {
+      const recaptcha = new RecaptchaVerifier(auth, "recaptcha", {});
+      // console.log(formatPhoneByFireBase("phone", data.user.phone));
+      signInWithPhoneNumber(
+        auth,
+        formatPhoneByFireBase(data.user.phone),
+        recaptcha
+      )
+        .then((confirmationResult) => {
+          setConfirmation(confirmationResult);
+        })
+        .catch((error) => {
+          console.error(" sendingError SMS:", error);
+        });
+    }
   }, [data.user]);
 
   const handleSubmitOtp = () => {
@@ -39,20 +57,19 @@ const VerificationPage = () => {
         api({
           method: typeHTTP.POST,
           url: "/user/verification",
-          body: { phone: data.user.phone },
-        }).then(res =>{
-         setVerificationMessage("Xác thực thành công");
-         console.log(res);
-         setAuthenticated(true);
-        
+          body: { phone: data.user?.phone },
+        }).then((res) => {
+          setVerificationMessage("Xác thực thành công");
+          console.log(res);
+          setAuthenticated(true);
         });
       })
       .catch((error) => {
         console.error("Error confirming SMS code:", error);
-       setVerificationMessage("Xác thực không thành công ");
+        setVerificationMessage("Xác thực không thành công ");
       });
   };
-  
+
   return (
     <Stack
       sx={{
@@ -70,12 +87,11 @@ const VerificationPage = () => {
           display: "flex",
           alignItems: "center",
           flexDirection: "column",
-          backgroundColor: "white"
+          backgroundColor: "white",
         }}
       >
         <MarkEmailReadIcon sx={{ fontSize: "80px", color: "#3498db" }} />
-        <Typography variant="span" sx={{ color: "#3498db" }}>
-        </Typography>
+        <Typography variant="span" sx={{ color: "#3498db" }}></Typography>
         <Box sx={{ marginTop: "20px" }}>
           <TextField
             sx={{ width: "300px", fontSize: "20px" }}
@@ -89,7 +105,8 @@ const VerificationPage = () => {
         <Button
           variant="contained"
           sx={{ marginTop: "10px", width: "300px" }}
-          onClick={() => { handleSubmitOtp()
+          onClick={() => {
+            handleSubmitOtp();
           }}
         >
           Submit
@@ -97,11 +114,14 @@ const VerificationPage = () => {
         <Typography variant="span" sx={{ color: "red", marginTop: "10px" }}>
           {verificationMessage}
         </Typography>
-        {authenticated && (
-          <Button variant="contained" onClick={() => window.location.href="/"}>
+        {/* {authenticated && (
+          <Button
+            variant="contained"
+            onClick={() => (window.location.href = "/")}
+          >
             Đăng Nhập
           </Button>
-        )}
+        )} */}
       </Box>
     </Stack>
   );
