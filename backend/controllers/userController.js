@@ -6,7 +6,7 @@ const Room = require("../models/Room");
 const verificationUpdate = async (req, res) => {
   const phone = req.body.phone;
   if (!phone)
-    return res.sendStatus(401).json({ error: ["Không tìm thấy SDT - 01"] });
+    return res.sendaStatus(401).json({ error: ["Không tìm thấy SDT - 01"] });
 
   const user = await User.findOne({ phone: phone }).lean();
   if (!user)
