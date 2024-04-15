@@ -1,3 +1,4 @@
+import React, { useEffect, useState, useContext } from "react";
 import {
   View,
   ScrollView,
@@ -6,16 +7,17 @@ import {
   Image,
   Text,
 } from "react-native";
-import React, { useEffect, useState, useContext } from "react";
-import { Ionicons, AntDesign, MaterialIcons } from "@expo/vector-icons";
+import { Ionicons, AntDesign } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { globalContext } from "../context/globalContext";
 import { api, typeHTTP } from "../utils/api";
+import Toast from "react-native-toast-message";
 
 export default function AddFriend({ navigation, route }) {
   const [userData, setUserData] = useState({ username: "" });
   const [results, setResult] = useState([]);
-  const { globalData, setGlobalData } = useContext(globalContext); // Thêm setGlobalData để cập nhật globalData
+  const [sentRequests, setSentRequests] = useState([]);
+  const { globalData, setglobalData } = useContext(globalContext);
 
   useEffect(() => {
     if (route.params && route.params.results) {
@@ -38,18 +40,9 @@ export default function AddFriend({ navigation, route }) {
     fetchUserData();
   }, []);
 
-  const handleSendRequestAddFriend = (toUser) => {
-    const body = {
-      fromUser: globalData.user,
-      toUser,
-    };
-    api({
-      body: body,
-      url: "/user/send-request-add-friend",
-      method: typeHTTP.POST,
-    }).then((res) => {
-      console.log(res);
-    });
+  const updateResultsAfterAction = (userId) => {
+    const updatedResults = results.filter((user) => user._id !== userId);
+    setResult(updatedResults);
   };
 
   const handleRefuse = (toUser) => {
@@ -61,11 +54,21 @@ export default function AddFriend({ navigation, route }) {
       body: body,
       url: "/user/refuse-request",
       method: typeHTTP.POST,
-    }).then((res) => {
-      console.log(res);
-    });
+    })
+      .then((res) => {
+        console.log(res);
+        Toast.show({
+          type: "success",
+          text1: "Từ chối lời mời kết bạn thành công",
+        });
+        updateResultsAfterAction(toUser._id);
+      })
+      .catch((error) => {
+        console.error("Error refusing friend request:", error);
+      });
   };
 
+  // Trong hàm handleAccept
   const handleAccept = (toUser) => {
     const body = {
       fromUser: globalData.user,
@@ -75,124 +78,164 @@ export default function AddFriend({ navigation, route }) {
       body: body,
       url: "/user/accept-request",
       method: typeHTTP.POST,
-    }).then((res) => {
-      console.log(res);
-    });
+    })
+      .then((res) => {
+        console.log(res);
+        Toast.show({
+          type: "success",
+          text1: "Chấp nhận lời mời kết bạn thành công",
+        });
+        // Cập nhật trạng thái của người dùng sau khi chấp nhận lời mời
+        const updatedUser = { ...globalData.user };
+        updatedUser.friends.push({ friendId: toUser._id, status: "friend" });
+        const updatedGlobalData = { ...globalData, user: updatedUser };
+        setglobalData(updatedGlobalData);
+        updateResultsAfterAction(toUser._id);
+      })
+      .catch((error) => {
+        console.error("Error accepting friend request:", error);
+      });
+  };
+
+  const handleSendRequestAddFriend = (toUser) => {
+    const body = {
+      fromUser: globalData.user,
+      toUser,
+    };
+    api({
+      body: body,
+      url: "/user/send-request-add-friend",
+      method: typeHTTP.POST,
+    })
+      .then((res) => {
+        console.log(res);
+        setSentRequests([...sentRequests, toUser._id]);
+      })
+      .catch((error) => {
+        console.error("Error sending friend request:", error);
+      });
   };
 
   const checkRelationship = (otherUser) => {
-    console.log(otherUser.friends, globalData.user.friends);
-    if (
-      globalData.user?.friends
-        .map((item) => item.friendId)
-        .includes(otherUser._id)
-    ) {
-      const friend = globalData.user.friends.filter(
-        (item) => item.friendId === otherUser._id
-      )[0];
-      if (friend.status === "pending") {
-        return (
-          <Pressable>
-            <Text>Đã gửi lời mời kết bạn</Text>
-          </Pressable>
-        );
-      } else {
-        if (friend.status === "request") {
-          return (
-            <>
-              <Pressable
-                onPress={() => handleAccept(otherUser)}
-                style={{
-                  width: 100,
-                  height: 55,
-                  backgroundColor: "#00BFFF",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: 90,
-                  marginLeft: 10,
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: 20,
-                    fontWeight: 400,
-                  }}
-                >
-                  Chấp Nhận
-                </Text>
-              </Pressable>
-              <Pressable
-                onPress={() => handleRefuse(otherUser)}
-                style={{
-                  width: 100,
-                  height: 55,
-                  backgroundColor: "#00BFFF",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: 90,
-                  marginLeft: 10,
-                }}
-              >
-                <Text
-                  style={{
-                    fontSize: 20,
-                    fontWeight: 400,
-                  }}
-                >
-                  Từ Chối
-                </Text>
-              </Pressable>
-            </>
-          );
-        } else {
-          return (
-            <Pressable
-              style={{
-                width: 100,
-                height: 55,
-                backgroundColor: "#00BFFF",
-                alignItems: "center",
-                justifyContent: "center",
-                borderRadius: 90,
-                marginLeft: 10,
-              }}
-            >
-              <Text
-                style={{
-                  fontSize: 20,
-                  fontWeight: 400,
-                }}
-              >
-                Ban bè
-              </Text>
-            </Pressable>
-          );
-        }
-      }
-    } else {
+    if (sentRequests.includes(otherUser._id)) {
       return (
-        <Pressable
-          onPress={() => handleSendRequestAddFriend(otherUser)}
-          style={{
-            width: 200,
-            height: 55,
-            backgroundColor: "#00BFFF",
-            alignItems: "center",
-            justifyContent: "center",
-            borderRadius: 90,
-            marginLeft: 10,
-          }}
-        >
-          <Text
-            style={{
-              fontSize: 20,
-              fontWeight: 400,
-            }}
-          >
-            Gửi lời mời kết bạn
-          </Text>
+        <Pressable>
+          <Text>Đã gửi lời mời kết bạn</Text>
         </Pressable>
       );
+    } else {
+      if (
+        globalData.user?.friends
+          .map((item) => item.friendId)
+          .includes(otherUser._id)
+      ) {
+        const friend = globalData.user.friends.filter(
+          (item) => item.friendId === otherUser._id
+        )[0];
+        if (friend.status === "pending") {
+          return (
+            <Pressable>
+              <Text>Đã gửi lời mời kết bạn</Text>
+            </Pressable>
+          );
+        } else {
+          if (friend.status === "request") {
+            return (
+              <>
+                <Pressable
+                  onPress={() => handleAccept(otherUser)}
+                  style={{
+                    width: 100,
+                    height: 55,
+                    backgroundColor: "#00BFFF",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: 90,
+                    marginLeft: 10,
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      fontWeight: 400,
+                    }}
+                  >
+                    Chấp Nhận
+                  </Text>
+                </Pressable>
+                <Pressable
+                  onPress={() => handleRefuse(otherUser)}
+                  style={{
+                    width: 100,
+                    height: 55,
+                    backgroundColor: "#00BFFF",
+                    alignItems: "center",
+                    justifyContent: "center",
+                    borderRadius: 90,
+                    marginLeft: 10,
+                  }}
+                >
+                  <Text
+                    style={{
+                      fontSize: 20,
+                      fontWeight: 400,
+                    }}
+                  >
+                    Từ Chối
+                  </Text>
+                </Pressable>
+              </>
+            );
+          } else {
+            return (
+              <Pressable
+                style={{
+                  width: 100,
+                  height: 55,
+                  backgroundColor: "#00BFFF",
+                  alignItems: "center",
+                  justifyContent: "center",
+                  borderRadius: 90,
+                  marginLeft: 10,
+                }}
+              >
+                <Text
+                  style={{
+                    fontSize: 20,
+                    fontWeight: 400,
+                  }}
+                >
+                  Bạn bè
+                </Text>
+              </Pressable>
+            );
+          }
+        }
+      } else {
+        return (
+          <Pressable
+            onPress={() => handleSendRequestAddFriend(otherUser)}
+            style={{
+              width: 200,
+              height: 55,
+              backgroundColor: "#00BFFF",
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: 90,
+              marginLeft: 10,
+            }}
+          >
+            <Text
+              style={{
+                fontSize: 20,
+                fontWeight: 400,
+              }}
+            >
+              Gửi lời mời kết bạn
+            </Text>
+          </Pressable>
+        );
+      }
     }
   };
 
@@ -242,7 +285,7 @@ export default function AddFriend({ navigation, route }) {
                 height: 100,
                 borderRadius: 90,
               }}
-            ></Image>
+            />
           </View>
         </View>
       </View>
@@ -263,49 +306,24 @@ export default function AddFriend({ navigation, route }) {
         style={{
           alignItems: "center",
           justifyContent: "center",
-          marginTop: 20,
           flexDirection: "row",
         }}
       >
         {results.map((result, index) => (
           <View
             key={index}
-            // onPress={() => {
-            //   navigation.navigate("AddFriend2");
-            // }}
             style={{
               width: 420,
-              height: 150,
+              height: 100,
               backgroundColor: "white",
               alignItems: "center",
               justifyContent: "center",
               marginLeft: 10,
             }}
           >
-            <Pressable
-              onPress={() => {
-                navigation.navigate("SendMessager");
-              }}
-              style={{
-                width: 300,
-                height: 55,
-                backgroundColor: "#87CEFA",
-                alignItems: "center",
-                justifyContent: "center",
-                borderRadius: 90,
-                flexDirection: "row",
-              }}
-            >
-              <AntDesign name="message1" size={24} color="blue" />
-              <Text style={{ marginLeft: 15, color: "blue", fontWeight: 700 }}>
-                Nhắn tin
-              </Text>
-            </Pressable>
-            {/* <MaterialIcons name="person-add-alt" size={34} color="black" /> */}
             <View
               style={{
                 flexDirection: "row",
-                marginTop: 10,
               }}
             >
               {checkRelationship(result)}
@@ -313,6 +331,7 @@ export default function AddFriend({ navigation, route }) {
           </View>
         ))}
       </View>
+      <Toast ref={(ref) => Toast.setRef(ref)} />
     </ScrollView>
   );
 }

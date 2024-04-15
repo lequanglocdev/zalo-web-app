@@ -15,7 +15,7 @@ import { FontAwesome } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
 
-export default function Phonebook() {
+export default function Phonebook({ navigation }) {
   const [activeForm, setActiveForm] = useState("friend");
   const [activeForm1, setActiveForm1] = useState("all");
   // Thêm state mới để lưu trữ kí tự hiện tại được chọn
@@ -57,7 +57,7 @@ export default function Phonebook() {
           formToShow1 === "recent") && (
           <View>
             {/* Hiển thị nội dung của tab "Bạn bè" và "Tất cả" */}
-            <View style={{ flexDirection: "row" }}>
+            <Pressable style={{ flexDirection: "row" }}>
               <View
                 style={{
                   width: 37,
@@ -84,7 +84,7 @@ export default function Phonebook() {
                   Lời mời kết bạn
                 </Text>
               </View>
-            </View>
+            </Pressable>
             <View style={{ flexDirection: "row" }}>
               <View
                 style={{

@@ -23,7 +23,6 @@ import {
   Dateofbirth,
   DataUser,
   AddFriend,
-  AddFriend2,
 } from "./src/view";
 import { GlobalContext } from "./src/context/globalContext";
 
@@ -171,7 +170,6 @@ export default function App() {
           <Stack.Screen name="Avatar" component={Avatar} />
           <Stack.Screen name="DataUser" component={DataUser} />
           <Stack.Screen name="AddFriend" component={AddFriend} />
-          <Stack.Screen name="AddFriend2" component={AddFriend2} />
         </Stack.Navigator>
       </NavigationContainer>
     </GlobalContext>

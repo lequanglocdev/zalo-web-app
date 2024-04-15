@@ -258,7 +258,6 @@ export default function CountryListScreen({ navigation }) {
   const [filteredCountries, setFilteredCountries] = useState(countriesData);
 
   const selectCountry = (country) => {
-    // Truyền dữ liệu về quốc gia đã chọn vào màn hình trước đó
     navigation.navigate("Friend", { selectedCountry: country });
   };
 

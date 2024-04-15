@@ -1,5 +1,12 @@
 import React, { useState, useEffect, useContext } from "react";
-import { View, Text, ScrollView, Pressable, TextInput } from "react-native";
+import {
+  View,
+  Text,
+  ScrollView,
+  Pressable,
+  TextInput,
+  Alert,
+} from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -37,6 +44,15 @@ export default function Friend({ navigation, route }) {
   const [results, setResult] = useState([]);
 
   const handleSearch = () => {
+    if (!selectedCountry) {
+      Alert.alert(
+        "Thông báo",
+        "Vui lòng chọn mã vùng trước khi tìm kiếm.",
+        [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+        { cancelable: false }
+      );
+      return;
+    }
     setResult([]);
     api({ url: "/user/find", method: typeHTTP.GET }).then((res) => {
       const arr = [];
