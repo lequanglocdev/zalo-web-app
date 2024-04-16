@@ -76,7 +76,12 @@ export default function User({ navigation }) {
           <View
             style={{ flexDirection: "row", justifyContent: "space-between" }}
           >
-            <View style={{ flexDirection: "row" }}>
+            <Pressable
+              onPress={() => {
+                navigation.navigate("DataUser");
+              }}
+              style={{ flexDirection: "row" }}
+            >
               <Image
                 source={require("../image/hinhcanhan.png")}
                 style={{
@@ -102,7 +107,7 @@ export default function User({ navigation }) {
                   Xem trang cá nhân
                 </Text>
               </View>
-            </View>
+            </Pressable>
             <View style={{ marginTop: 20, marginRight: 30 }}>
               <FontAwesome name="exchange" size={24} color="black" />
             </View>
