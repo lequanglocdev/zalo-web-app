@@ -11,15 +11,18 @@ export const typeHTTP = {
 
 export const api = ({ method, url, body, sendToken }) =>
   new Promise((resolve, reject) => {
-    const headers = {};
+    const headers = { "Content-type": "application/json"};
 
     if (sendToken) {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("accessToken");
+      console.log("TokenAPI:", token);
       if (token) {
         headers["Authorization"] = `Bearer ${token}`;
       } else {
         // Nếu không có token mà cần gửi, có thể xử lý ở đây
         // Ví dụ: reject(new Error("Token is missing"));
+        resolve({ error: "Token is missing" });
+        return;
       }
     }
 
