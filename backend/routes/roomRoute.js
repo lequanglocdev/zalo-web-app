@@ -10,5 +10,6 @@ router.post(
   roomController.createGroup
 );
 router.post("/create-group-mobile", roomController.createGroupMobile);
+router.delete("/:id", roomController.deleteRoom);
 
 module.exports = router;

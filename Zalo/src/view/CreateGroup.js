@@ -14,12 +14,22 @@ import { Feather } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker"; // Import thư viện image picker
 
 export default function CreateGroup({ navigation }) {
-  const { globalData } = useContext(globalContext);
+  const { globalData, globalHandler } = useContext(globalContext);
   const [result, setResult] = useState([]);
   const [phone, setPhone] = useState("");
   const [groupName, setGroupName] = useState("");
   const [participants, setParticipants] = useState([]);
   const [image, setImage] = useState(null);
+
+  const handleRoom = () => {
+    api({
+      method: typeHTTP.GET,
+      url: `/room/get-by-user/${globalData.user?._id}`,
+    }).then((rooms) => {
+      globalHandler.setRooms(rooms);
+      navigation.navigate("Message");
+    });
+  };
 
   useEffect(() => setParticipants([globalData.user]), [globalData.user]);
 
@@ -93,11 +103,7 @@ export default function CreateGroup({ navigation }) {
             marginLeft: 20,
           }}
         >
-          <Pressable
-            onPress={() => {
-              navigation.goBack();
-            }}
-          >
+          <Pressable onPress={() => handleRoom()}>
             <Feather name="x" size={24} color="black" />
           </Pressable>
           <View style={{ marginLeft: 20, marginTop: 2 }}>

@@ -78,6 +78,16 @@ class RoomController {
     }
   };
 
+  deleteRoom = async (req, res) => {
+    const { id } = req.params;
+    try {
+      await Room.findByIdAndDelete(id);
+      return res.status(200).json("Delete Succesfully");
+    } catch (error) {
+      return res.status(500).json(error.Message);
+    }
+  };
+
   getRoomByUser = async (req, res) => {
     try {
       const { id } = req.params;

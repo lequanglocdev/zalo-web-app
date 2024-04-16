@@ -31,7 +31,7 @@ export default function SendMessager({ navigation, route }) {
   const [messages, setMessages] = useState([]);
   const [showSendButton, setShowSendButton] = useState(false);
   const room = route.params?.room;
-  const { globalData } = useContext(globalContext);
+  const { globalData, globalHandler } = useContext(globalContext);
   const socket = io.connect(baseURLOrigin);
   const scrollViewRef = useRef();
   const textInputRef = useRef();
@@ -184,6 +184,21 @@ export default function SendMessager({ navigation, route }) {
     }
   };
 
+  const handleDisBandRoom = () => {
+    if (globalData.currentRoom.type === "group") {
+      const id = globalData.currentRoom._id;
+      api({ method: typeHTTP.DELETE, url: `/room/${id}` }).then((res) => {
+        api({
+          method: typeHTTP.GET,
+          url: `/room/get-by-user/${globalData.user?._id}`,
+        }).then((rooms) => {
+          globalHandler.setRooms(rooms);
+          navigation.navigate("Message");
+        });
+      });
+    }
+  };
+
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -233,9 +248,12 @@ export default function SendMessager({ navigation, route }) {
               <View style={{ marginLeft: 20 }}>
                 <AntDesign name="videocamera" size={24} color="white" />
               </View>
-              <View style={{ marginLeft: 20 }}>
+              <Pressable
+                onPress={() => handleDisBandRoom()}
+                style={{ marginLeft: 20 }}
+              >
                 <Feather name="list" size={24} color="white" />
-              </View>
+              </Pressable>
             </View>
           </View>
         </ImageBackground>
