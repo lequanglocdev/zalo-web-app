@@ -24,7 +24,10 @@ import {
   DataUser,
   AddFriend,
   CreateGroup,
+  DetailMedia,
+  MessageItem,
 } from "./src/view";
+
 import { GlobalContext } from "./src/context/globalContext";
 
 const Tab = createBottomTabNavigator();
@@ -173,6 +176,8 @@ export default function App() {
           <Stack.Screen name="AddFriend" component={AddFriend} />
           <Stack.Screen name="SendMessager" component={SendMessager} />
           <Stack.Screen name="CreateGroup" component={CreateGroup} />
+          <Stack.Screen name="DetailMedia" component={DetailMedia} />
+          <Stack.Screen name="MessageItem" component={MessageItem} />
         </Stack.Navigator>
       </NavigationContainer>
     </GlobalContext>

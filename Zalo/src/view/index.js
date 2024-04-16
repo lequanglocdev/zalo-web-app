@@ -16,6 +16,8 @@ import Avatar from "./Avatar";
 import DataUser from "./DataUser";
 import AddFriend from "./AddFriend";
 import CreateGroup from "./CreateGroup";
+import DetailMedia from "./DetailMedia";
+import MessageItem from "./MessageItem";
 
 export {
   Message,
@@ -36,4 +38,6 @@ export {
   DataUser,
   AddFriend,
   CreateGroup,
+  DetailMedia,
+  MessageItem,
 };

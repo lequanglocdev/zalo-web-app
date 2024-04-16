@@ -1,5 +1,6 @@
 import React from "react";
-import { Image, Text, View } from "react-native";
+import { Image, Pressable, Text, View } from "react-native";
+import { useNavigation } from "@react-navigation/native";
 import docx from "../../assets/docx.png";
 import rar from "../../assets/rar.png";
 import pdf from "../../assets/pdf.png";
@@ -10,6 +11,7 @@ export const fileTypes = {
 };
 
 const MessageItem = ({ message }) => {
+  const navigation = useNavigation();
   if (message.typeMessage === "text") return <Text>{message.information}</Text>;
   else if (message.typeMessage === "loading") {
     return (
@@ -26,17 +28,27 @@ const MessageItem = ({ message }) => {
   } else {
     if (message.information.url.includes("/image___")) {
       return (
-        <Image
-          style={{ width: 200, height: 100 }}
-          source={{ uri: message.information?.url }}
-        />
+        <Pressable
+          onPress={() => {
+            navigation.navigate("DetailMedia", {
+              url: message.information?.url,
+            });
+          }}
+        >
+          <Image
+            style={{ width: 200, height: 100 }}
+            source={{ uri: message.information?.url }}
+          />
+        </Pressable>
       );
     } else {
       const fileType = message.information.url
         .split("ap-southeast-1.amazonaws.com/")[1]
         .split("___")[0];
       return (
-        <View style={{ flexDirection: "row", gap: 10, alignItems: "center" }}>
+        <Pressable
+          style={{ flexDirection: "row", gap: 10, alignItems: "center" }}
+        >
           <Image
             source={fileTypes[fileType]}
             style={{ width: 50, height: 50 }}
@@ -47,7 +59,7 @@ const MessageItem = ({ message }) => {
             </View>
             <Text>{message.information.size} MB</Text>
           </View>
-        </View>
+        </Pressable>
       );
     }
   }

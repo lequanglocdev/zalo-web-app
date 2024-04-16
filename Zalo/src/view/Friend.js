@@ -13,6 +13,7 @@ import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { api, typeHTTP } from "../utils/api";
 import { globalContext } from "../context/globalContext";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 //import { Avatar, Box, Typography } from "react-native-elements";
 
 export default function Friend({ navigation, route }) {
@@ -20,6 +21,22 @@ export default function Friend({ navigation, route }) {
   const [selectedCountry, setSelectedCountry] = useState(null);
   const { globalData } = useContext(globalContext);
   // const [phoneNumber, setPhoneNumber] = useState("");
+  const [userData, setUserData] = useState({ username: "" });
+
+  useEffect(() => {
+    async function fetchUserData() {
+      try {
+        const jsonValue = await AsyncStorage.getItem("userData");
+        if (jsonValue != null) {
+          setUserData(JSON.parse(jsonValue));
+        }
+      } catch (e) {
+        console.error("Error reading user data from AsyncStorage:", e);
+      }
+    }
+
+    fetchUserData();
+  }, []);
 
   const toggleCountryList = () => {
     setShowCountryList(!showCountryList);
@@ -189,7 +206,7 @@ export default function Friend({ navigation, route }) {
           >
             <View style={{ alignItems: "center", marginTop: 15 }}>
               <Text style={{ color: "white", fontSize: 18, fontWeight: 500 }}>
-                Lê Quang Lộc
+                {userData.username}
               </Text>
             </View>
 

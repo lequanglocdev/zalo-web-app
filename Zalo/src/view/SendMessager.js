@@ -23,7 +23,7 @@ import { api, baseURLOrigin, typeHTTP } from "../utils/api";
 import * as FilePicker from "expo-document-picker";
 import * as FileSystem from "expo-file-system";
 import { getRemainUserForSingleRoom } from "../utils/getRemainUserForSingleRoom";
-import MessageItem from "../components/MessageItem";
+import MessageItem from "../view/MessageItem";
 import * as ImagePicker from "expo-image-picker"; // Import thư viện image picker
 
 export default function SendMessager({ navigation, route }) {
@@ -192,7 +192,7 @@ export default function SendMessager({ navigation, route }) {
       <View style={{ flex: 1 }}>
         <ImageBackground
           source={require("../image/Untitled.png")}
-          style={{ width: 420, height: 100 }}
+          style={{ width: 420, height: 110 }}
         >
           <View style={{ flexDirection: "row", marginTop: 60, marginLeft: 20 }}>
             <Pressable
@@ -201,13 +201,24 @@ export default function SendMessager({ navigation, route }) {
             >
               <AntDesign name="arrowleft" size={24} color="#fff" />
             </Pressable>
-            <View style={{ marginLeft: 20, marginTop: 6, width: 150 }}>
-              <Text style={{ fontSize: 16, color: "#fff" }}>
-                {room.type === "group"
-                  ? room.name
-                  : getRemainUserForSingleRoom(room, globalData.user?._id)
-                      ?.username}
-              </Text>
+            <View>
+              <View style={{ marginLeft: 20, marginTop: 6, width: 150 }}>
+                <Text style={{ fontSize: 16, color: "#fff" }}>
+                  {room.type === "group"
+                    ? room.name
+                    : getRemainUserForSingleRoom(room, globalData.user?._id)
+                        ?.username}
+                </Text>
+              </View>
+
+              <View
+                style={{ fontSize: "14px", color: "#7589A3", marginLeft: 20 }}
+              >
+                <Text style={{ fontSize: 16, color: "#fff" }}>
+                  {globalData.currentRoom?.type === "group" &&
+                    `${globalData.currentRoom?.users.length} thành viên`}
+                </Text>
+              </View>
             </View>
 
             <View
