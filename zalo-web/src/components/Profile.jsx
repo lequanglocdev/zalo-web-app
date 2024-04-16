@@ -29,7 +29,6 @@ const Profile = () => {
 
   // Dùng dữ liệu từ global context
   const username = data.user?.username;
-  const image = data.image?.image;
 
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
@@ -68,7 +67,7 @@ const Profile = () => {
         >
           <Avatar
             sx={{ width: 40, height: 40 }}
-            src={image}
+            src="https://avatars.githubusercontent.com/u/107296302?v=4"
           ></Avatar>
         </IconButton>
       </Tooltip>

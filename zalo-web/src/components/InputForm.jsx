@@ -11,7 +11,7 @@ const InputForm = ({
   keyPayload,
   type,
   invalidFiels = [],
-  setInvalidFiels
+  setInvalidFiels,
 }) => {
   let helperText = null;
 
@@ -43,7 +43,6 @@ const InputForm = ({
         error={!!helperText} // error được đặt thành true nếu có lỗi
         helperText={helperText} // Truyền giá trị của helperText vào
       />
-    
     </Box>
   );
 };

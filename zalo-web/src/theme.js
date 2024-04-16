@@ -42,7 +42,6 @@ const theme = extendTheme({
       },
     },
     // .MuiMenuItem-root{}
-    
   },
 });
 

@@ -116,10 +116,7 @@ const Search = () => {
             <IconButton>
               <GroupAddIcon onClick={handleOpenModalAddGroup} />
             </IconButton>
-            <Modal
-              open={openModalAddGroup}
-              onClose={handleCloseModalAddGroup}
-            >
+            <Modal open={openModalAddGroup} onClose={handleCloseModalAddGroup}>
               <AddGroup handleCloseModalAddGroup={handleCloseModalAddGroup} />
             </Modal>
           </Tooltip>

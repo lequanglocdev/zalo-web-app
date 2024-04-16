@@ -136,21 +136,21 @@ const chatHistory = [
 
 const messageOption = [
   {
-    title:"Reply"
+    title: "Reply",
   },
   {
-    title:"React to message"
+    title: "React to message",
   },
   {
-    title:"Forward message"
+    title: "Forward message",
   },
   {
-    title:"Start message"
+    title: "Start message",
   },
   {
-    title:"Delete message"
+    title: "Delete message",
   },
-]
+];
 const ChatList = [
   {
     id: 0,
@@ -234,4 +234,4 @@ const ChatList = [
   },
 ];
 
-export { mockData ,chatHistory , messageOption ,ChatList };
+export { mockData, chatHistory, messageOption, ChatList };

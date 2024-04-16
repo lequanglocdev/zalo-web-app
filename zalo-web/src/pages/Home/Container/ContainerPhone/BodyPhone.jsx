@@ -42,7 +42,7 @@ const BodyPhone = () => {
         padding: "16px",
         display: "flex",
         flexDirection: "column",
-        height:(theme) => theme.zalo.heightList,
+        height: (theme) => theme.zalo.heightList,
         gap: 1,
         overflow: "hidden",
         overflowY: "auto",

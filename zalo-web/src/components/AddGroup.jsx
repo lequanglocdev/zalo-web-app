@@ -16,14 +16,14 @@ const SearchStyle = styled("div")(({ theme }) => ({
   position: "relative",
   borderRadius: 20,
   backgroundColor: "#dfe6e9",
-  
+
   "&:hover": {
     backgroundColor: "#dfe6e9",
     borderRadius: 20,
   },
   marginLeft: 0,
   width: "100%",
-  marginTop:"20px",
+  marginTop: "20px",
   [theme.breakpoints.up("sm")]: {
     marginLeft: theme.spacing(0),
     width: "auto",
@@ -33,7 +33,7 @@ const SearchStyle = styled("div")(({ theme }) => ({
 const SearchIconWrapper = styled("div")(({ theme }) => ({
   padding: theme.spacing(0, 2),
   height: "100%",
-  
+
   position: "absolute",
   pointerEvents: "none",
   display: "flex",
