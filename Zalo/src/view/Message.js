@@ -101,7 +101,7 @@ export default function Message({ navigation }) {
               >
                 <View>
                   <Image
-                    source={require("../image/hinhcanhan.png")}
+                    source={{ uri: room.image }}
                     style={{
                       width: 50,
                       height: 50,
