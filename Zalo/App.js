@@ -23,6 +23,7 @@ import {
   Dateofbirth,
   DataUser,
   AddFriend,
+  CreateGroup,
 } from "./src/view";
 import { GlobalContext } from "./src/context/globalContext";
 
@@ -146,6 +147,7 @@ function MyTabs() {
 
 export default function App() {
   const Stack = createNativeStackNavigator();
+
   return (
     <GlobalContext>
       <NavigationContainer>
@@ -159,7 +161,6 @@ export default function App() {
           <Stack.Screen name="ScreenLogin" component={ScreenLogin} />
           <Stack.Screen name="ScreenRegister" component={ScreenRegister} />
           <Stack.Screen name="Setting" component={Setting} />
-          <Stack.Screen name="SendMessager" component={SendMessager} />
           <Stack.Screen name="Friend" component={Friend} />
           <Stack.Screen
             name="CountryListScreen"
@@ -170,6 +171,8 @@ export default function App() {
           <Stack.Screen name="Avatar" component={Avatar} />
           <Stack.Screen name="DataUser" component={DataUser} />
           <Stack.Screen name="AddFriend" component={AddFriend} />
+          <Stack.Screen name="SendMessager" component={SendMessager} />
+          <Stack.Screen name="CreateGroup" component={CreateGroup} />
         </Stack.Navigator>
       </NavigationContainer>
     </GlobalContext>

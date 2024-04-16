@@ -9,6 +9,7 @@ import {
   KeyboardAvoidingView,
   Platform,
   Keyboard,
+  Alert,
 } from "react-native";
 import {
   AntDesign,
@@ -19,16 +20,25 @@ import {
 import { globalContext } from "../context/globalContext";
 import { io } from "socket.io-client";
 import { api, baseURLOrigin, typeHTTP } from "../utils/api";
+import * as FilePicker from "expo-document-picker";
+import * as FileSystem from "expo-file-system";
+import { getRemainUserForSingleRoom } from "../utils/getRemainUserForSingleRoom";
+import MessageItem from "../components/MessageItem";
+import * as ImagePicker from "expo-image-picker"; // Import thư viện image picker
 
 export default function SendMessager({ navigation, route }) {
   const [message, setMessage] = useState("");
   const [messages, setMessages] = useState([]);
   const [showSendButton, setShowSendButton] = useState(false);
-  const recipientName = route.params?.recipientName;
+  const room = route.params?.room;
   const { globalData } = useContext(globalContext);
   const socket = io.connect(baseURLOrigin);
   const scrollViewRef = useRef();
   const textInputRef = useRef();
+  const fileRef = useRef();
+  const chatContainerRef = useRef(null);
+  const [files, setFiles] = useState([]);
+  const [image, setImage] = useState(null);
 
   const handleMessageChange = (text) => {
     setMessage(text);
@@ -80,6 +90,99 @@ export default function SendMessager({ navigation, route }) {
     }, 100);
   };
 
+  const pickFile = async () => {
+    let result = await FilePicker.getDocumentAsync({
+      // multiple: true,
+      copyToCacheDirectory: true,
+      // type: "image/*",
+    });
+    if (!result.canceled) {
+      const base64 = await FileSystem.readAsStringAsync(result.assets[0].uri, {
+        encoding: FileSystem.EncodingType.Base64,
+      });
+      const body = {
+        room_id: globalData.currentRoom._id,
+        information: {
+          base64,
+          originalname: result.assets[0].name,
+          uri: result.assets[0].uri,
+          mimetype: result.assets[0].mimeType,
+          size: result.assets[0].size,
+        },
+        typeMessage: "file",
+        user_id: globalData.user._id,
+        users: globalData.currentRoom?.users.map((item) => item._id),
+      };
+      setMessages([
+        ...messages,
+        {
+          typeMessage: "loading",
+          style:
+            item.user_id === globalData.user._id ? "flex-end" : "flex-start",
+        },
+      ]);
+      api({
+        url: "/message/send-file-mobile",
+        method: typeHTTP.POST,
+        body: body,
+      }).then((res) => {
+        socket.emit("send_message_with_file", res);
+      });
+    }
+  };
+
+  const pickImage = async () => {
+    let permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (permissionResult.granted === false) {
+      Alert.alert(
+        "Thông báo",
+        "Ứng dụng cần quyền truy cập vào thư viện ảnh để chọn ảnh!",
+        [{ text: "OK", onPress: () => console.log("Permission denied") }]
+      );
+      return;
+    }
+    try {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        // allowsMultipleSelection: true,
+        mediaTypes: ImagePicker.MediaTypeOptions.All,
+        base64: true,
+      });
+      if (!result.cancelled) {
+        const body = {
+          room_id: globalData.currentRoom._id,
+          information: {
+            base64: result.assets[0].base64,
+            originalname: result.assets[0].fileName,
+            uri: result.assets[0].uri,
+            mimetype: result.assets[0].mimeType,
+            size: result.assets[0].fileSize,
+          },
+          typeMessage: "image",
+          user_id: globalData.user._id,
+          users: globalData.currentRoom?.users.map((item) => item._id),
+        };
+        setMessages([
+          ...messages,
+          {
+            typeMessage: "loading",
+            style:
+              item.user_id === globalData.user._id ? "flex-end" : "flex-start",
+          },
+        ]);
+        api({
+          url: "/message/send-file-mobile",
+          method: typeHTTP.POST,
+          body: body,
+        }).then((res) => {
+          socket.emit("send_message_with_file", res);
+        });
+      }
+    } catch (error) {
+      console.error("Error picking images:", error);
+    }
+  };
+
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -99,7 +202,10 @@ export default function SendMessager({ navigation, route }) {
             </Pressable>
             <View style={{ marginLeft: 20, marginTop: 6, width: 150 }}>
               <Text style={{ fontSize: 16, color: "#fff" }}>
-                {recipientName}
+                {room.type === "group"
+                  ? room.name
+                  : getRemainUserForSingleRoom(room, globalData.user?._id)
+                      ?.username}
               </Text>
             </View>
 
@@ -144,7 +250,7 @@ export default function SendMessager({ navigation, route }) {
                     item.user_id === globalData.user._id ? "#B0E0E6" : "white",
                   borderRadius: 10,
                   paddingHorizontal: 10,
-                  paddingVertical: 5,
+                  paddingVertical: 10,
                   maxWidth: 250,
                   alignItems: "center",
                   borderColor:
@@ -154,17 +260,12 @@ export default function SendMessager({ navigation, route }) {
                   borderWidth: 2,
                 }}
               >
-                <Text
-                  style={{
-                    fontSize: 20,
-                  }}
-                >
-                  {item.information}
-                </Text>
+                <MessageItem message={item} />
               </View>
             </View>
           ))}
         </ScrollView>
+
         <View
           style={{
             height: 100,
@@ -209,7 +310,7 @@ export default function SendMessager({ navigation, route }) {
                 marginRight: 10,
               }}
             >
-              <Pressable>
+              <Pressable onPress={() => pickFile()}>
                 <MaterialCommunityIcons
                   name="dots-horizontal"
                   size={24}
@@ -219,7 +320,7 @@ export default function SendMessager({ navigation, route }) {
               <Pressable style={{ marginLeft: 10 }}>
                 <Feather name="mic" size={24} color="#808080" />
               </Pressable>
-              <Pressable style={{ marginLeft: 10 }}>
+              <Pressable onPress={() => pickImage()} style={{ marginLeft: 10 }}>
                 <AntDesign name="picture" size={24} color="#FFD700" />
               </Pressable>
             </View>

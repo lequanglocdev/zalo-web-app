@@ -9,5 +9,6 @@ router.post(
   upload.single("image"),
   roomController.createGroup
 );
+router.post("/create-group-mobile", roomController.createGroupMobile);
 
 module.exports = router;

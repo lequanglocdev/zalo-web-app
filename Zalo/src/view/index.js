@@ -15,6 +15,7 @@ import Dateofbirth from "./Dateofbirth";
 import Avatar from "./Avatar";
 import DataUser from "./DataUser";
 import AddFriend from "./AddFriend";
+import CreateGroup from "./CreateGroup";
 
 export {
   Message,
@@ -34,4 +35,5 @@ export {
   Avatar,
   DataUser,
   AddFriend,
+  CreateGroup,
 };

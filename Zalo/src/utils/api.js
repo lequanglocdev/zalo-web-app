@@ -1,6 +1,6 @@
 import axios from "axios";
-export const baseURLOrigin = "http://192.168.0.213:5000";
-const baseURL = "http://192.168.0.213:5000/v1";
+export const baseURLOrigin = "http://192.168.1.32:5000";
+const baseURL = "http://192.168.1.32:5000/v1";
 
 export const typeHTTP = {
   POST: "post",

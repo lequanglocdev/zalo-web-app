@@ -21,7 +21,8 @@ const socket = (server, baseURL) => {
     // });
 
     socket.on("send_message_with_file", async (body) => {
-      io.emit(body.room_id, body);
+      const messages = await Message.find({ room_id: body.room_id }).lean();
+      io.emit(body.room_id, messages);
     });
 
     socket.on("send_message", async (body) => {

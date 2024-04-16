@@ -1,5 +1,6 @@
 const messageModel = require("../models/Message");
 const uploadToS3 = require("../upload/s3");
+const { formatBase64ToBuffer } = require("../utils/buffer");
 
 class MessageController {
   getByRoom = async (req, res) => {
@@ -42,6 +43,42 @@ class MessageController {
       }
       return res.status(201).json(await messageModel.create(message));
     } catch (error) {
+      return res.status(500).json(error.Message);
+    }
+  };
+
+  sendFileMessageMobile = async (req, res) => {
+    try {
+      const { room_id, typeMessage, user_id, disabled, information } = req.body;
+      information.buffer = await formatBase64ToBuffer(information.base64);
+      const message = {
+        room_id,
+        typeMessage,
+        user_id,
+        disabled,
+      };
+      if (typeMessage !== "text" && typeMessage !== "notify") {
+        const result = await uploadToS3(
+          `${
+            information.mimetype.split("/")[0] !== "application"
+              ? information.mimetype.split("/")[0]
+              : information.originalname.split(".")[
+                  information.originalname.split(".").length - 1
+                ]
+          }___${Date.now().toString()}_${
+            information.originalname.split(".")[0]
+          }`,
+          information.buffer,
+          information.mimetype,
+          information.originalname.split(".")[0],
+          information.size / 1024
+        );
+
+        message.information = result;
+      }
+      return res.status(201).json(await messageModel.create(message));
+    } catch (error) {
+      console.log(error);
       return res.status(500).json(error.Message);
     }
   };

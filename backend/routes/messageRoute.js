@@ -9,5 +9,6 @@ router.post(
   upload.array("information"),
   messageController.sendMessage
 );
+router.post("/send-file-mobile", messageController.sendFileMessageMobile);
 
 module.exports = router;

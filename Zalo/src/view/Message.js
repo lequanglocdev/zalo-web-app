@@ -91,10 +91,7 @@ export default function Message({ navigation }) {
                 onPress={() => {
                   globalHandler.setCurrentRoom(room);
                   navigation.navigate("SendMessager", {
-                    recipientName: getRemainUserForSingleRoom(
-                      room,
-                      globalData.user?._id
-                    ).username,
+                    room: room,
                   });
                 }}
                 style={{
@@ -123,10 +120,10 @@ export default function Message({ navigation }) {
                   }}
                 >
                   <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-                    {
-                      getRemainUserForSingleRoom(room, globalData.user?._id)
-                        .username
-                    }
+                    {room.type === "group"
+                      ? room.name
+                      : getRemainUserForSingleRoom(room, globalData.user?._id)
+                          ?.username}
                   </Text>
                 </View>
               </Pressable>
@@ -162,11 +159,18 @@ export default function Message({ navigation }) {
                   <View style={{ marginLeft: 10 }}>
                     <AntDesign name="addusergroup" size={25} color="#A9A9A9" />
                   </View>
-                  <View style={{ marginLeft: 10, marginTop: 2 }}>
-                    <Text style={{ fontSize: 20, fontWeight: 400 }}>
-                      Tạo nhóm
-                    </Text>
-                  </View>
+                  <Pressable
+                    onPress={() => {
+                      navigation.navigate("CreateGroup");
+                      toggleModal();
+                    }}
+                  >
+                    <View style={{ marginLeft: 10, marginTop: 2 }}>
+                      <Text style={{ fontSize: 20, fontWeight: 400 }}>
+                        Tạo nhóm
+                      </Text>
+                    </View>
+                  </Pressable>
                 </Pressable>
 
                 <Pressable style={{ flexDirection: "row", marginTop: 25 }}>

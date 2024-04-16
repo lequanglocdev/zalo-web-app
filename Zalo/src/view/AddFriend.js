@@ -7,7 +7,7 @@ import {
   Image,
   Text,
 } from "react-native";
-import { Ionicons, AntDesign } from "@expo/vector-icons";
+import { Ionicons } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { globalContext } from "../context/globalContext";
 import { api, typeHTTP } from "../utils/api";
@@ -17,7 +17,7 @@ export default function AddFriend({ navigation, route }) {
   const [userData, setUserData] = useState({ username: "" });
   const [results, setResult] = useState([]);
   const [sentRequests, setSentRequests] = useState([]);
-  const { globalData, setglobalData } = useContext(globalContext);
+  const { globalData, globalHandler } = useContext(globalContext);
 
   useEffect(() => {
     if (route.params && route.params.results) {
@@ -68,7 +68,6 @@ export default function AddFriend({ navigation, route }) {
       });
   };
 
-  // Trong hàm handleAccept
   const handleAccept = (toUser) => {
     const body = {
       fromUser: globalData.user,
@@ -85,11 +84,10 @@ export default function AddFriend({ navigation, route }) {
           type: "success",
           text1: "Chấp nhận lời mời kết bạn thành công",
         });
-        // Cập nhật trạng thái của người dùng sau khi chấp nhận lời mời
-        const updatedUser = { ...globalData.user };
-        updatedUser.friends.push({ friendId: toUser._id, status: "friend" });
-        const updatedGlobalData = { ...globalData, user: updatedUser };
-        setglobalData(updatedGlobalData);
+        // const updatedUser = { ...globalData.user };
+        // updatedUser.friends.push({ friendId: toUser._id, status: "friend" });
+        // const updatedGlobalData = { ...globalData, user: updatedUser };
+        // globalHandler.setUser(updatedGlobalData);
         updateResultsAfterAction(toUser._id);
       })
       .catch((error) => {

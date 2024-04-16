@@ -24,13 +24,15 @@ export default function Otp({ navigation }) {
   const [verification, setVerification] = useState();
 
   useEffect(() => {
-    const phoneProvider = new firebase.auth.PhoneAuthProvider();
-    phoneProvider
-      .verifyPhoneNumber(
-        formatPhoneByFireBase(globalData.user.phone),
-        recaptchaRef.current
-      )
-      .then((confirmation) => setVerification(confirmation));
+    if (globalData?.user?.phone) {
+      const phoneProvider = new firebase.auth.PhoneAuthProvider();
+      phoneProvider
+        .verifyPhoneNumber(
+          formatPhoneByFireBase(globalData.user.phone),
+          recaptchaRef.current
+        )
+        .then((confirmation) => setVerification(confirmation));
+    }
   }, [globalData.user]);
 
   const handleOtpChange = (text, index) => {
