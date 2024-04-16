@@ -42,7 +42,9 @@ const MessageItem = ({ message }) => {
             style={{ width: 50, height: 50 }}
           />
           <View style={{ flexDirection: "column", gap: 5 }}>
-            <Text>{message.information.name}</Text>
+            <View style={{ width: 200 }}>
+              <Text>{message.information.name}</Text>
+            </View>
             <Text>{message.information.size} MB</Text>
           </View>
         </View>

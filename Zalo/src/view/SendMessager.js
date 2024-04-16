@@ -35,10 +35,6 @@ export default function SendMessager({ navigation, route }) {
   const socket = io.connect(baseURLOrigin);
   const scrollViewRef = useRef();
   const textInputRef = useRef();
-  const fileRef = useRef();
-  const chatContainerRef = useRef(null);
-  const [files, setFiles] = useState([]);
-  const [image, setImage] = useState(null);
 
   const handleMessageChange = (text) => {
     setMessage(text);
@@ -69,6 +65,11 @@ export default function SendMessager({ navigation, route }) {
   }, [messages]);
 
   const handleSendMessage = () => {
+    if (!message.trim()) {
+      // Kiểm tra xem tin nhắn có trống không hoặc chỉ chứa khoảng trắng
+      return; // Nếu trống, không làm gì cả
+    }
+
     const body = {
       room_id: globalData.currentRoom?._id,
       information: message,
@@ -79,9 +80,11 @@ export default function SendMessager({ navigation, route }) {
     setMessages([...messages, body]);
 
     socket.emit("send_message", body);
-    scrollToBottom(); // Scroll xuống khi gửi tin nhắn mới
-    textInputRef.current.clear(); // Xóa nội dung của TextInput
-    Keyboard.dismiss(); // Đóng bàn phím
+    scrollToBottom(); // Cuộn xuống khi gửi tin nhắn mới
+    setMessage(""); // Xóa nội dung trong ô nhập tin nhắn
+    Keyboard.dismiss(); // Ẩn bàn phím
+
+    setShowSendButton(false); // Ẩn nút gửi sau khi gửi tin nhắn
   };
 
   const scrollToBottom = () => {
@@ -117,8 +120,7 @@ export default function SendMessager({ navigation, route }) {
         ...messages,
         {
           typeMessage: "loading",
-          style:
-            item.user_id === globalData.user._id ? "flex-end" : "flex-start",
+          style: "flex-end",
         },
       ]);
       api({
@@ -166,8 +168,7 @@ export default function SendMessager({ navigation, route }) {
           ...messages,
           {
             typeMessage: "loading",
-            style:
-              item.user_id === globalData.user._id ? "flex-end" : "flex-start",
+            style: "flex-end",
           },
         ]);
         api({
@@ -251,7 +252,7 @@ export default function SendMessager({ navigation, route }) {
                   borderRadius: 10,
                   paddingHorizontal: 10,
                   paddingVertical: 10,
-                  maxWidth: 250,
+                  maxWidth: 300,
                   alignItems: "center",
                   borderColor:
                     item.user_id === globalData.user._id
@@ -274,9 +275,6 @@ export default function SendMessager({ navigation, route }) {
             flexDirection: "row",
           }}
         >
-          {/* <Pressable style={{ marginLeft: 10, marginTop: 10 }}>
-            <Feather name="smile" size={24} color="#808080" />
-          </Pressable> */}
           <TextInput
             ref={textInputRef}
             placeholder="Tin nhắn"
