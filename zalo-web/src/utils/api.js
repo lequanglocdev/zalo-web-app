@@ -14,15 +14,16 @@ export const api = ({ method, url, body, sendToken }) =>
     const headers = {};
 
     if (sendToken) {
-      const token = localStorage.getItem("token");
+      const token = localStorage.getItem("accessToken");
+      console.log("TokenAPI:", token);
       if (token) {
         headers["Authorization"] = `Bearer ${token}`;
       } else {
         // Nếu không có token mà cần gửi, có thể xử lý ở đây
         // Ví dụ: reject(new Error("Token is missing"));
+        
       }
     }
-
     switch (method) {
       case typeHTTP.POST:
         axios
@@ -30,6 +31,7 @@ export const api = ({ method, url, body, sendToken }) =>
           .then((res) => resolve(res.data))
           .catch((error) => reject(error));
         break;
+        
       case typeHTTP.PUT:
         axios
           .put(`${baseURL}${url}`, body, { headers })

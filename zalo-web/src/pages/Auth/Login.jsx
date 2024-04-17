@@ -36,7 +36,9 @@ const Login = () => {
       };
       api({ method: typeHTTP.POST, url: "/auth/login", body }).then((res) => {
         localStorage.setItem("user", JSON.stringify(res._id));
-        console.log(res.accessToken);
+        const accessToken = res.accessToken;
+        localStorage.setItem("accessToken", accessToken)
+        console.log("Token Login",res.accessToken);
         handler.setUser(res);
         setLoading(false);
         nav("/home");

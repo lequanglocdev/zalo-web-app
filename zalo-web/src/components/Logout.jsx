@@ -22,8 +22,11 @@ const Logout = ({ handleCloseModalLogout }) => {
     handleCloseModalLogout(event);
   };
   const LogoutUser = () => {
+    const loguot = localStorage.removeItem("user"); 
     nav("/");
+    console.log("Log out",loguot );
   };
+ 
   return (
     <div>
       <Box sx={style}>
