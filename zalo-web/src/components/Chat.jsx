@@ -44,8 +44,8 @@ const Chat = () => {
             style={{
               display: "flex",
               alignItems: "center",
-              paddingLeft: "10px",
-              gap: "10px",
+              padding: "6px",
+              gap: 5,
               cursor: "pointer",
             }}
           >

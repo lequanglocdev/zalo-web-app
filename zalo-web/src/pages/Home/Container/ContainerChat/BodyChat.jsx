@@ -141,7 +141,7 @@ const BodyChat = () => {
                   {item.typeMessage === "text" ? (
                     item.information
                   ) : item.information.url.includes("/image___") ? (
-                    <img src={item.information.url} />
+                    <img src={item.information.url}  style={{width:"350px",height:"350px",objectFit:"contain"}}/>
                   ) : item.information.url.includes("/video___") ? (
                     <video src={item.information.url} />
                   ) : (
