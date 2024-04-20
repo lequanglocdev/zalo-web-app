@@ -14,22 +14,32 @@ const AddFriend = ({ handleCloseModalAddFriend }) => {
   const [phone, setPhone] = useState("");
   const [results, setResult] = useState([]);
   const { data } = useContext(globalContext);
+  const [error, setError] = useState(false);
   const [openModal, setOpenModal] = React.useState(false);
   const handleOpenModal = (event) => {
     handleCloseModalAddFriend(event);
   };
 
   const handleSearch = () => {
-    setResult([]);
-    api({ url: "/user/find", method: typeHTTP.GET }).then((res) => {
-      const arr = [];
-      res.forEach((item) => {
-        if (item.phone.includes(phone.toLowerCase())) {
-          arr.push(item);
+    if (phone.trim() !== "" && phone.length >= 9 && phone.length <= 10) {
+      setResult([]);
+      api({ url: "/user/find", method: typeHTTP.GET }).then((res) => {
+        const arr = [];
+        res.forEach((item) => {
+          if (item.phone.includes(phone.toLowerCase())) {
+            arr.push(item);
+          }
+        });
+        setResult(arr);
+        if (arr.length === 0) {
+          setError(true); // Thiết lập error thành true để hiển thị thông báo
+        } else {
+          setError(false);
         }
       });
-      setResult(arr);
-    });
+    } else {
+      setError(true);
+    }
   };
 
   const handleSendRequestAddFriend = (toUser) => {
@@ -157,6 +167,7 @@ const AddFriend = ({ handleCloseModalAddFriend }) => {
       >
         <Typography>Nhập số điện thoại</Typography>
         <TextField
+          error={error}
           variant="filled"
           value={phone}
           onChange={(e) => setPhone(e.target.value)}
@@ -166,25 +177,55 @@ const AddFriend = ({ handleCloseModalAddFriend }) => {
         sx={{ height: "70%", backgroundColor: "#dfe6e9", marginTop: "20px" }}
       >
         <Typography sx={{ color: "#0984e3" }}>Danh sách tìm bạn bè</Typography>
-        {results.map((results, index) => {
-          return (
-            <Box
-              key={index}
+        {error ? (
+          <Box
+            sx={{
+              justifyContent: "center",
+              alignItems: "center",
+              display: "flex",
+              height: "100%",
+              width: "100%",
+            }}
+          >
+            <Typography
               sx={{
-                display: "flex",
-                justifyContent: "space-between",
-                alignItems: "center",
-                padding: "10px",
+                textAlign: "center",
+                padding: "20px",
+                color: "#fff",
+                backgroundColor: "rgba(0,0,0,0.3)",
+                borderRadius: "10px",
               }}
             >
-              <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                <Avatar alt="Cindy Baker" src="/static/images/avatar/3.jpg" />
-                <Typography>{results.username}</Typography>
-              </Box>
-              {checkRelationship(results)}
-            </Box>
-          );
-        })}
+              Không tìm thấy số điện thoại <br />
+              trong danh sách bạn bè.
+            </Typography>
+          </Box>
+        ) : (
+          <>
+            {results.map((results, index) => {
+              return (
+                <Box
+                  key={index}
+                  sx={{
+                    display: "flex",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    padding: "10px",
+                  }}
+                >
+                  <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
+                    <Avatar
+                      alt="Cindy Baker"
+                      src="/static/images/avatar/3.jpg"
+                    />
+                    <Typography>{results.username}</Typography>
+                  </Box>
+                  {checkRelationship(results)}
+                </Box>
+              );
+            })}
+          </>
+        )}
       </Box>
       <Box
         sx={{

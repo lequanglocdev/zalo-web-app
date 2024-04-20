@@ -67,6 +67,7 @@ const VerificationPage = () => {
       .catch((error) => {
         console.error("Error confirming SMS code:", error);
         setVerificationMessage("Xác thực không thành công ");
+        
       });
   };
 

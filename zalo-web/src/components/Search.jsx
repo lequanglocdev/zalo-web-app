@@ -9,7 +9,7 @@ import GroupAddIcon from "@mui/icons-material/GroupAdd";
 import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import Modal from "@mui/material/Modal";
-
+import Grid from "@mui/material/Grid";
 import AddFriend from "./AddFriend";
 import { Link } from "react-router-dom";
 import AddGroup from "./AddGroup";
@@ -79,48 +79,47 @@ const Search = () => {
   return (
     <Box>
       <Toolbar>
-        <SearchStyle>
-          <SearchIconWrapper>
-            <SearchIcon />
-          </SearchIconWrapper>
-          <StyledInputBase
-            placeholder="Tìm kiếm"
-            inputProps={{ "aria-label": "search" }}
-          />
-        </SearchStyle>
-        <Box
-          sx={{
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-          }}
-        >
-          {/* <Link to={"/add-friend"}>
-           
-          </Link> */}
-          <Tooltip title="Thêm bạn">
-            <IconButton>
-              <PersonAddAltIcon onClick={handleOpenModalAddFriend} />
-            </IconButton>
-            <Modal
-              open={openModalAddFriend}
-              onClose={handleCloseModalAddFriend}
-            >
-              <AddFriend
-                handleCloseModalAddFriend={handleCloseModalAddFriend}
+        <Grid container spacing={2} alignItems="center">
+          <Grid item xs={12} sm={8} md={9}>
+            <SearchStyle>
+              <SearchIconWrapper>
+                <SearchIcon />
+              </SearchIconWrapper>
+              <StyledInputBase
+                placeholder="Tìm kiếm"
+                inputProps={{ "aria-label": "search" }}
               />
-            </Modal>
-          </Tooltip>
-
-          <Tooltip title="Tạo nhóm chat">
-            <IconButton>
-              <GroupAddIcon onClick={handleOpenModalAddGroup} />
-            </IconButton>
-            <Modal open={openModalAddGroup} onClose={handleCloseModalAddGroup}>
-              <AddGroup handleCloseModalAddGroup={handleCloseModalAddGroup} />
-            </Modal>
-          </Tooltip>
-        </Box>
+            </SearchStyle>
+          </Grid>
+          <Grid item xs={6} sm={2} md={1}>
+            <Tooltip title="Thêm bạn">
+              <IconButton onClick={handleOpenModalAddFriend}>
+                <PersonAddAltIcon />
+              </IconButton>
+              <Modal
+                open={openModalAddFriend}
+                onClose={handleCloseModalAddFriend}
+              >
+                <AddFriend
+                  handleCloseModalAddFriend={handleCloseModalAddFriend}
+                />
+              </Modal>
+            </Tooltip>
+          </Grid>
+          <Grid item xs={6} sm={2} md={1}>
+            <Tooltip title="Tạo nhóm chat">
+              <IconButton onClick={handleOpenModalAddGroup}>
+                <GroupAddIcon />
+              </IconButton>
+              <Modal
+                open={openModalAddGroup}
+                onClose={handleCloseModalAddGroup}
+              >
+                <AddGroup handleCloseModalAddGroup={handleCloseModalAddGroup} />
+              </Modal>
+            </Tooltip>
+          </Grid>
+        </Grid>
       </Toolbar>
     </Box>
   );

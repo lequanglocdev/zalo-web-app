@@ -9,7 +9,7 @@ import CircularProgress from "@mui/material/CircularProgress";
 import { api, typeHTTP } from "../../utils/api";
 import { globalContext } from "../../context/globalContext";
 import { Stack } from "@mui/material";
-
+import Alert from "@mui/material/Alert";
 const Login = () => {
   const nav = useNavigate();
   const { data, handler } = useContext(globalContext);
@@ -34,15 +34,27 @@ const Login = () => {
         phone: login.phone,
         password: login.password,
       };
-      api({ method: typeHTTP.POST, url: "/auth/login", body }).then((res) => {
+      try {
+        const res = await api({
+          method: typeHTTP.POST,
+          url: "/auth/login",
+          body,
+        });
         localStorage.setItem("user", JSON.stringify(res._id));
         const accessToken = res.accessToken;
-        localStorage.setItem("accessToken", accessToken)
-        console.log("Token Login",res.accessToken);
+        localStorage.setItem("accessToken", accessToken);
+        console.log("Token Login", res.accessToken);
         handler.setUser(res);
         setLoading(false);
         nav("/home");
-      });
+      } catch (error) {
+        setLoading(false);
+        console.error("Login failed:", error);
+        // Hiển thị thông báo lỗi cho người dùng
+        alert(
+          "Đăng nhập không thành công. Vui lòng kiểm tra lại thông tin đăng nhập."
+        );
+      }
     }
   };
 
@@ -57,17 +69,6 @@ const Login = () => {
           {
             name: item[0],
             message: "Bạn không được bỏ trống trường này",
-          },
-        ]);
-      invalids++;
-    });
-    fields.forEach((item) => {
-      if (item[1].length > 0)
-        setInvalidFiels((prev) => [
-          ...prev,
-          {
-            name: item[0],
-            message: "Dữ liệu ko hợp lệ",
           },
         ]);
       invalids++;
@@ -105,6 +106,11 @@ const Login = () => {
     return invalids;
   };
 
+  const handleKeyPress = (event) => {
+    if (event.key === "Enter" && !event.shiftKey) {
+      loginUser();
+    }
+  };
   const ClickRegister = () => {
     nav("/register");
   };
@@ -165,6 +171,7 @@ const Login = () => {
             type={"password"}
             name="password"
             setInvalidFiels={setInvalidFiels}
+            onKeyPress={handleKeyPress}
             invalidFiels={invalidFiels}
           />
 
