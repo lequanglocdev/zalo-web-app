@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   View,
   Text,
@@ -9,42 +9,46 @@ import {
 } from "react-native";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
+import { api, typeHTTP } from "../utils/api";
 
 const years = [];
 for (let i = 1900; i <= new Date().getFullYear(); i++) {
   years.push(i.toString());
 }
 
-const months = [];
-for (let i = 1; i <= 12; i++) {
-  months.push("Tháng " + i.toString());
-}
+const months = Array.from({ length: 12 }, (_, i) => i + 1).map(
+  (month) => `Tháng ${month}`
+);
 
-const days = [];
-for (let i = 1; i <= 31; i++) {
-  days.push(i.toString());
-}
+const days = Array.from({ length: 31 }, (_, i) => i + 1).map((day) =>
+  day.toString()
+);
 
-export default function Dateofbirth({ navigation }) {
+export default function DateOfBirth({ navigation }) {
   const [selectedYear, setSelectedYear] = useState(
     new Date().getFullYear().toString()
   );
   const [selectedMonth, setSelectedMonth] = useState("1");
   const [selectedDay, setSelectedDay] = useState("1");
-  const [gender, setGender] = useState(""); // State để theo dõi giới tính được chọn
-  const [isComplete, setIsComplete] = useState(false); // State để theo dõi xem đã chọn đủ thông tin chưa
-  // Function để xử lý khi chọn giới tính
-  const handleGenderSelection = (selectedGender) => {
-    setGender(selectedGender);
+  const [gender, setGender] = useState(""); // State to track selected gender
+  const [isComplete, setIsComplete] = useState(false); // State to track if all required info is selected
+
+  // Effect to check if all required information is selected
+  useEffect(() => {
     setIsComplete(
-      selectedGender !== "" &&
+      gender !== "" &&
         selectedYear !== "" &&
         selectedMonth !== "" &&
         selectedDay !== ""
-    ); // Kiểm tra xem đã chọn đủ thông tin chưa
+    );
+  }, [gender, selectedYear, selectedMonth, selectedDay]);
+
+  // Function to handle gender selection
+  const handleGenderSelection = (selectedGender) => {
+    setGender(selectedGender);
   };
 
-  // Function để xử lý khi thay đổi ngày tháng năm
+  // Function to handle date change
   const handleDateChange = (value, type) => {
     switch (type) {
       case "year":
@@ -57,12 +61,38 @@ export default function Dateofbirth({ navigation }) {
         setSelectedDay(value);
         break;
     }
-    setIsComplete(
-      gender !== "" &&
-        selectedYear !== "" &&
-        selectedMonth !== "" &&
-        selectedDay !== ""
-    ); // Kiểm tra xem đã chọn đủ thông tin chưa
+  };
+
+  // Function to update user data in backend
+  const updateUser = async () => {
+    const body = {
+      gender: gender,
+      birthday: `${selectedYear}-${selectedMonth}-${selectedDay}`,
+    };
+
+    try {
+      const res = await api({
+        method: typeHTTP.PUT,
+        url: "/user/update", // Thay đổi endpoint
+        body: body,
+      });
+      if (res.error) {
+        console.error("API Error:", res.error);
+        return;
+      }
+      console.log("User profile updated successfully");
+    } catch (error) {
+      console.error("API Error:", error);
+    }
+  };
+
+  // Function to handle navigation when pressing the "Tiếp tục" button
+  const handleContinuePress = () => {
+    // Call updateUser function to update user profile
+    updateUser();
+
+    // Navigate back
+    navigation.goBack();
   };
 
   return (
@@ -202,7 +232,9 @@ export default function Dateofbirth({ navigation }) {
         <Picker
           style={{ width: 100, height: 150 }}
           selectedValue={selectedDay}
-          onValueChange={(itemValue, itemIndex) => setSelectedDay(itemValue)}
+          onValueChange={(itemValue, itemIndex) =>
+            handleDateChange(itemValue, "day")
+          }
         >
           {days.map((day, index) => (
             <Picker.Item label={day} value={day} key={index} />
@@ -212,7 +244,9 @@ export default function Dateofbirth({ navigation }) {
         <Picker
           style={{ width: 150, height: 150 }}
           selectedValue={selectedMonth}
-          onValueChange={(itemValue, itemIndex) => setSelectedMonth(itemValue)}
+          onValueChange={(itemValue, itemIndex) =>
+            handleDateChange(itemValue, "month")
+          }
         >
           {months.map((month, index) => (
             <Picker.Item label={month} value={month} key={index} />
@@ -222,7 +256,9 @@ export default function Dateofbirth({ navigation }) {
         <Picker
           style={{ width: 150, height: 150 }}
           selectedValue={selectedYear}
-          onValueChange={(itemValue, itemIndex) => setSelectedYear(itemValue)}
+          onValueChange={(itemValue, itemIndex) =>
+            handleDateChange(itemValue, "year")
+          }
         >
           {years.map((year, index) => (
             <Picker.Item label={year} value={year} key={index} />
@@ -233,7 +269,8 @@ export default function Dateofbirth({ navigation }) {
       <View style={{ alignItems: "center" }}>
         <Pressable
           onPress={() => {
-            navigation.navigate("Avatar");
+            // navigation.goBack();
+            handleContinuePress();
           }}
           style={{
             marginTop: 180,

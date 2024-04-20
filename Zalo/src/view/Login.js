@@ -140,7 +140,9 @@ export default function Login({ navigation, selectedLanguage }) {
         </Pressable>
         <Pressable
           onPress={() => {
-            navigation.navigate("ScreenRegister", { selectedLanguage: language });
+            navigation.navigate("ScreenRegister", {
+              selectedLanguage: language,
+            });
           }}
           style={{
             width: 350,

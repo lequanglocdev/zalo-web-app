@@ -1,3 +1,4 @@
+import React, { useEffect, useContext } from "react";
 import {
   View,
   Text,
@@ -6,28 +7,12 @@ import {
   Image,
   Pressable,
 } from "react-native";
-import React, { useEffect, useState } from "react";
 import { Ionicons } from "@expo/vector-icons";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { SimpleLineIcons } from "@expo/vector-icons";
+import { globalContext } from "../context/globalContext"; // Import the global context
 
 export default function DataUser({ navigation }) {
-  const [userData, setUserData] = useState({ username: "" });
-
-  useEffect(() => {
-    async function fetchUserData() {
-      try {
-        const jsonValue = await AsyncStorage.getItem("userData");
-        if (jsonValue != null) {
-          setUserData(JSON.parse(jsonValue));
-        }
-      } catch (e) {
-        console.error("Error reading user data from AsyncStorage:", e);
-      }
-    }
-
-    fetchUserData();
-  }, []);
+  const { globalData } = useContext(globalContext);
 
   return (
     <ScrollView>
@@ -67,7 +52,7 @@ export default function DataUser({ navigation }) {
               fontWeight: 400,
             }}
           >
-            {userData.username}
+            {globalData.user.username}
           </Text>
         </View>
       </View>
@@ -81,7 +66,9 @@ export default function DataUser({ navigation }) {
       <View style={{ width: 380, justifyContent: "space-between" }}>
         <View style={{ marginLeft: 20, marginTop: 20, flexDirection: "row" }}>
           <Text style={{ fontSize: 15 }}>Giới tính</Text>
-          <Text style={{ fontSize: 15, marginLeft: 100 }}>Nam</Text>
+          <Text style={{ fontSize: 15, marginLeft: 100 }}>
+            {globalData.user.gender}
+          </Text>
         </View>
 
         <View
@@ -95,8 +82,10 @@ export default function DataUser({ navigation }) {
         ></View>
 
         <View style={{ marginLeft: 20, marginTop: 20, flexDirection: "row" }}>
-          <Text style={{ fontSize: 15 }}>Ngày sinh</Text>
-          <Text style={{ fontSize: 15, marginLeft: 90 }}>24/03/2002</Text>
+          <Text style={{ fontSize: 15 }}>Ngày sinh </Text>
+          <Text style={{ fontSize: 15, marginLeft: 90 }}>
+            {globalData.user.birthday}
+          </Text>
         </View>
 
         <View
@@ -113,7 +102,7 @@ export default function DataUser({ navigation }) {
           <Text style={{ fontSize: 15 }}>Điện thoại</Text>
           <View style={{ flexDirection: "column" }}>
             <Text style={{ fontSize: 15, marginLeft: 90 }}>
-              +84 396 356 806
+              +84 {globalData.user.phone}
             </Text>
             <View style={{ width: 230, marginLeft: 90 }}>
               <Text style={{ fontSize: 12, color: "#A9A9A9" }}>
@@ -133,6 +122,9 @@ export default function DataUser({ navigation }) {
         }}
       >
         <Pressable
+          onPress={() => {
+            navigation.navigate("Dateofbirth");
+          }}
           style={{
             width: 370,
             height: 55,

@@ -19,6 +19,16 @@ export default function AddFriend({ navigation, route }) {
   const [sentRequests, setSentRequests] = useState([]);
   const { globalData, globalHandler } = useContext(globalContext);
 
+  const handleAddFriend = () => {
+    api({
+      method: typeHTTP.GET,
+      url: `/room/get-by-user/${globalData.user?._id}`,
+    }).then((rooms) => {
+      globalHandler.setRooms(rooms);
+      navigation.navigate("Message");
+    });
+  };
+
   useEffect(() => {
     if (route.params && route.params.results) {
       setResult(route.params.results);
@@ -149,7 +159,6 @@ export default function AddFriend({ navigation, route }) {
                     alignItems: "center",
                     justifyContent: "center",
                     borderRadius: 90,
-                    marginLeft: 10,
                   }}
                 >
                   <Text
@@ -170,7 +179,6 @@ export default function AddFriend({ navigation, route }) {
                     alignItems: "center",
                     justifyContent: "center",
                     borderRadius: 90,
-                    marginLeft: 10,
                   }}
                 >
                   <Text
@@ -194,7 +202,6 @@ export default function AddFriend({ navigation, route }) {
                   alignItems: "center",
                   justifyContent: "center",
                   borderRadius: 90,
-                  marginLeft: 10,
                 }}
               >
                 <Text
@@ -246,7 +253,7 @@ export default function AddFriend({ navigation, route }) {
         <View style={{ flexDirection: "row" }}>
           <Pressable
             onPress={() => {
-              navigation.goBack();
+              handleAddFriend();
             }}
             style={{ marginLeft: 20, marginTop: 60 }}
           >
@@ -316,7 +323,6 @@ export default function AddFriend({ navigation, route }) {
               backgroundColor: "white",
               alignItems: "center",
               justifyContent: "center",
-              marginLeft: 10,
             }}
           >
             <View

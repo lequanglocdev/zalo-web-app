@@ -18,6 +18,7 @@ import AddFriend from "./AddFriend";
 import CreateGroup from "./CreateGroup";
 import DetailMedia from "./DetailMedia";
 import MessageItem from "./MessageItem";
+import ReadWord from "./ReadWord";
 
 export {
   Message,
@@ -40,4 +41,5 @@ export {
   CreateGroup,
   DetailMedia,
   MessageItem,
+  ReadWord,
 };

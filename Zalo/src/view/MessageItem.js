@@ -4,10 +4,12 @@ import { useNavigation } from "@react-navigation/native";
 import docx from "../../assets/docx.png";
 import rar from "../../assets/rar.png";
 import pdf from "../../assets/pdf.png";
+import pptx from "../../assets/ppt.png"; // Import icon for PowerPoint file
 export const fileTypes = {
   docx,
   rar,
   pdf,
+  pptx, // Add PowerPoint icon to fileTypes object
 };
 
 const MessageItem = ({ message }) => {
@@ -47,6 +49,11 @@ const MessageItem = ({ message }) => {
         .split("___")[0];
       return (
         <Pressable
+          onPress={() => {
+            navigation.navigate("ReadWord", {
+              url: message.information?.url,
+            });
+          }}
           style={{ flexDirection: "row", gap: 10, alignItems: "center" }}
         >
           <Image

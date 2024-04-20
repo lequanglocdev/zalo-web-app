@@ -62,7 +62,7 @@ export default function Otp({ navigation }) {
           url: "/user/verification",
           body: { phone: globalData.user.phone },
         }).then((res) => {
-          navigation.navigate("Dateofbirth");
+          navigation.navigate("Message");
         });
       });
   };
