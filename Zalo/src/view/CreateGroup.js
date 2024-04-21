@@ -34,6 +34,17 @@ export default function CreateGroup({ navigation }) {
   useEffect(() => setParticipants([globalData.user]), [globalData.user]);
 
   const handleSearch = () => {
+    // Kiểm tra độ dài của số điện thoại
+    if (phone.length < 9 || phone.length > 10) {
+      Alert.alert(
+        "Thông báo",
+        "Số điện thoại không có trong danh sách bạn bè, số phải có độ dài từ 9 đến 10 chữ số.",
+        [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+        { cancelable: false }
+      );
+      return;
+    }
+
     setResult([]);
     api({ url: "/user/find", method: typeHTTP.GET }).then((res) => {
       const arr = res.filter((item) =>

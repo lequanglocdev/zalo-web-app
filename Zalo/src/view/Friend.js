@@ -61,6 +61,7 @@ export default function Friend({ navigation, route }) {
   const [results, setResult] = useState([]);
 
   const handleSearch = () => {
+    // Kiểm tra xem đã chọn quốc gia chưa
     if (!selectedCountry) {
       Alert.alert(
         "Thông báo",
@@ -70,6 +71,19 @@ export default function Friend({ navigation, route }) {
       );
       return;
     }
+
+    // Kiểm tra độ dài của số điện thoại
+    if (phone.length < 9 || phone.length > 10) {
+      Alert.alert(
+        "Thông báo",
+        "Số điện thoại phải có độ dài từ 9 đến 10 chữ số.",
+        [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+        { cancelable: false }
+      );
+      return;
+    }
+
+    // Nếu số điện thoại hợp lệ, thực hiện chức năng handleSearch
     setResult([]);
     api({ url: "/user/find", method: typeHTTP.GET }).then((res) => {
       const arr = [];
