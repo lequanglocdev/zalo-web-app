@@ -184,21 +184,6 @@ export default function SendMessager({ navigation, route }) {
     }
   };
 
-  const handleDisBandRoom = () => {
-    if (globalData.currentRoom.type === "group") {
-      const id = globalData.currentRoom._id;
-      api({ method: typeHTTP.DELETE, url: `/room/${id}` }).then((res) => {
-        api({
-          method: typeHTTP.GET,
-          url: `/room/get-by-user/${globalData.user?._id}`,
-        }).then((rooms) => {
-          globalHandler.setRooms(rooms);
-          navigation.navigate("Message");
-        });
-      });
-    }
-  };
-
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -249,7 +234,15 @@ export default function SendMessager({ navigation, route }) {
                 <AntDesign name="videocamera" size={24} color="white" />
               </View>
               <Pressable
-                onPress={() => handleDisBandRoom()}
+                onPress={() => {
+                  // handleDisBandRoom();
+
+                  navigation.navigate("InfoRoom", {
+                    room_id: globalData.currentRoom?._id,
+                    room_type: globalData.currentRoom?.type,
+                    room_image: globalData.currentRoom?.image,
+                  });
+                }}
                 style={{ marginLeft: 20 }}
               >
                 <Feather name="list" size={24} color="white" />

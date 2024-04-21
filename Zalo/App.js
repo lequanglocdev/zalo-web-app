@@ -27,6 +27,9 @@ import {
   DetailMedia,
   MessageItem,
   ReadWord,
+  InfoRoom,
+  AddFriendGroup,
+  ViewGroupMembers,
 } from "./src/view";
 
 import { GlobalContext } from "./src/context/globalContext";
@@ -180,6 +183,9 @@ export default function App() {
           <Stack.Screen name="DetailMedia" component={DetailMedia} />
           <Stack.Screen name="MessageItem" component={MessageItem} />
           <Stack.Screen name="ReadWord" component={ReadWord} />
+          <Stack.Screen name="InfoRoom" component={InfoRoom} />
+          <Stack.Screen name="AddFriendGroup" component={AddFriendGroup} />
+          <Stack.Screen name="ViewGroupMembers" component={ViewGroupMembers} />
         </Stack.Navigator>
       </NavigationContainer>
     </GlobalContext>

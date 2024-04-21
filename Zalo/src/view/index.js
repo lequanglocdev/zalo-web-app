@@ -19,6 +19,9 @@ import CreateGroup from "./CreateGroup";
 import DetailMedia from "./DetailMedia";
 import MessageItem from "./MessageItem";
 import ReadWord from "./ReadWord";
+import InfoRoom from "./InfoRoom";
+import AddFriendGroup from "./AddFriendGroup";
+import ViewGroupMembers from "./ViewGroupMembers";
 
 export {
   Message,
@@ -42,4 +45,7 @@ export {
   DetailMedia,
   MessageItem,
   ReadWord,
+  InfoRoom,
+  AddFriendGroup,
+  ViewGroupMembers,
 };
