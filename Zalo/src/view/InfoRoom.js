@@ -169,6 +169,37 @@ export default function InfoRoom({ navigation, route }) {
       )}
 
       <Pressable
+        onPress={() => {
+          navigation.navigate("ImageAndFileScreen", {
+            roomId: room_id,
+            roomType: room_type,
+          });
+        }}
+        style={{
+          marginTop: 20,
+          alignItems: "center",
+          justifyContent: "center",
+        }}
+      >
+        <View
+          style={{
+            width: 40,
+            height: 40,
+            borderRadius: 90,
+            marginTop: 20,
+            backgroundColor: "#D3D3D3",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
+        >
+          <AntDesign name="filetext1" size={24} color="black" />
+        </View>
+        <View>
+          <Text style={{ fontSize: 16, marginTop: 10 }}>Ảnh và File</Text>
+        </View>
+      </Pressable>
+
+      <Pressable
         onPress={() => handleDisBandRoom()}
         style={{
           marginTop: 40,

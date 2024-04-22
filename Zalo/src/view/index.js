@@ -22,6 +22,7 @@ import ReadWord from "./ReadWord";
 import InfoRoom from "./InfoRoom";
 import AddFriendGroup from "./AddFriendGroup";
 import ViewGroupMembers from "./ViewGroupMembers";
+import ImageAndFileScreen from "./ImageAndFileScreen";
 
 export {
   Message,
@@ -48,4 +49,5 @@ export {
   InfoRoom,
   AddFriendGroup,
   ViewGroupMembers,
+  ImageAndFileScreen,
 };

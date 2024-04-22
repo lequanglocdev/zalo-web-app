@@ -30,6 +30,7 @@ import {
   InfoRoom,
   AddFriendGroup,
   ViewGroupMembers,
+  ImageAndFileScreen,
 } from "./src/view";
 
 import { GlobalContext } from "./src/context/globalContext";
@@ -186,6 +187,10 @@ export default function App() {
           <Stack.Screen name="InfoRoom" component={InfoRoom} />
           <Stack.Screen name="AddFriendGroup" component={AddFriendGroup} />
           <Stack.Screen name="ViewGroupMembers" component={ViewGroupMembers} />
+          <Stack.Screen
+            name="ImageAndFileScreen"
+            component={ImageAndFileScreen}
+          />
         </Stack.Navigator>
       </NavigationContainer>
     </GlobalContext>
