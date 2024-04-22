@@ -135,6 +135,29 @@ const acceptRequest = async (req, res) => {
   }
 };
 
+const unFriend = async (req, res) => {
+  try {
+    const { fromUser, toUser } = req.body
+
+    const userUpdated = await User.findByIdAndUpdate(
+      fromUser._id,
+      { $pull: { friends: { friendId: toUser._id } } },
+      { new: true }
+    );
+
+    await User.findByIdAndUpdate(
+      toUser._id,
+      { $pull: { friends: { friendId: fromUser._id } } },
+      { new: true }
+    );
+
+    return res.status(200).json(userUpdated)
+  } catch (error) {
+    return res.status(500).json(error.Message);
+  }
+
+}
+
 module.exports = {
   verificationUpdate,
   findUser,
@@ -143,4 +166,5 @@ module.exports = {
   sendRequestAddFriend,
   refuseRequest,
   acceptRequest,
+  unFriend
 };

@@ -7,10 +7,11 @@ const {
   sendRequestAddFriend,
   refuseRequest,
   acceptRequest,
+  unFriend
 } = require("../controllers/userController");
 const { verifyToken } = require("../middlewares/verifyToken");
-const {authenticateJWT} = require("../middlewares/authenticateJWT")
-const {updateUser} = require("../controllers/updateUser")
+const { authenticateJWT } = require("../middlewares/authenticateJWT")
+const { updateUser } = require("../controllers/updateUser")
 
 router.post("/verification", verificationUpdate);
 router.get("/find/:userId", findUser);
@@ -19,7 +20,8 @@ router.get("/", getUsers);
 router.post("/send-request-add-friend", sendRequestAddFriend);
 router.post("/refuse-request", refuseRequest);
 router.post("/accept-request", acceptRequest);
+router.post("/unfriend", authenticateJWT, unFriend)
 
-router.post("/update", authenticateJWT,  updateUser);
+router.post("/update", authenticateJWT, updateUser);
 
 module.exports = router;

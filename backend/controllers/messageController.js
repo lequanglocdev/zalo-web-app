@@ -24,14 +24,12 @@ class MessageController {
       };
       if (typeMessage !== "text" && typeMessage !== "notify") {
         const result = await uploadToS3(
-          `${
-            information.mimetype.split("/")[0] !== "application"
-              ? information.mimetype.split("/")[0]
-              : information.originalname.split(".")[
-                  information.originalname.split(".").length - 1
-                ]
-          }___${Date.now().toString()}_${
-            information.originalname.split(".")[0]
+          `${information.mimetype.split("/")[0] !== "application"
+            ? information.mimetype.split("/")[0]
+            : information.originalname.split(".")[
+            information.originalname.split(".").length - 1
+            ]
+          }___${Date.now().toString()}_${information.originalname.split(".")[0]
           }`,
           information.buffer,
           information.mimetype,
@@ -59,14 +57,12 @@ class MessageController {
       };
       if (typeMessage !== "text" && typeMessage !== "notify") {
         const result = await uploadToS3(
-          `${
-            information.mimetype.split("/")[0] !== "application"
-              ? information.mimetype.split("/")[0]
-              : information.originalname.split(".")[
-                  information.originalname.split(".").length - 1
-                ]
-          }___${Date.now().toString()}_${
-            information.originalname.split(".")[0]
+          `${information.mimetype.split("/")[0] !== "application"
+            ? information.mimetype.split("/")[0]
+            : information.originalname.split(".")[
+            information.originalname.split(".").length - 1
+            ]
+          }___${Date.now().toString()}_${information.originalname.split(".")[0]
           }`,
           information.buffer,
           information.mimetype,
@@ -82,6 +78,24 @@ class MessageController {
       return res.status(500).json(error.Message);
     }
   };
+
+  disableMessage = async (req, res) => {
+    try {
+      const { message_id} = req.body
+
+      const messageUpdate = await messageModel.findByIdAndUpdate(
+        { _id: message_id},
+        { disabled: true },
+        { new: true }
+      )
+      console.log(messageUpdate)
+
+      // return res.status(400).json("Xóa tin nhắn không thành công")
+    } catch (error) {
+      return res.status(500).json(error.Message)
+    }
+  }
 }
+
 
 module.exports = new MessageController();

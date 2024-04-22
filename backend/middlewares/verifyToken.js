@@ -9,7 +9,8 @@ const verifyToken = (req, res, next) => {
   try {
     const decoded = jwt.verify(token, process.env.JWT_ACCESS_KEY);
     console.log("decoded: ", decoded);
-
+    
+    req._id = decoded._id
     req.phone = decoded.phone;
     next();
   } catch (error) {

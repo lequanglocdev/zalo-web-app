@@ -2,10 +2,10 @@ POST  http://localhost:5000/v1/auth/register
 Content-Type: application/json
 
 {
-   "username": "Ha Trong Dt",
-   "phone": "090799031",
+   "username": "Ha Trong Dat",
+   "phone": "0907990310",
    "password": "123456",
-   "email": "smile442019@gmail.com"
+   "email": "haducanh1802@gmail.com"
 }
 
 ###
@@ -13,7 +13,7 @@ POST http://localhost:5000/v1/auth/login
 Content-Type: application/json
 
 {
-    "phone": "0907990317",
+    "phone": "0907990310",
     "password": "123456"
 }
 
@@ -21,3 +21,37 @@ Content-Type: application/json
 POST http://localhost:5000/v1/auth/logout
 Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY1ZWVmYWM5Mjg4ZDEwZWRmODQ4MzEyZCIsImlzQWRtaW4iOmZhbHNlLCJpYXQiOjE3MTAxNjg1ODUsImV4cCI6MTcxMDE3MjE4NX0.Gbdhl0QyYe65uVbJX8CM3z82sHdE_rTBCYYjZa_FGos
 
+###
+POST http://localhost:5000/v1/user/unfriend
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY2MjY2OTAzNWM2NmRkZGFjYmE1MDdlYyIsInBob25lIjoiMDkwNzk5MDMxNyIsImlhdCI6MTcxMzc5NDEzOCwiZXhwIjoxNzE0MDUzMzM4fQ.E8PE5lKj9ywgVq3MMpa8-W5d5N-C1UbItZXtnkGSpUo
+
+{
+    "fromUser": {
+        "_id": "662669035c66dddacba507ec"
+    },
+    "toUser": {
+        "_id": "66266a355c66dddacba507f0"
+    }
+}
+
+###
+POST http://localhost:5000/v1/user/accept-request
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJfaWQiOiI2NjI2NmEzNTVjNjZkZGRhY2JhNTA3ZjAiLCJwaG9uZSI6IjA5MDc5OTAzMTAiLCJpYXQiOjE3MTM4MTc0MjcsImV4cCI6MTcxNDA3NjYyN30.UMFSfjKO995MCCg766CuWnqjcUzR1MjSdZMNQJj_hCE
+
+{
+    "fromUser": {
+        "_id": "66266a355c66dddacba507f0"
+    },
+    "toUser": {
+        "_id": "662669035c66dddacba507ec"
+    }
+}
+
+###
+POST http://localhost:5000/v1/message/disableMessage
+Content-Type: application/json
+
+{
+    "message_id": "662613d67469b19bd44f3ad6"
+
+}
