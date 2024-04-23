@@ -1,5 +1,13 @@
 import React from "react";
-import { Image, Pressable, Text, View } from "react-native";
+import {
+  Image,
+  Pressable,
+  Text,
+  View,
+  TouchableOpacity,
+  VideoPlayer,
+  AudioPlayer,
+} from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import docx from "../../assets/docx.png";
 import rar from "../../assets/rar.png";
@@ -42,6 +50,41 @@ const MessageItem = ({ message }) => {
             source={{ uri: message.information?.url }}
           />
         </Pressable>
+      );
+    } else if (message.information.url.includes("/video___")) {
+      return (
+        <TouchableOpacity
+          onLongPress={() => handleTouchHover()}
+          key={index}
+          onPress={() =>
+            navigation.navigate("VideoDetail", {
+              url: message.information?.url,
+            })
+          }
+          style={{ position: "relative" }}
+        >
+          <View
+            style={{
+              position: "absolute",
+              top: 0,
+              left: 0,
+              width: "100%",
+              height: "100%",
+              zIndex: 1,
+            }}
+          ></View>
+          <VideoPlayer
+            key={index}
+            url={message.information.url}
+            style={{ width: 300, height: 300 }}
+          />
+        </TouchableOpacity>
+      );
+    } else if (message.information.url.includes("/audio___")) {
+      return (
+        <TouchableOpacity key={index} onLongPress={() => handleTouchHover()}>
+          <AudioPlayer key={index} url={message.information.url} />
+        </TouchableOpacity>
       );
     } else {
       const fileType = message.information.url

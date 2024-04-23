@@ -31,6 +31,8 @@ import {
   AddFriendGroup,
   ViewGroupMembers,
   ImageAndFileScreen,
+  VideoPlayer,
+  ResetPassword,
 } from "./src/view";
 
 import { GlobalContext } from "./src/context/globalContext";
@@ -168,6 +170,7 @@ export default function App() {
           <Stack.Screen name="User" component={User} />
           <Stack.Screen name="ScreenLogin" component={ScreenLogin} />
           <Stack.Screen name="ScreenRegister" component={ScreenRegister} />
+          <Stack.Screen name="ResetPassword" component={ResetPassword} />
           <Stack.Screen name="Setting" component={Setting} />
           <Stack.Screen name="Friend" component={Friend} />
           <Stack.Screen
@@ -192,6 +195,7 @@ export default function App() {
             component={ImageAndFileScreen}
           />
         </Stack.Navigator>
+        <Stack.Screen name="VideoPlayer" component={VideoPlayer} />
       </NavigationContainer>
     </GlobalContext>
   );

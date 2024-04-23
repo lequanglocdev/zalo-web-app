@@ -78,7 +78,7 @@ export default function ScreenLogin({ navigation, route }) {
 
     try {
       const response = await axios.post(
-        "http://192.168.0.87:5000/v1/auth/login",
+        "http://192.168.1.86:5000/v1/auth/login",
         data,
         {
           headers: { "Content-type": "application/json" },
@@ -210,17 +210,23 @@ export default function ScreenLogin({ navigation, route }) {
         <View style={{ width: 350, borderWidth: 1, borderColor: "#DCDCDC" }} />
       </View>
 
-      <Text
-        style={{
-          fontSize: 14,
-          fontWeight: "bold",
-          color: "blue",
-          marginLeft: 20,
-          marginTop: 20,
+      <Pressable
+        onPress={() => {
+          navigation.navigate("ResetPassword");
         }}
       >
-        {selectedLanguage === "vi" ? "Lấy lại mật khẩu" : "Forgot Password"}
-      </Text>
+        <Text
+          style={{
+            fontSize: 14,
+            fontWeight: "bold",
+            color: "blue",
+            marginLeft: 20,
+            marginTop: 20,
+          }}
+        >
+          {selectedLanguage === "vi" ? "Lấy lại mật khẩu" : "Forgot Password"}
+        </Text>
+      </Pressable>
 
       <View
         style={{

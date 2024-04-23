@@ -3,7 +3,7 @@ const User = require("../models/User");
 const bcrypt = require("bcrypt");
 const asyncHandler = require("express-async-handler");
 const sendMail = require("../utils/sendMail");
-const crypto = require("crypto")
+const crypto = require("crypto");
 const userRegister = async (req, res) => {
   const { username, phone, password, email } = req.body;
   const errors = [];
@@ -123,41 +123,93 @@ const userLogout = async (req, res) => {
   res.status(200).json("Logged out successfully!");
 };
 
+// const forgetPassword = asyncHandler(async (req, res) => {
+//   const { email } = req.query;
+//   if (!email) throw new Error("Missing email");
+//   const user = await User.findOne({ email });
+//   if (!user) throw new Error("User not found");
+//   const resetToken = user.createChangePassword();
+//   await user.save();
+
+//   const html = `Xin vui lòng click vào link dưới đây để thay đổi mật khẩu của bạn.Link này sẽ hết hạn sau 15 phút kể từ bây giờ. <a href=${process.env.URL_SERVER}/api/user/reset-password/${resetToken}>Click here</a>`;
+
+//   const data = {
+//     email,
+//     html,
+//   };
+//   const rs = await sendMail(data);
+//   return res.status(200).json({
+//     sucess: true,
+//     rs,
+//   });
+// });
 const forgetPassword = asyncHandler(async (req, res) => {
-  const { email } = req.query;
+  const { email } = req.body;
   if (!email) throw new Error("Missing email");
   const user = await User.findOne({ email });
   if (!user) throw new Error("User not found");
-  const resetToken = user.createChangePassword();
+
+  // Tạo một mật khẩu mới ngẫu nhiên
+  const newPassword = generateRandomPassword();
+
+  // Cập nhật mật khẩu mới cho người dùng
+  user.password = newPassword;
   await user.save();
 
-  const html = `Xin vui lòng click vào link dưới đây để thay đổi mật khẩu của bạn.Link này sẽ hết hạn sau 15 phút kể từ bây giờ. <a href=${process.env.URL_SERVER}/api/user/reset-password/${resetToken}>Click here</a>`;
-
+  // Gửi email chứa mật khẩu mới
+  const html = `Mật khẩu mới của bạn là: <strong>${newPassword}</strong>. Vui lòng đăng nhập và đổi mật khẩu sau khi đăng nhập thành công.`;
   const data = {
     email,
     html,
   };
   const rs = await sendMail(data);
+
   return res.status(200).json({
-    sucess: true,
+    success: true,
     rs,
   });
 });
-const resetPassword = asyncHandler(async(req,res)=>{
-  const {password,token} = req.body
-  if(!password || !token) throw new Error("Missing inputs")
-  const passwordResetToken = crypto.createHash('sha256').update(token).digest('hex')
-  const user = await User.findOne({passwordResetToken,passwordResetExpires:{$gt:Date.now()}})
-  if(!user) throw new Error("Invalid reset token")
-  user.password = password
-  user.passwordResetToken = undefined
-  user.passwordChangedAt = Date.now()
-  user.passwordResetExpires = undefined
-  await user.save()
+
+// Hàm tạo mật khẩu ngẫu nhiên
+function generateRandomPassword() {
+  const length = 6;
+  const charset = "123456";
+  let newPassword = "";
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * charset.length);
+    newPassword += charset[randomIndex];
+  }
+  return newPassword;
+}
+
+module.exports = forgetPassword;
+const resetPassword = asyncHandler(async (req, res) => {
+  const { password, token } = req.body;
+  if (!password || !token) throw new Error("Missing inputs");
+  const passwordResetToken = crypto
+    .createHash("sha256")
+    .update(token)
+    .digest("hex");
+  const user = await User.findOne({
+    passwordResetToken,
+    passwordResetExpires: { $gt: Date.now() },
+  });
+  if (!user) throw new Error("Invalid reset token");
+  user.password = password;
+  user.passwordResetToken = undefined;
+  user.passwordChangedAt = Date.now();
+  user.passwordResetExpires = undefined;
+  await user.save();
   return res.status(200).json({
     sucess: user ? true : false,
-    mes: user ? 'Updated password' : 'Something went wrong'
-  })
-})
+    mes: user ? "Updated password" : "Something went wrong",
+  });
+});
 
-module.exports = { userRegister, userLogin, userLogout, forgetPassword,resetPassword };
+module.exports = {
+  userRegister,
+  userLogin,
+  userLogout,
+  forgetPassword,
+  resetPassword,
+};

@@ -23,6 +23,8 @@ import InfoRoom from "./InfoRoom";
 import AddFriendGroup from "./AddFriendGroup";
 import ViewGroupMembers from "./ViewGroupMembers";
 import ImageAndFileScreen from "./ImageAndFileScreen";
+import VideoPlayer from "./VideoPlayer";
+import ResetPassword from "./ResetPassword";
 
 export {
   Message,
@@ -50,4 +52,6 @@ export {
   AddFriendGroup,
   ViewGroupMembers,
   ImageAndFileScreen,
+  VideoPlayer,
+  ResetPassword,
 };
