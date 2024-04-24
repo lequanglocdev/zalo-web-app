@@ -101,7 +101,19 @@ export default function Message({ navigation }) {
               >
                 <View>
                   <Image
-                    source={{ uri: room.image }}
+                    source={
+                      room.type === "group"
+                        ? { uri: room.image }
+                        : getRemainUserForSingleRoom(room, globalData.user?._id)
+                            .image
+                        ? {
+                            uri: getRemainUserForSingleRoom(
+                              room,
+                              globalData.user?._id
+                            ).image,
+                          }
+                        : require("../image/ảnh nền.png")
+                    }
                     style={{
                       width: 50,
                       height: 50,

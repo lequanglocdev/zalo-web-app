@@ -97,7 +97,7 @@ export default function DateOfBirth({ navigation }) {
     await updateUser();
 
     // Navigate back
-    navigation.goBack();
+    navigation.navigate("Avatar");
   };
 
   return (

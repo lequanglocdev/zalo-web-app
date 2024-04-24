@@ -10,6 +10,7 @@ import {
   Platform,
   Keyboard,
   Alert,
+  Image,
 } from "react-native";
 import {
   AntDesign,
@@ -276,6 +277,27 @@ export default function SendMessager({ navigation, route }) {
                 marginHorizontal: 10,
               }}
             >
+              {item.user_id !== globalData.user._id && (
+                <Image
+                  style={{
+                    height: 50,
+                    width: 50,
+                    borderRadius: 50,
+                    marginRight: 10,
+                  }}
+                  source={
+                    globalData.currentRoom?.users.filter(
+                      (item1) => item1._id === item.user_id
+                    )[0].image
+                      ? {
+                          uri: globalData.currentRoom?.users.filter(
+                            (item1) => item1._id === item.user_id
+                          )[0].image,
+                        }
+                      : require("../image/ảnh nền.png")
+                  }
+                />
+              )}
               <View
                 style={{
                   backgroundColor:

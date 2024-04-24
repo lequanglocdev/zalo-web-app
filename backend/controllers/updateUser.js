@@ -1,4 +1,6 @@
 const User = require("../models/User");
+const uploadToS3 = require("../upload/s3");
+const { formatBase64ToBuffer } = require("../utils/buffer");
 
 // Controller function to update user information
 const updateUser = async (req, res) => {
@@ -46,7 +48,6 @@ const updateUserMobile = async (req, res) => {
     if (req.body.username) user.username = req.body.username;
     if (req.body.gender) user.gender = req.body.gender;
     if (req.body.birthday) user.birthday = new Date(req.body.birthday);
-    console.log(req.body);
     const updatedUser = await user.save();
 
     return res.status(200).json(updatedUser);
@@ -55,4 +56,37 @@ const updateUserMobile = async (req, res) => {
   }
 };
 
-module.exports = { updateUser, updateUserMobile };
+const updateAvatarMobile = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const { avatar } = req.body;
+    console.log(avatar);
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ error: "User not found !!!" });
+    }
+    if (avatar) {
+      avatar.buffer = await formatBase64ToBuffer(avatar.base64);
+      const result = await uploadToS3(
+        `${avatar.mimetype.split("/")[0]}___${Date.now().toString()}_${
+          avatar.originalname.split(".")[0]
+        }`,
+        avatar.buffer,
+        avatar.mimetype,
+        avatar.originalname.split(".")[0],
+        avatar.size / 1024
+      );
+      console.log(result);
+      user.image = result.url;
+    }
+
+    const updatedUser = await user.save();
+
+    return res.status(200).json(updatedUser);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Error updating user information" });
+  }
+};
+
+module.exports = { updateUser, updateUserMobile, updateAvatarMobile };

@@ -11,7 +11,11 @@ const {
 } = require("../controllers/userController");
 const { verifyToken } = require("../middlewares/verifyToken");
 const { authenticateJWT } = require("../middlewares/authenticateJWT");
-const { updateUser, updateUserMobile } = require("../controllers/updateUser");
+const {
+  updateUser,
+  updateUserMobile,
+  updateAvatarMobile,
+} = require("../controllers/updateUser");
 
 router.post("/verification", verificationUpdate);
 router.get("/find/:userId", findUser);
@@ -23,5 +27,6 @@ router.post("/accept-request", acceptRequest);
 router.post("/unfriend", authenticateJWT, unFriend);
 router.post("/update", authenticateJWT, updateUser);
 router.put("/update-mobile/:id", updateUserMobile);
+router.put("/update-avatar-mobile/:id", updateAvatarMobile);
 
 module.exports = router;

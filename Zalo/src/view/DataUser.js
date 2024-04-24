@@ -40,7 +40,11 @@ export default function DataUser({ navigation }) {
 
       <View style={{ flexDirection: "row" }}>
         <Image
-          source={require("../image/hinhcanhan.png")}
+          source={
+            globalData.user?.image
+              ? { uri: globalData.user?.image }
+              : require("../image/ảnh nền.png")
+          }
           style={{
             width: 50,
             height: 50,

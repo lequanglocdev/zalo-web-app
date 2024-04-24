@@ -7,7 +7,7 @@ import {
   TextInput,
   Pressable,
 } from "react-native";
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { SimpleLineIcons } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
@@ -16,9 +16,16 @@ import { Ionicons } from "@expo/vector-icons";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Entypo } from "@expo/vector-icons";
 import AsyncStorage from "@react-native-async-storage/async-storage";
+import { globalContext } from "../context/globalContext";
 
 export default function User({ navigation }) {
   const [userData, setUserData] = useState({ username: "" });
+  const { globalData } = useContext(globalContext);
+  const [image, setImage] = useState();
+
+  useEffect(() => {
+    setImage(globalData.user?.image ? globalData.user?.image : null);
+  }, [globalData.user]);
 
   useEffect(() => {
     async function fetchUserData() {
@@ -83,7 +90,9 @@ export default function User({ navigation }) {
               style={{ flexDirection: "row" }}
             >
               <Image
-                source={require("../image/hinhcanhan.png")}
+                source={
+                  image ? { uri: image } : require("../image/ảnh nền.png")
+                }
                 style={{
                   width: 50,
                   height: 50,

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -7,11 +7,63 @@ import {
   Pressable,
   Modal,
   StyleSheet,
+  Image,
 } from "react-native";
 import { Entypo, Ionicons } from "@expo/vector-icons";
+import * as ImagePicker from "expo-image-picker";
+import * as FileSystem from "expo-file-system";
+import { globalContext } from "../context/globalContext";
+import { api, typeHTTP } from "../utils/api";
 
 export default function Avatar({ navigation }) {
   const [modalVisible, setModalVisible] = useState(false);
+  const { globalData, globalHandler } = useContext(globalContext);
+  const [image, setImage] = useState();
+
+  useEffect(() => {
+    setImage(globalData.user?.image ? globalData.user?.image : null);
+  }, [globalData.user]);
+
+  const pickImage = async () => {
+    let permissionResult =
+      await ImagePicker.requestMediaLibraryPermissionsAsync();
+    if (permissionResult.granted === false) {
+      Alert.alert(
+        "Thông báo",
+        "Ứng dụng cần quyền truy cập vào thư viện ảnh để chọn ảnh!",
+        [{ text: "OK", onPress: () => console.log("Permission denied") }]
+      );
+      return;
+    }
+    try {
+      let result = await ImagePicker.launchImageLibraryAsync({
+        // allowsMultipleSelection: true,
+        mediaTypes: ImagePicker.MediaTypeOptions.Images,
+        base64: true,
+      });
+      if (!result.cancelled) {
+        const body = {
+          avatar: {
+            base64: result.assets[0].base64,
+            originalname: result.assets[0].fileName,
+            uri: result.assets[0].uri,
+            mimetype: result.assets[0].mimeType,
+            size: result.assets[0].fileSize,
+          },
+        };
+        api({
+          url: `/user/update-avatar-mobile/${globalData.user?._id}`,
+          method: typeHTTP.PUT,
+          body: body,
+        }).then((res) => {
+          setModalVisible(false);
+          globalHandler.setUser(res);
+        });
+      }
+    } catch (error) {
+      console.error("Error picking images:", error);
+    }
+  };
 
   return (
     <ScrollView>
@@ -64,7 +116,14 @@ export default function Avatar({ navigation }) {
             justifyContent: "center",
           }}
         >
-          <Entypo name="user" size={100} color="white" />
+          {image ? (
+            <Image
+              source={{ uri: image }}
+              style={{ width: 150, height: 150, borderRadius: 150 }}
+            />
+          ) : (
+            <Entypo name="user" size={100} color="white" />
+          )}
         </View>
       </View>
 
@@ -84,7 +143,7 @@ export default function Avatar({ navigation }) {
       <View style={{ alignItems: "center" }}>
         <Pressable
           onPress={() => {
-            navigation.navigate("Message");
+            navigation.navigate("DataUser");
           }}
           style={{
             marginTop: 180,
@@ -110,7 +169,7 @@ export default function Avatar({ navigation }) {
         <View style={styles.modalContainer}>
           <View style={styles.modalContent}>
             {/* Tùy chọn chọn ảnh từ thư viện */}
-            <Pressable onPress={() => console.log("Chọn ảnh từ thư viện")}>
+            <Pressable onPress={() => pickImage()}>
               <Text style={styles.modalOption}>Chọn ảnh từ thư viện</Text>
             </Pressable>
             {/* Tùy chọn chụp ảnh từ camera */}
