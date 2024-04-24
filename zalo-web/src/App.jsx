@@ -9,6 +9,7 @@ import Register from "./pages/Auth/Register";
 import { useContext, useEffect } from "react";
 import { api, typeHTTP } from "./utils/api";
 import CreatingGroup from "./pages/Default/creating-group";
+import ForgetPassword from "./pages/Auth/ForgetPassword";
 
 function App() {
   const location = useLocation();
@@ -34,6 +35,7 @@ function App() {
       <Route path="/" element={<Login />} />
       <Route path="/register" element={<Register />} />
       <Route path="/verification" element={<VerificationPage />} />
+      <Route path="/forgetpassword" element={<ForgetPassword />} />
       <Route path="home" element={<Home />} />
       <Route path="/creating-group" element={<CreatingGroup />} />
     </Routes>

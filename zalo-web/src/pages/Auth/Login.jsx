@@ -114,6 +114,9 @@ const Login = () => {
   const ClickRegister = () => {
     nav("/register");
   };
+  const ClickForgetPassword = () => {
+    nav("/forgetpassword");
+  };
   return (
     <>
       <Backdrop
@@ -191,6 +194,7 @@ const Login = () => {
                 color: "#3498db",
                 cursor: "pointer",
               }}
+              onClick={ClickForgetPassword}
             >
               Quên mật khẩu
             </Typography>
