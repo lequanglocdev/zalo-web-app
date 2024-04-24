@@ -1,18 +1,11 @@
 import React from "react";
-import {
-  Image,
-  Pressable,
-  Text,
-  View,
-  TouchableOpacity,
-  VideoPlayer,
-  AudioPlayer,
-} from "react-native";
+import { Image, Pressable, Text, View, AudioPlayer } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import docx from "../../assets/docx.png";
 import rar from "../../assets/rar.png";
 import pdf from "../../assets/pdf.png";
 import pptx from "../../assets/ppt.png"; // Import icon for PowerPoint file
+import VideoPlayer from "./VideoPlayer";
 export const fileTypes = {
   docx,
   rar,
@@ -53,11 +46,9 @@ const MessageItem = ({ message }) => {
       );
     } else if (message.information.url.includes("/video___")) {
       return (
-        <TouchableOpacity
-          onLongPress={() => handleTouchHover()}
-          key={index}
+        <Pressable
           onPress={() =>
-            navigation.navigate("VideoDetail", {
+            navigation.navigate("VideoMedia", {
               url: message.information?.url,
             })
           }
@@ -74,16 +65,15 @@ const MessageItem = ({ message }) => {
             }}
           ></View>
           <VideoPlayer
-            key={index}
             url={message.information.url}
             style={{ width: 300, height: 300 }}
           />
-        </TouchableOpacity>
+        </Pressable>
       );
     } else if (message.information.url.includes("/audio___")) {
       return (
-        <TouchableOpacity key={index} onLongPress={() => handleTouchHover()}>
-          <AudioPlayer key={index} url={message.information.url} />
+        <TouchableOpacity onLongPress={() => handleTouchHover()}>
+          <AudioPlayer url={message.information.url} />
         </TouchableOpacity>
       );
     } else {

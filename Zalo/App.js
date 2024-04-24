@@ -33,6 +33,7 @@ import {
   ImageAndFileScreen,
   VideoPlayer,
   ResetPassword,
+  VideoMedia,
 } from "./src/view";
 
 import { GlobalContext } from "./src/context/globalContext";
@@ -185,6 +186,7 @@ export default function App() {
           <Stack.Screen name="SendMessager" component={SendMessager} />
           <Stack.Screen name="CreateGroup" component={CreateGroup} />
           <Stack.Screen name="DetailMedia" component={DetailMedia} />
+          <Stack.Screen name="VideoMedia" component={VideoMedia} />
           <Stack.Screen name="MessageItem" component={MessageItem} />
           <Stack.Screen name="ReadWord" component={ReadWord} />
           <Stack.Screen name="InfoRoom" component={InfoRoom} />

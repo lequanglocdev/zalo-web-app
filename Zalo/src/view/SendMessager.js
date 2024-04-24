@@ -151,16 +151,25 @@ export default function SendMessager({ navigation, route }) {
         base64: true,
       });
       if (!result.cancelled) {
+        let base64 = null;
+        if (result.assets[0].mimeType.includes("video/")) {
+          base64 = await FileSystem.readAsStringAsync(result.assets[0].uri, {
+            encoding: FileSystem.EncodingType.Base64,
+          });
+        }
+
         const body = {
           room_id: globalData.currentRoom._id,
           information: {
-            base64: result.assets[0].base64,
+            base64: base64 === null ? result.assets[0].base64 : base64,
             originalname: result.assets[0].fileName,
             uri: result.assets[0].uri,
             mimetype: result.assets[0].mimeType,
             size: result.assets[0].fileSize,
           },
-          typeMessage: "image",
+          typeMessage: result.assets[0].mimeType.includes("video/")
+            ? "video"
+            : "image",
           user_id: globalData.user._id,
           users: globalData.currentRoom?.users.map((item) => item._id),
         };

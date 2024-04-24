@@ -28,12 +28,31 @@ const updateUser = async (req, res) => {
     const updatedUser = await user.save();
 
     // Trả về thông tin người dùng đã được cập nhật
-    res.status(200).json(updatedUser);
+    return res.status(200).json(updatedUser);
   } catch (error) {
     // Xử lý lỗi nếu có bất kỳ lỗi nào xảy ra
-    res.status(500).json({ error: 'Error updating user information' });
+    return res.status(500).json({ error: "Error updating user information" });
   }
 };
 
+const updateUserMobile = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ error: "User not found !!!" });
+    }
+    // Cập nhật thông tin người dùng
+    if (req.body.username) user.username = req.body.username;
+    if (req.body.gender) user.gender = req.body.gender;
+    if (req.body.birthday) user.birthday = new Date(req.body.birthday);
+    console.log(req.body);
+    const updatedUser = await user.save();
 
-module.exports = { updateUser };
+    return res.status(200).json(updatedUser);
+  } catch (error) {
+    return res.status(500).json({ error: "Error updating user information" });
+  }
+};
+
+module.exports = { updateUser, updateUserMobile };

@@ -12,6 +12,7 @@ const VideoPlayer = ({ url, style }) => {
       ? videoRef.current.playAsync()
       : videoRef.current.pauseAsync();
   }, [playing]);
+  console.log(url);
 
   return (
     <View

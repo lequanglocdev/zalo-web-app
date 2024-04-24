@@ -25,6 +25,7 @@ import ViewGroupMembers from "./ViewGroupMembers";
 import ImageAndFileScreen from "./ImageAndFileScreen";
 import VideoPlayer from "./VideoPlayer";
 import ResetPassword from "./ResetPassword";
+import VideoMedia from "./VideoMedia";
 
 export {
   Message,
@@ -54,4 +55,5 @@ export {
   ImageAndFileScreen,
   VideoPlayer,
   ResetPassword,
+  VideoMedia,
 };

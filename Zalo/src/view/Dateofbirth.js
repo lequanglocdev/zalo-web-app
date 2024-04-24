@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   View,
   Text,
@@ -10,15 +10,16 @@ import {
 import { MaterialCommunityIcons } from "@expo/vector-icons";
 import { Picker } from "@react-native-picker/picker";
 import { api, typeHTTP } from "../utils/api";
+import { convertStringtoDate } from "../utils/date";
+import { globalContext } from "../context/globalContext";
 
 const years = [];
 for (let i = 1900; i <= new Date().getFullYear(); i++) {
   years.push(i.toString());
 }
 
-const months = Array.from({ length: 12 }, (_, i) => i + 1).map(
-  (month) => `Tháng ${month}`
-);
+// Thay đổi cách tạo mảng months để tính từ 1 đến 12
+const months = Array.from({ length: 12 }, (_, i) => (i + 1).toString());
 
 const days = Array.from({ length: 31 }, (_, i) => i + 1).map((day) =>
   day.toString()
@@ -28,6 +29,7 @@ export default function DateOfBirth({ navigation }) {
   const [selectedYear, setSelectedYear] = useState(
     new Date().getFullYear().toString()
   );
+  const { globalData, globalHandler } = useContext(globalContext);
   const [selectedMonth, setSelectedMonth] = useState("1");
   const [selectedDay, setSelectedDay] = useState("1");
   const [gender, setGender] = useState(""); // State to track selected gender
@@ -66,30 +68,33 @@ export default function DateOfBirth({ navigation }) {
   // Function to update user data in backend
   const updateUser = async () => {
     const body = {
+      username: globalData.user?.username,
       gender: gender,
-      birthday: `${selectedYear}-${selectedMonth}-${selectedDay}`,
+      birthday: convertStringtoDate(
+        `${selectedDay}-${selectedMonth}-${selectedYear}`
+      ),
     };
-
     try {
       const res = await api({
         method: typeHTTP.PUT,
-        url: "/user/update", // Thay đổi endpoint
+        url: `/user/update-mobile/${globalData.user?._id}`, // Thay đổi endpoint
         body: body,
       });
       if (res.error) {
         console.error("API Error:", res.error);
         return;
       }
-      console.log("User profile updated successfully");
+      console.log("User profile updated successfully", res);
+      globalHandler.setUser(res);
     } catch (error) {
       console.error("API Error:", error);
     }
   };
 
   // Function to handle navigation when pressing the "Tiếp tục" button
-  const handleContinuePress = () => {
+  const handleContinuePress = async () => {
     // Call updateUser function to update user profile
-    updateUser();
+    await updateUser();
 
     // Navigate back
     navigation.goBack();

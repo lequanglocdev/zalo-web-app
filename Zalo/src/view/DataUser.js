@@ -13,6 +13,12 @@ import { globalContext } from "../context/globalContext"; // Import the global c
 
 export default function DataUser({ navigation }) {
   const { globalData } = useContext(globalContext);
+  const formatDate = (date) => {
+    const day = date.getDate().toString().padStart(2, "0");
+    const month = date.getMonth().toString().padStart(2, "0");
+    const year = date.getFullYear();
+    return `${day}-${month}-${year}`;
+  };
 
   return (
     <ScrollView>
@@ -84,7 +90,7 @@ export default function DataUser({ navigation }) {
         <View style={{ marginLeft: 20, marginTop: 20, flexDirection: "row" }}>
           <Text style={{ fontSize: 15 }}>Ngày sinh </Text>
           <Text style={{ fontSize: 15, marginLeft: 90 }}>
-            {globalData.user.birthday}
+            {formatDate(new Date(globalData.user.birthday))}
           </Text>
         </View>
 
