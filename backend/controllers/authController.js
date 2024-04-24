@@ -52,15 +52,13 @@ const userRegister = async (req, res) => {
       });
     } else {
       try {
-        const salt = await bcrypt.genSalt(10);
-        const hashed = await bcrypt.hash(password, salt);
-
+     
         //Create new user
         const newUser = new User({
           username: username,
           phone: phone,
           email: email,
-          password: hashed,
+          password: password,
           verification: false,
         });
         console.log(newUser);
