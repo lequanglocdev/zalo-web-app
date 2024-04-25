@@ -288,11 +288,11 @@ export default function SendMessager({ navigation, route }) {
                   source={
                     globalData.currentRoom?.users.filter(
                       (item1) => item1._id === item.user_id
-                    )[0].image
+                    )[0]?.image
                       ? {
                           uri: globalData.currentRoom?.users.filter(
                             (item1) => item1._id === item.user_id
-                          )[0].image,
+                          )[0]?.image,
                         }
                       : require("../image/ảnh nền.png")
                   }
