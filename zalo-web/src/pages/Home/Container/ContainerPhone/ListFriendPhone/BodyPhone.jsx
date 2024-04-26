@@ -46,8 +46,20 @@ const BodyPhone = () => {
         gap: 1,
         overflow: "hidden",
         overflowY: "auto",
-        "&::-webkit-scrollbar-thumb": { backgroundColor: "#b2bec3" },
-        "&::-webkit-scrollbar-thumb:hover": { backgroundColor: "#bfc2cf" },
+        "&::-webkit-scrollbar": {
+          width: "8px",
+        },
+        "&::-webkit-scrollbar-thumb": {
+          backgroundColor: "#ccc",
+          borderRadius: "4px",
+        },
+        "&::-webkit-scrollbar-thumb:hover": {
+          backgroundColor: "#ccc",
+        },
+        "&::-webkit-scrollbar-track": {
+          backgroundColor: "#ddd",
+          borderRadius: "8px",
+        },
       }}
     >
       <Box sx={{ height: "64px" }}>

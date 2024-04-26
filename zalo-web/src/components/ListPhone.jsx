@@ -4,8 +4,13 @@ import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import DraftsIcon from "@mui/icons-material/Drafts";
 import Typography from "@mui/material/Typography";
 import Search from "~/components/Search";
-
-const ListPhone = () => {
+import React, { useState } from "react";
+const ListPhone = ({ onSelect }) => {
+  const [activeTab, setActiveTab] = useState("friends"); 
+  const handleTabClick = (tab) => {
+    setActiveTab(tab);
+    onSelect(tab); // Gọi hàm onSelect để truyền trạng thái xuống component cha
+  };
   return (
     <Box
       sx={{
@@ -26,8 +31,9 @@ const ListPhone = () => {
             padding: "0 18px",
             height: "56px",
             cursor: "pointer",
-            borderRadius: "8px",
+            backgroundColor: activeTab === "friends" ? "#74b9ff" : "transparent", // Thay đổi màu nền khi mục được chọn
           }}
+          onClick={() => handleTabClick("friends")}
         >
           <PersonIcon />
           <Typography sx={{ marginLeft: "20px" }}>Danh sách bạn bè</Typography>
@@ -40,7 +46,11 @@ const ListPhone = () => {
             padding: "0 18px",
             height: "56px",
             cursor: "pointer",
+            backgroundColor: activeTab === "groups" ? "#74b9ff" : "transparent",
+
           }}
+          onClick={() => handleTabClick("groups")}
+
         >
           <PeopleAltIcon />
           <Typography sx={{ marginLeft: "20px" }}>Danh sách nhóm</Typography>
@@ -53,7 +63,9 @@ const ListPhone = () => {
             padding: "0 18px",
             height: "56px",
             cursor: "pointer",
+            backgroundColor: activeTab === "invitations" ? "#74b9ff" : "transparent",
           }}
+          onClick={() => handleTabClick("invitations")}
         >
           <DraftsIcon />
           <Typography sx={{ marginLeft: "20px" }}>Lời mời kết bạn</Typography>

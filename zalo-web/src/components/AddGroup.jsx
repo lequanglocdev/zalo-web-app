@@ -12,7 +12,9 @@ import PhotoCameraBackIcon from "@mui/icons-material/PhotoCameraBack";
 import { styled } from "@mui/material/styles";
 import InputBase from "@mui/material/InputBase";
 import CheckIcon from "@mui/icons-material/Check";
-
+import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
+import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
+import { faker } from "@faker-js/faker";
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
   clipPath: "inset(50%)",
@@ -84,7 +86,7 @@ const AddGroup = ({ handleCloseModalAddGroup }) => {
         left: "50%",
         transform: "translate(-50%, -50%)",
         width: "500px",
-        height: "600px",
+        height: "650px",
         bgcolor: "#fff",
         border: "1px solid #333",
         borderRadius: "6px",
@@ -101,7 +103,7 @@ const AddGroup = ({ handleCloseModalAddGroup }) => {
           height: "10%",
         }}
       >
-        <Typography>Tạo nhóm</Typography>
+        <Typography sx={{ fontSize: "bold" }}>Tạo nhóm</Typography>
         <Button onClick={handleOpenModal}>
           <CloseIcon sx={{ color: "#333" }} />
         </Button>
@@ -196,7 +198,27 @@ const AddGroup = ({ handleCloseModalAddGroup }) => {
             marginTop: "10px",
           }}
         >
-          <Box sx={{ width: "60%", borderRight: "1px solid #333" }}>
+          <Box
+            sx={{
+              width: "70%",
+              maxHeight: "360px",
+              overflowY: "auto",
+              "&::-webkit-scrollbar": {
+                width: "8px",
+              },
+              "&::-webkit-scrollbar-thumb": {
+                backgroundColor: "#ccc",
+                borderRadius: "4px",
+              },
+              "&::-webkit-scrollbar-thumb:hover": {
+                backgroundColor: "#ccc",
+              },
+              "&::-webkit-scrollbar-track": {
+                backgroundColor: "#ddd",
+                borderRadius: "8px",
+              },
+            }}
+          >
             {result.map((user, index) => (
               <Box
                 key={index}
@@ -204,7 +226,7 @@ const AddGroup = ({ handleCloseModalAddGroup }) => {
                   display: "flex",
                   alignItems: "center",
                   justifyContent: "space-between",
-                  gap: 10,
+                  gap: 4,
                   padding: "10px",
                 }}
               >
@@ -217,7 +239,7 @@ const AddGroup = ({ handleCloseModalAddGroup }) => {
                   }}
                 >
                   <img
-                    src="https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg"
+                    src={faker.image.avatar()}
                     height={"40px"}
                     width={"40px"}
                     style={{ borderRadius: "50%" }}
@@ -225,18 +247,47 @@ const AddGroup = ({ handleCloseModalAddGroup }) => {
                   <Typography>{user?.username}</Typography>
                 </Box>
                 {participants.map((item) => item._id).includes(user._id) ? (
-                  <CheckIcon sx={{ color: "#3498db" }} />
+                  <RemoveCircleOutlineIcon
+                    sx={{ color: "#3498db" }}
+                    onClick={() => {
+                      setParticipants(
+                        participants.filter(
+                          (participant) => participant._id !== user._id
+                        )
+                      );
+                    }}
+                  />
                 ) : (
-                  <button
+                  <AddCircleOutlineIcon
+                    sx={{ color: "#3498db", border: "none" }}
                     onClick={() => setParticipants([...participants, user])}
-                  >
-                    +
-                  </button>
+                  />
                 )}
               </Box>
             ))}
           </Box>
-          <Box sx={{ width: "40%" }}>
+          <Box
+            sx={{
+              width: "50%",
+              border: "1px solid #b2bec3",
+              maxHeight: "360px",
+              overflowY: "auto",
+              "&::-webkit-scrollbar": {
+                width: "8px",
+              },
+              "&::-webkit-scrollbar-thumb": {
+                backgroundColor: "#ccc",
+                borderRadius: "4px",
+              },
+              "&::-webkit-scrollbar-thumb:hover": {
+                backgroundColor: "#ccc",
+              },
+              "&::-webkit-scrollbar-track": {
+                backgroundColor: "#ddd",
+                borderRadius: "8px",
+              },
+            }}
+          >
             {participants.map((user, index) => (
               <div
                 key={index}
@@ -249,7 +300,7 @@ const AddGroup = ({ handleCloseModalAddGroup }) => {
                 }}
               >
                 <img
-                  src="https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg"
+                  src={faker.image.avatar()}
                   height={"40px"}
                   width={"40px"}
                   style={{ borderRadius: "50%" }}

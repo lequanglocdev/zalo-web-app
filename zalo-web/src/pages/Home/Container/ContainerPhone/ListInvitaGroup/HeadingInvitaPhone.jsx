@@ -1,14 +1,15 @@
 import React from "react";
 import Box from "@mui/material/Box";
-import PersonIcon from "@mui/icons-material/Person";
-import Typography from "@mui/material/Typography";
 
-const HeadingPhone = () => {
+import Typography from "@mui/material/Typography";
+import MailOutlineIcon from "@mui/icons-material/MailOutline";
+const HeadingInvitaPhone = () => {
   return (
     <Box
       sx={{
         borderBottom: "1px solid #b2bec3",
-        height: (theme) => theme.zalo.heightSearch,
+        width: "100%",
+        height: "64px",
         display: "flex",
         alignItems: "center",
       }}
@@ -22,11 +23,11 @@ const HeadingPhone = () => {
           borderRadius: "8px",
         }}
       >
-        <PersonIcon />
-        <Typography sx={{ marginLeft: "20px" }}>Danh sách bạn bè</Typography>
+        <MailOutlineIcon />
+        <Typography sx={{ marginLeft: "20px" }}>Lời mời kết bạn</Typography>
       </Box>
     </Box>
   );
 };
 
-export default HeadingPhone;
+export default HeadingInvitaPhone;

@@ -3,13 +3,13 @@ import Box from "@mui/material/Box";
 import HeadingPhone from "./HeadingPhone";
 import BodyPhone from "./BodyPhone";
 
-const ContainerPhone = () => {
+const ListFriendPhone = () => {
   return (
-    <Box>
-      {/* <HeadingPhone />
-      <BodyPhone /> */}
+    <Box sx={{ width: "1020px" }}>
+      <HeadingPhone />
+      <BodyPhone />
     </Box>
   );
 };
 
-export default ContainerPhone;
+export default ListFriendPhone;
