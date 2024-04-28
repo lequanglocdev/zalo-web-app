@@ -26,6 +26,8 @@ import ImageAndFileScreen from "./ImageAndFileScreen";
 import VideoPlayer from "./VideoPlayer";
 import ResetPassword from "./ResetPassword";
 import VideoMedia from "./VideoMedia";
+import Recorder from "./Recorder";
+import AudioPlayer from "./AudioPlayer";
 
 export {
   Message,
@@ -56,4 +58,6 @@ export {
   VideoPlayer,
   ResetPassword,
   VideoMedia,
+  Recorder,
+  AudioPlayer,
 };

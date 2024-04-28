@@ -1,11 +1,12 @@
 import React from "react";
-import { Image, Pressable, Text, View, AudioPlayer } from "react-native";
+import { Image, Pressable, Text, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import docx from "../../assets/docx.png";
 import rar from "../../assets/rar.png";
 import pdf from "../../assets/pdf.png";
 import pptx from "../../assets/ppt.png"; // Import icon for PowerPoint file
 import VideoPlayer from "./VideoPlayer";
+import AudioPlayer from "./AudioPlayer";
 export const fileTypes = {
   docx,
   rar,
@@ -29,7 +30,7 @@ const MessageItem = ({ message }) => {
       </View>
     );
   } else {
-    if (message.information.url.includes("/image___")) {
+    if (message.information?.url?.includes("/image___")) {
       return (
         <Pressable
           onPress={() => {
@@ -44,7 +45,7 @@ const MessageItem = ({ message }) => {
           />
         </Pressable>
       );
-    } else if (message.information.url.includes("/video___")) {
+    } else if (message.information?.url?.includes("/video___")) {
       return (
         <Pressable
           onPress={() =>
@@ -70,11 +71,11 @@ const MessageItem = ({ message }) => {
           />
         </Pressable>
       );
-    } else if (message.information.url.includes("/audio___")) {
+    } else if (message.information?.url?.includes("/audio___")) {
       return (
-        <TouchableOpacity onLongPress={() => handleTouchHover()}>
-          <AudioPlayer url={message.information.url} />
-        </TouchableOpacity>
+        <Pressable onPress={() => handleTouchHover()}>
+          <AudioPlayer url={message.information?.url} />
+        </Pressable>
       );
     } else {
       const fileType = message.information.url
@@ -95,9 +96,9 @@ const MessageItem = ({ message }) => {
           />
           <View style={{ flexDirection: "column", gap: 5 }}>
             <View style={{ width: 200 }}>
-              <Text>{message.information.name}</Text>
+              <Text>{message.information?.name}</Text>
             </View>
-            <Text>{message.information.size} MB</Text>
+            <Text>{message.information?.size} MB</Text>
           </View>
         </Pressable>
       );

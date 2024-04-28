@@ -34,6 +34,8 @@ import {
   VideoPlayer,
   ResetPassword,
   VideoMedia,
+  Recorder,
+  AudioPlayer,
 } from "./src/view";
 
 import { GlobalContext } from "./src/context/globalContext";
@@ -187,6 +189,7 @@ export default function App() {
           <Stack.Screen name="CreateGroup" component={CreateGroup} />
           <Stack.Screen name="DetailMedia" component={DetailMedia} />
           <Stack.Screen name="VideoMedia" component={VideoMedia} />
+          <Stack.Screen name="AudioPlayer" component={AudioPlayer} />
           <Stack.Screen name="MessageItem" component={MessageItem} />
           <Stack.Screen name="ReadWord" component={ReadWord} />
           <Stack.Screen name="InfoRoom" component={InfoRoom} />
@@ -198,6 +201,7 @@ export default function App() {
           />
         </Stack.Navigator>
         <Stack.Screen name="VideoPlayer" component={VideoPlayer} />
+        <Stack.Screen name="Recorder" component={Recorder} />
       </NavigationContainer>
     </GlobalContext>
   );

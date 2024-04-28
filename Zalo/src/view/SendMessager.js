@@ -26,6 +26,7 @@ import * as FileSystem from "expo-file-system";
 import { getRemainUserForSingleRoom } from "../utils/getRemainUserForSingleRoom";
 import MessageItem from "../view/MessageItem";
 import * as ImagePicker from "expo-image-picker"; // Import thư viện image picker
+import Recorder from "./Recorder";
 
 export default function SendMessager({ navigation, route }) {
   const [message, setMessage] = useState("");
@@ -36,6 +37,15 @@ export default function SendMessager({ navigation, route }) {
   const socket = io.connect(baseURLOrigin);
   const scrollViewRef = useRef();
   const textInputRef = useRef();
+  const [files, setFiles] = useState([]);
+  const [record, setRecord] = useState(false);
+  const [sendMessage] = useState(false);
+
+  const handleMicPress = () => {
+    setRecord(true); // Set record state to true when mic button is pressed
+    setShowSendButton(false); // Hide send button when recording
+    handleSendMessage(); // Call handleSendMessage directly when mic is pressed
+  };
 
   const handleMessageChange = (text) => {
     setMessage(text);
@@ -66,26 +76,51 @@ export default function SendMessager({ navigation, route }) {
   }, [messages]);
 
   const handleSendMessage = () => {
-    if (!message.trim()) {
-      // Kiểm tra xem tin nhắn có trống không hoặc chỉ chứa khoảng trắng
-      return; // Nếu trống, không làm gì cả
+    if (files.length === 0) {
+      if (!message.trim()) {
+        // Check if message is empty or contains only whitespace
+        return;
+      }
+
+      const body = {
+        room_id: globalData.currentRoom?._id,
+        information: message,
+        typeMessage: "text",
+        user_id: globalData.user?._id,
+        disabled: false,
+      };
+
+      setMessages([...messages, body]);
+
+      socket.emit("send_message", body);
+      scrollToBottom();
+      setMessage("");
+      Keyboard.dismiss();
+      setShowSendButton(false);
+    } else {
+      try {
+        const body = {
+          room_id: globalData.currentRoom._id,
+          information: files[0],
+          typeMessage: "file",
+          user_id: globalData.user._id,
+          users: globalData.currentRoom?.users.map((item) => item._id),
+        };
+        const load = { ...body, typeMessage: "loading" };
+        setMessages([...messages, load]);
+        api({
+          url: "/message/send-file-mobile",
+          method: typeHTTP.POST,
+          body: body,
+        }).then((res) => {
+          socket.emit("send_message_with_file", res);
+        });
+      } catch (error) {
+        console.log(error);
+      }
     }
-
-    const body = {
-      room_id: globalData.currentRoom?._id,
-      information: message,
-      typeMessage: "text",
-      user_id: globalData.user?._id,
-      disabled: false,
-    };
-    setMessages([...messages, body]);
-
-    socket.emit("send_message", body);
-    scrollToBottom(); // Cuộn xuống khi gửi tin nhắn mới
-    setMessage(""); // Xóa nội dung trong ô nhập tin nhắn
-    Keyboard.dismiss(); // Ẩn bàn phím
-
-    setShowSendButton(false); // Ẩn nút gửi sau khi gửi tin nhắn
+    setFiles([]);
+    setRecord(false);
   };
 
   const scrollToBottom = () => {
@@ -117,13 +152,8 @@ export default function SendMessager({ navigation, route }) {
         user_id: globalData.user._id,
         users: globalData.currentRoom?.users.map((item) => item._id),
       };
-      setMessages([
-        ...messages,
-        {
-          typeMessage: "loading",
-          style: "flex-end",
-        },
-      ]);
+      const load = { ...body, typeMessage: "loading" };
+      setMessages([...messages, load]);
       api({
         url: "/message/send-file-mobile",
         method: typeHTTP.POST,
@@ -174,13 +204,8 @@ export default function SendMessager({ navigation, route }) {
           user_id: globalData.user._id,
           users: globalData.currentRoom?.users.map((item) => item._id),
         };
-        setMessages([
-          ...messages,
-          {
-            typeMessage: "loading",
-            style: "flex-end",
-          },
-        ]);
+        const load = { ...body, typeMessage: "loading" };
+        setMessages([...messages, load]);
         api({
           url: "/message/send-file-mobile",
           method: typeHTTP.POST,
@@ -328,53 +353,73 @@ export default function SendMessager({ navigation, route }) {
             flexDirection: "row",
           }}
         >
-          <TextInput
-            ref={textInputRef}
-            placeholder="Tin nhắn"
-            value={message}
-            onChangeText={(e) => handleMessageChange(e)}
-            style={{
-              flex: 1,
-              fontSize: 18,
-              color: "black",
-              marginLeft: 10,
-              marginTop: 13,
-            }}
-            placeholderTextColor="#808080"
-          />
-          {showSendButton && (
-            <Pressable
-              onPress={() => handleSendMessage()}
-              style={{ marginTop: 10, marginRight: 10 }}
-            >
-              <Ionicons name="send-sharp" size={24} color="blue" />
-            </Pressable>
+          {!record && (
+            <>
+              <TextInput
+                ref={textInputRef}
+                placeholder="Tin nhắn"
+                value={message}
+                onChangeText={(e) => handleMessageChange(e)}
+                style={{
+                  flex: 1,
+                  fontSize: 18,
+                  color: "black",
+                  marginLeft: 10,
+                  marginTop: 13,
+                }}
+                placeholderTextColor="#808080"
+              />
+              {showSendButton && (
+                <Pressable
+                  onPress={() => handleSendMessage()}
+                  style={{ marginTop: 10, marginRight: 10 }}
+                >
+                  <Ionicons name="send-sharp" size={24} color="blue" />
+                </Pressable>
+              )}
+              {!showSendButton && (
+                <View
+                  style={{
+                    display: "flex",
+                    flexDirection: "row",
+                    justifyContent: "space-between",
+                    alignItems: "center",
+                    marginTop: 10,
+                    marginRight: 10,
+                  }}
+                >
+                  <Pressable onPress={() => pickFile()}>
+                    <MaterialCommunityIcons
+                      name="dots-horizontal"
+                      size={24}
+                      color="#808080"
+                    />
+                  </Pressable>
+
+                  <Pressable
+                    onPress={() => handleMicPress()}
+                    style={{ marginLeft: 10 }}
+                  >
+                    <Feather name="mic" size={24} color="#808080" />
+                  </Pressable>
+                  <Pressable
+                    onPress={() => pickImage()}
+                    style={{ marginLeft: 10 }}
+                  >
+                    <AntDesign name="picture" size={24} color="#FFD700" />
+                  </Pressable>
+                </View>
+              )}
+            </>
           )}
-          {!showSendButton && (
-            <View
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-between",
-                alignItems: "center",
-                marginTop: 10,
-                marginRight: 10,
-              }}
-            >
-              <Pressable onPress={() => pickFile()}>
-                <MaterialCommunityIcons
-                  name="dots-horizontal"
-                  size={24}
-                  color="#808080"
-                />
-              </Pressable>
-              <Pressable style={{ marginLeft: 10 }}>
-                <Feather name="mic" size={24} color="#808080" />
-              </Pressable>
-              <Pressable onPress={() => pickImage()} style={{ marginLeft: 10 }}>
-                <AntDesign name="picture" size={24} color="#FFD700" />
-              </Pressable>
-            </View>
+
+          {record && (
+            <Recorder
+              files={files}
+              handleSendMessage={handleSendMessage} // Pass handleSendMessage here
+              setFiles={setFiles}
+              setRecord={setRecord}
+            />
           )}
         </View>
       </View>
