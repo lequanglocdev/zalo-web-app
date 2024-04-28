@@ -50,7 +50,7 @@ class MessageController {
   sendFileMessageMobile = async (req, res) => {
     try {
       const { room_id, typeMessage, user_id, disabled, information } = req.body;
-      
+
       information.buffer = await formatBase64ToBuffer(information.base64);
       const message = {
         room_id,

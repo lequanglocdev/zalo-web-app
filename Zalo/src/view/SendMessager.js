@@ -76,6 +76,9 @@ export default function SendMessager({ navigation, route }) {
   }, [messages]);
 
   const handleSendMessage = () => {
+    if (message.disabled) {
+      handleSendDisable();
+    }
     if (files.length === 0) {
       if (!message.trim()) {
         // Check if message is empty or contains only whitespace
@@ -219,6 +222,33 @@ export default function SendMessager({ navigation, route }) {
     }
   };
 
+  const handleSendDisable = (messageId) => {
+    try {
+      const body = {
+        message_id: messageId,
+      };
+      api({
+        url: "/message/disableMessage",
+        method: typeHTTP.POST,
+        body: body,
+      }).then((res) => {
+        // Xử lý phản hồi nếu cần
+        globalHandler.setRooms(res);
+
+        // Cập nhật tin nhắn đã bị thu hồi trong state
+        const updatedMessages = messages.map((msg) => {
+          if (msg._id === messageId) {
+            return { ...msg, disabled: true };
+          }
+          return msg;
+        });
+        setMessages(updatedMessages);
+      });
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
     <KeyboardAvoidingView
       style={{ flex: 1 }}
@@ -325,8 +355,11 @@ export default function SendMessager({ navigation, route }) {
               )}
               <View
                 style={{
-                  backgroundColor:
-                    item.user_id === globalData.user._id ? "#B0E0E6" : "white",
+                  backgroundColor: item.disabled // Check if item has disabled property
+                    ? "#E0E0E0" // Use different background color for disabled messages
+                    : item.user_id === globalData.user._id
+                    ? "#B0E0E6"
+                    : "white",
                   borderRadius: 10,
                   paddingHorizontal: 10,
                   paddingVertical: 10,
@@ -339,7 +372,14 @@ export default function SendMessager({ navigation, route }) {
                   borderWidth: 2,
                 }}
               >
-                <MessageItem message={item} />
+                {item.disabled ? ( // Check if message is disabled
+                  <Text style={{ color: "red" }}>Tin nhắn đã bị thu hồi</Text>
+                ) : (
+                  <MessageItem
+                    message={item}
+                    onDelete={handleSendDisable} // Pass handleSendDisable function to onDelete prop
+                  />
+                )}
               </View>
             </View>
           ))}
