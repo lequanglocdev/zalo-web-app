@@ -137,132 +137,100 @@ export default function InfoRoom({ navigation, route }) {
         )}
       </ScrollView>
 
-      {room_type === "group" && (
-        <Pressable
-          onPress={() => {
-            navigation.navigate("AddFriendGroup");
-          }}
-          style={{
-            marginTop: 20,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <View
-            style={{
-              width: 40,
-              height: 40,
-              borderRadius: 90,
-              marginTop: 20,
-              backgroundColor: "#D3D3D3",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <AntDesign name="addusergroup" size={24} color="black" />
-          </View>
-          <View>
-            <Text style={{ fontSize: 16, marginTop: 10 }}>Thêm thành viên</Text>
-          </View>
-        </Pressable>
-      )}
-
-      {room_type !== "group" && (
-        <Pressable
-          onPress={() => {
-            globalHandler.setCurrentRoom(room);
-            navigation.navigate("DataUser", {
-              room: room,
-            });
-          }}
-          style={{
-            marginTop: 20,
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <View
-            style={{
-              width: 40,
-              height: 40,
-              borderRadius: 90,
-              marginTop: 20,
-              backgroundColor: "#D3D3D3",
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Text style={{ fontSize: 20 }}>👤</Text>
-          </View>
-          <View>
-            <Text style={{ fontSize: 16, marginTop: 10 }}>Trang cá nhân</Text>
-          </View>
-        </Pressable>
-      )}
-
-      <Pressable
-        onPress={() => {
-          navigation.navigate("ImageAndFileScreen", {
-            roomId: room_id,
-            roomType: room_type,
-          });
-        }}
+      <View
         style={{
-          marginTop: 20,
-          alignItems: "center",
+          flexDirection: "row",
           justifyContent: "center",
         }}
       >
-        <View
-          style={{
-            width: 40,
-            height: 40,
-            borderRadius: 90,
-            marginTop: 20,
-            backgroundColor: "#D3D3D3",
-            alignItems: "center",
-            justifyContent: "center",
-          }}
-        >
-          <AntDesign name="filetext1" size={24} color="black" />
-        </View>
-        <View>
-          <Text style={{ fontSize: 16, marginTop: 10 }}>Ảnh và File</Text>
-        </View>
-      </Pressable>
+        {room_type === "group" && (
+          <Pressable
+            onPress={() => {
+              navigation.navigate("AddFriendGroup");
+            }}
+            style={{
+              marginTop: 20,
+              alignItems: "center",
+              justifyContent: "center",
+            }}
+          >
+            <View
+              style={{
+                width: 40,
+                height: 40,
+                borderRadius: 90,
+                marginTop: 20,
+                backgroundColor: "#D3D3D3",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <AntDesign name="addusergroup" size={24} color="black" />
+            </View>
+            <View
+              style={{
+                width: 100,
+              }}
+            >
+              <Text
+                style={{ fontSize: 16, marginTop: 10, textAlign: "center" }}
+              >
+                Thêm thành viên
+              </Text>
+            </View>
+          </Pressable>
+        )}
 
-      <Pressable
-        onPress={() => handleDisBandRoom()}
-        style={{
-          marginTop: 40,
-          marginLeft: 15,
-          flexDirection: "row",
-          alignItems: "center",
-        }}
-      >
-        <AntDesign name="delete" size={24} color="red" />
+        {room_type !== "group" && (
+          <Pressable
+            onPress={() => {
+              globalHandler.setCurrentRoom(room);
+              navigation.navigate("DataUser", {
+                room: room,
+              });
+            }}
+            style={{
+              marginTop: 20,
+              alignItems: "center",
+              justifyContent: "center",
+              width: 100,
+            }}
+          >
+            <View
+              style={{
+                width: 40,
+                height: 40,
+                borderRadius: 90,
+                marginTop: 20,
+                backgroundColor: "#D3D3D3",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <Text style={{ fontSize: 20 }}>👤</Text>
+            </View>
+            <View>
+              <Text
+                style={{ fontSize: 16, marginTop: 10, textAlign: "center" }}
+              >
+                Trang cá nhân
+              </Text>
+            </View>
+          </Pressable>
+        )}
 
-        <Text
-          style={{
-            fontSize: 16,
-            marginLeft: 10,
-            color: "red",
-            fontWeight: "bold",
-          }}
-        >
-          Xóa nhóm
-        </Text>
-      </Pressable>
-
-      {room_type === "group" && (
         <Pressable
           onPress={() => {
-            navigation.navigate("ViewGroupMembers", { roomId: room_id });
+            navigation.navigate("ImageAndFileScreen", {
+              roomId: room_id,
+              roomType: room_type,
+            });
           }}
           style={{
-            marginTop: 20,
+            width: 100,
             alignItems: "center",
             justifyContent: "center",
+            marginLeft: 15,
           }}
         >
           <View
@@ -276,13 +244,74 @@ export default function InfoRoom({ navigation, route }) {
               justifyContent: "center",
             }}
           >
-            <AntDesign name="user" size={24} color="black" />
+            <AntDesign name="filetext1" size={24} color="black" />
           </View>
           <View>
-            <Text style={{ fontSize: 16, marginTop: 10 }}>
-              Xem thành viên nhóm
-            </Text>
+            <Text style={{ fontSize: 16, marginTop: 10 }}>Ảnh và File</Text>
           </View>
+        </Pressable>
+
+        {room_type === "group" && (
+          <Pressable
+            onPress={() => {
+              navigation.navigate("ViewGroupMembers", { roomId: room_id });
+            }}
+            style={{
+              width: 100,
+              marginTop: 20,
+              alignItems: "center",
+              justifyContent: "center",
+              marginLeft: 15,
+            }}
+          >
+            <View
+              style={{
+                width: 40,
+                height: 40,
+                borderRadius: 90,
+                marginTop: 20,
+                backgroundColor: "#D3D3D3",
+                alignItems: "center",
+                justifyContent: "center",
+              }}
+            >
+              <AntDesign name="user" size={24} color="black" />
+            </View>
+
+            <View
+              style={{
+                marginLeft: 10,
+              }}
+            >
+              <Text style={{ fontSize: 16, marginTop: 10 }}>
+                Xem thành viên nhóm
+              </Text>
+            </View>
+          </Pressable>
+        )}
+      </View>
+
+      {room_type === "group" && (
+        <Pressable
+          onPress={() => handleDisBandRoom()}
+          style={{
+            marginTop: 40,
+            marginLeft: 15,
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
+          <AntDesign name="delete" size={24} color="red" />
+          <Text
+            style={{
+              fontSize: 16,
+              marginLeft: 10,
+              color: "red",
+              fontWeight: "bold",
+            }}
+          >
+            Xóa nhóm
+          </Text>
         </Pressable>
       )}
 
