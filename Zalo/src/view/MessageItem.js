@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Image, Pressable, Text, View } from "react-native";
 import { useNavigation } from "@react-navigation/native";
 import { AntDesign } from "@expo/vector-icons";
@@ -18,6 +18,7 @@ export const fileTypes = {
 
 const MessageItem = ({ message, onDelete }) => {
   const navigation = useNavigation();
+  const [showDeleteMenu, setShowDeleteMenu] = useState(false);
 
   // Function to handle delete message
   const handleDelete = () => {
@@ -28,7 +29,7 @@ const MessageItem = ({ message, onDelete }) => {
 
   // Trong phần render của component MessageItem:
   return (
-    <Pressable onPress={() => {}}>
+    <Pressable>
       <View>
         {message.typeMessage === "text" ? (
           <Text>{message.information}</Text>
@@ -124,8 +125,38 @@ const MessageItem = ({ message, onDelete }) => {
             </Pressable>
           </View>
         )}
-        <Pressable onPress={handleDelete}>
-          <AntDesign name="delete" size={24} color="red" />
+        {showDeleteMenu && (
+          <Pressable onPress={handleDelete}>
+            <View
+              style={{
+                marginLeft: -50,
+                marginTop: -20,
+              }}
+            >
+              <AntDesign name="sync" size={24} color="red" />
+            </View>
+            <Text
+              style={{
+                fontSize: 14,
+                marginTop: 10,
+                marginLeft: -70,
+                fontWeight: "bold",
+              }}
+            >
+              Thu Hồi
+            </Text>
+          </Pressable>
+        )}
+
+        <Pressable onPress={() => setShowDeleteMenu(!showDeleteMenu)}>
+          <View
+            style={{
+              marginLeft: -50,
+              marginTop: 15,
+            }}
+          >
+            <AntDesign name="ellipsis1" size={24} color="black" />
+          </View>
         </Pressable>
       </View>
     </Pressable>

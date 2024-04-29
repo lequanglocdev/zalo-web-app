@@ -41,6 +41,16 @@ export default function SendMessager({ navigation, route }) {
   const [record, setRecord] = useState(false);
   const [sendMessage] = useState(false);
 
+  const handleAddFriend = () => {
+    api({
+      method: typeHTTP.GET,
+      url: `/room/get-by-user/${globalData.user?._id}`,
+    }).then((rooms) => {
+      globalHandler.setRooms(rooms);
+      navigation.navigate("Message");
+    });
+  };
+
   const handleMicPress = () => {
     setRecord(true); // Set record state to true when mic button is pressed
     setShowSendButton(false); // Hide send button when recording
@@ -231,22 +241,11 @@ export default function SendMessager({ navigation, route }) {
         url: "/message/disableMessage",
         method: typeHTTP.POST,
         body: body,
-      }).then((res) => {
-        // Xử lý phản hồi nếu cần
-        globalHandler.setRooms(res);
-
-        // Cập nhật tin nhắn đã bị thu hồi trong state
-        const updatedMessages = messages.map((msg) => {
-          if (msg._id === messageId) {
-            return { ...msg, disabled: true };
-          }
-          return msg;
-        });
-        setMessages(updatedMessages);
-      });
+      }).then((res) => {});
     } catch (error) {
       console.error(error);
     }
+    handleAddFriend();
   };
 
   return (
@@ -315,6 +314,7 @@ export default function SendMessager({ navigation, route }) {
             </View>
           </View>
         </ImageBackground>
+
         <ScrollView
           ref={scrollViewRef}
           onContentSizeChange={() => scrollToBottom()}

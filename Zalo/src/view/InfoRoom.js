@@ -6,12 +6,14 @@ import {
   Image,
   ImageBackground,
   Pressable,
+  Alert,
 } from "react-native";
 import { globalContext } from "../context/globalContext";
 import { Ionicons } from "@expo/vector-icons";
 import { AntDesign } from "@expo/vector-icons";
 import { getRemainUserForSingleRoom } from "../utils/getRemainUserForSingleRoom";
 import { api, typeHTTP } from "../utils/api";
+import Toast from "react-native-toast-message";
 
 export default function InfoRoom({ navigation, route }) {
   const { globalData, globalHandler } = useContext(globalContext);
@@ -30,6 +32,36 @@ export default function InfoRoom({ navigation, route }) {
         });
       });
     }
+  };
+
+  const handleUnFriend = (toUser) => {
+    // Xử lý xóa kết bạn
+    const body = {
+      fromUser: globalData.user,
+      toUser,
+    };
+
+    api({
+      body: body,
+      url: "/user/unfriend",
+      method: typeHTTP.POST,
+    })
+      .then((res) => {
+        console.log(res);
+        Toast.show({
+          type: "success",
+          text1: "Đã xóa kết bạn thành công",
+        });
+        // Cập nhật giao diện sau khi xóa kết bạn
+        updateResultsAfterAction(toUser._id);
+      })
+      .catch((error) => {
+        console.error("Lỗi khi xóa kết bạn:", error);
+        Alert.alert(
+          "Lỗi",
+          "Đã xảy ra lỗi khi xóa kết bạn. Vui lòng thử lại sau"
+        );
+      });
   };
 
   // Tìm kiếm thông tin của phòng dựa trên room_id
@@ -251,6 +283,35 @@ export default function InfoRoom({ navigation, route }) {
               Xem thành viên nhóm
             </Text>
           </View>
+        </Pressable>
+      )}
+
+      {room_type !== "group" && (
+        <Pressable
+          onPress={() =>
+            handleUnFriend(
+              getRemainUserForSingleRoom(room, globalData.user?._id)
+            )
+          }
+          style={{
+            marginTop: 20,
+            marginLeft: 15,
+            flexDirection: "row",
+            alignItems: "center",
+          }}
+        >
+          <AntDesign name="deleteuser" size={24} color="red" />
+
+          <Text
+            style={{
+              fontSize: 16,
+              marginLeft: 10,
+              color: "red",
+              fontWeight: "bold",
+            }}
+          >
+            Xóa kết bạn
+          </Text>
         </Pressable>
       )}
     </ScrollView>
