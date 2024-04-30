@@ -41,7 +41,14 @@ const theme = extendTheme({
         },
       },
     },
-    // .MuiMenuItem-root{}
+    MuiPaper: {
+      styleOverrides: {
+        root: {
+          border:"1px solid #34495e",
+          boxShadow: "none",
+        },
+      },
+    },
   },
 });
 

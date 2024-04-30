@@ -33,31 +33,46 @@ const HeadingChat = () => {
               aria-haspopup="true"
               aria-expanded={open ? "true" : undefined}
             >
-              <Avatar
-                sx={{ width: 40, height: 40 }}
+              <img
                 alt="Cindy Baker"
-                src="/static/images/avatar/3.jpg"
-              ></Avatar>
+                src={data.currentRoom.image}
+                style={{
+                  width: "40px",
+                  height: "40px",
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                }}
+              />
             </IconButton>
           </Tooltip>
-          <Box>
-            <div style={{ fontSize: "18px", fontWeight: "bold" }}>
+          <Box sx={{ width: "100%" }}>
+            <Box
+              style={{
+                fontSize: "18px",
+                fontWeight: "bold",
+                whiteSpace: "nowrap",
+                overflow: "hidden",
+                textOverflow: "ellipsis",
+              }}
+            >
               {data.currentRoom?.type === "single"
                 ? getRemainUserForSingleRoom(data.currentRoom, data.user?._id)
                     ?.username
+                : data.currentRoom.name.length > 30
+                ? `${data.currentRoom.name.substring(0, 30)}...`
                 : data.currentRoom.name}
-            </div>
-            <div style={{ fontSize: "14px", color: "#7589A3" }}>
+            </Box>
+            <Box style={{ fontSize: "14px", color: "#7589A3" }}>
               {data.currentRoom?.type === "group"
                 ? `${data.currentRoom?.users.length} thanh vien`
                 : "Truy cập cách đây 20 phút trước"}
-            </div>
+            </Box>
           </Box>
         </Box>
       </Grid>
 
       {/* Right Section */}
-      <Grid item sm={2} >
+      <Grid item sm={2}>
         <Box sx={{ textAlign: "right" }}>
           <SearchIcon sx={{ marginRight: "16px", cursor: "pointer" }} />
           <PhoneIcon sx={{ marginRight: "16px", cursor: "pointer" }} />

@@ -36,6 +36,7 @@ const AddGroup = ({ handleCloseModalAddGroup }) => {
   const [participants, setParticipants] = useState([]);
   const [image, setImage] = useState([]);
   const [imageUrl, setImageUrl] = useState("");
+  const [showIcon, setShowIcon] = useState(true);
   const handleOpenModal = (event) => {
     handleCloseModalAddGroup(event);
   };
@@ -58,8 +59,16 @@ const AddGroup = ({ handleCloseModalAddGroup }) => {
     const imageUrl = URL.createObjectURL(files[0]);
     // Lưu URL vào state hoặc props để hiển thị hình ảnh
     setImageUrl(imageUrl);
+    setShowIcon(false);
   };
   useEffect(() => setParticipants([data.user]), [data.user]);
+
+  const handleEnterPress = (event) => {
+    if (event.key === "Enter") {
+      handleSearch();
+    }
+  };
+
   const handleCreateGroup = () => {
     if (image) {
       const formData = new FormData();
@@ -110,7 +119,7 @@ const AddGroup = ({ handleCloseModalAddGroup }) => {
       </Box>
       <Box
         sx={{
-          marginTop: "10px",
+        
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -118,43 +127,48 @@ const AddGroup = ({ handleCloseModalAddGroup }) => {
           height: "10%",
         }}
       >
-        <Button
-          component="label"
-          role={undefined}
-          sx={{
-            "& .MuiSvgIcon-root": { fontSize: 40 },
-          }}
-          tabIndex={-1}
-          startIcon={<PhotoCameraBackIcon />}
-        >
-          <VisuallyHiddenInput
-            type="file"
-            accept="image/"
-            onChange={(e) => handleFile(e)}
-          />
-          <img
-            src={imageUrl}
-            style={{
-              width: "60px",
-              height: "60px",
-              borderRadius: "50%",
-              objectFit: "cover",
-            }}
-          />
-        </Button>
         <Box
           sx={{
             display: "flex",
             alignItems: "center",
             justifyContent: "space-between",
-            gap: 4,
+            gap: 2,
           }}
         >
-          <Typography>Nhập tên nhóm</Typography>
+          <Button component="label" role={undefined}>
+            <VisuallyHiddenInput
+              type="file"
+              accept="image/*"
+              onChange={(e) => handleFile(e)}
+            />
+            <img
+              src={imageUrl}
+              style={{
+                width: "46px",
+                height: "46px",
+                borderRadius: "50%",
+                objectFit: "cover",
+                border: "2px solid #3498db",
+              }}
+            />
+            {showIcon && (
+              <span
+                style={{
+                  position: "absolute",
+                  top: "50%",
+                  left: "50%",
+                  transform: "translate(-50%, -50%)",
+                }}
+              >
+                <PhotoCameraBackIcon />
+              </span>
+            )}
+          </Button>
           <TextField
+            variant="filled"
             value={groupName}
             onChange={(e) => setGroupName(e.target.value)}
-            sx={{ width: "300px" }}
+            sx={{ width: "400px" }}
             placeholder="nhập tên nhóm"
           />
         </Box>
@@ -163,31 +177,31 @@ const AddGroup = ({ handleCloseModalAddGroup }) => {
       <Box
         sx={{
           height: "70%",
-          backgroundColor: "#dfe6e9",
-          marginTop: "20px",
-          padding: "20px",
         }}
       >
         <Box
           sx={{
             display: "flex",
-            justifyContent: "space-between",
             alignItems: "center",
+            justifyContent: "space-between",
+            gap: 2,
           }}
         >
-          <Typography>Tìm thành viên </Typography>
           <TextField
-            sx={{ width: 200 }}
+            variant="filled"
             value={phone}
+            sx={{ width: "480px" }}
+            placeholder="nhập số điện thoại thành viên"
             onChange={(e) => setPhone(e.target.value)}
+            onKeyDown={handleEnterPress}
           />
-          <Button
+          {/* <Button
             onClick={() => handleSearch()}
-            sx={{ padding: "10px" }}
+            sx={{ marginTop: "20px" }}
             variant="contained"
           >
             Tìm
-          </Button>
+          </Button> */}
         </Box>
 
         <Box

@@ -43,18 +43,38 @@ const Chat = () => {
             key={index}
             style={{
               display: "flex",
+
               alignItems: "center",
               padding: "6px",
               gap: 5,
               cursor: "pointer",
             }}
           >
-            <Avatar alt="Cindy Baker" src="/static/images/avatar/3.jpg" />
-            <Typography variant="span">
-              {room.type === "single"
-                ? getRemainUserForSingleRoom(room, data.user?._id)?.username
-                : room.name}
-            </Typography>
+            <img
+              alt="Cindy Baker"
+              src={room.image}
+              style={{
+                width: "40px",
+                height: "40px",
+                borderRadius: "50%",
+                objectFit: "cover",
+              }}
+            />
+            <Box
+              sx={{
+                display: "flex",
+                flexDirection: "column",
+              }}
+            >
+              <Typography variant="span">
+                {room.type === "single"
+                  ? getRemainUserForSingleRoom(room, data.user?._id)?.username
+                  : room.name.length > 30
+                  ? `${room.name.substring(0, 30)}...`
+                  : room.name}
+              </Typography>
+              <Typography>abc</Typography>
+            </Box>
           </Box>
         ))}
       </Box>

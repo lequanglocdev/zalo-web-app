@@ -12,11 +12,23 @@ import Button from "@mui/material/Button";
 import { globalContext } from "../../../../context/globalContext";
 import { api, baseURLOrigin, typeHTTP } from "../../../../utils/api";
 import { io } from "socket.io-client";
+import Menu from "@mui/material/Menu";
+import MenuItem from "@mui/material/MenuItem";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import IconButton from "@mui/material/IconButton";
+
 const socket = io.connect(baseURLOrigin);
 
 const heightBody = "592px";
 const heightChat = "486px";
 const heightText = `calc(${heightBody} - ${heightChat})`;
+
+const options = [
+  "Đánh dấu tin nhắn đã đọc",
+  "Gửi tin đồng thời",
+  "Trở lại giao diện cơ bản",
+];
+const ITEM_HEIGHT = 48;
 
 const BodyChat = () => {
   const [message, setMessage] = useState("");
@@ -25,7 +37,14 @@ const BodyChat = () => {
   const chatContainerRef = useRef(null);
   const [files, setFiles] = useState([]);
   const fileRef = useRef();
-
+  const [anchorEl, setAnchorEl] = React.useState(null);
+  const open = Boolean(anchorEl);
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleClose = () => {
+    setAnchorEl(null);
+  };
   useEffect(() => {
     api({
       method: typeHTTP.GET,
@@ -130,16 +149,16 @@ const BodyChat = () => {
                 m={1.5}
                 sx={{
                   backgroundColor:
-                    item.user_id === data.user._id ? "#0984e3" : "#ecf0f1",
+                    item.user_id === data.user._id ? "#ecf0f1" : "#34495e",
                   borderRadius: "16px",
                 }}
               >
                 <Typography
                   variant="body2"
-                  color={item.user_id === data.user._id ? "#ecf0f1" : "#34495e"}
+                  color={item.user_id === data.user._id ? "#34495e" : "#34495e"}
                 >
                   {item.typeMessage === "text" ? (
-                    item.information
+                    <Typography>{item.information}</Typography>
                   ) : item.information.url.includes("/image___") ? (
                     <img
                       src={item.information.url}
@@ -189,6 +208,52 @@ const BodyChat = () => {
                   )}
                 </Typography>
               </Box>
+              <Box
+                // aria-label="more"
+                // id="long-button"
+                // aria-controls={open ? "long-menu" : undefined}
+                // aria-expanded={open ? "true" : undefined}
+                aria-haspopup="true"
+                onClick={handleClick}
+                sx={{
+                  position: "relative",
+                  width: "40px",
+                  height: "40px",
+                  top:"16px",
+                  cursor: "pointer",
+                  // backgroundColor: "red",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                <MoreHorizIcon sx={{ fontSize: "16px" }} />
+              </Box>
+              <Menu
+                id="long-menu"
+                MenuListProps={{
+                  "aria-labelledby": "long-button",
+                }}
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                PaperProps={{
+                  style: {
+                    maxHeight: ITEM_HEIGHT * 4.5,
+                    width: "26ch",
+                  },
+                }}
+              >
+                {options.map((option) => (
+                  <MenuItem
+                    key={option}
+                    selected={option === "Pyxis"}
+                    onClick={handleClose}
+                  >
+                    {option}
+                  </MenuItem>
+                ))}
+              </Menu>
             </Stack>
           ))}
         </Paper>
@@ -241,12 +306,9 @@ const BodyChat = () => {
                     right: 0,
                   }}
                 >
-                  {/* <Stack>
-                    <ChatBubbleOutlineIcon sx={{ cursor: "pointer" }} />
-                  </Stack>
                   <InsertEmoticonIcon
-                    sx={{ marginLeft: "20px", cursor: "pointer" }}
-                  /> */}
+                    sx={{ marginRight: "20px", cursor: "pointer" }}
+                  />
                   <Button
                     sx={{ paddingX: "10px" }}
                     variant="contained"
