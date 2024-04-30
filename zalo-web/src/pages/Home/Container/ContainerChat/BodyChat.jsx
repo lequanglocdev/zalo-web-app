@@ -23,11 +23,7 @@ const heightBody = "592px";
 const heightChat = "486px";
 const heightText = `calc(${heightBody} - ${heightChat})`;
 
-const options = [
-  "Đánh dấu tin nhắn đã đọc",
-  "Gửi tin đồng thời",
-  "Trở lại giao diện cơ bản",
-];
+const options = ["Thu hồi tin nhắn"];
 const ITEM_HEIGHT = 48;
 
 const BodyChat = () => {
@@ -61,20 +57,40 @@ const BodyChat = () => {
   }, [data.currentRoom, socket]);
 
   const handleSendMessage = () => {
-    const body = {
-      room_id: data.currentRoom?._id,
-      information: message,
-      typeMessage: "text",
-      user_id: data.user?._id,
-      disabled: false,
-    };
+    if (message.disabled) {
+      handleSendDisable();
+    } else {
+      const body = {
+        room_id: data.currentRoom?._id,
+        information: message,
+        typeMessage: "text",
+        user_id: data.user?._id,
+        disabled: false,
+      };
 
-    socket.emit("send_message", body);
-    setMessage("");
+      socket.emit("send_message", body);
+      setMessage("");
+    }
   };
   const handleKeyPress = (event) => {
     if (event.key === "Enter" && !event.shiftKey) {
       handleSendMessage();
+    }
+  };
+  const handleSendDisable = (messageId) => {
+    try {
+      const body = {
+        message_id: messageId,
+      };
+      api({
+        url: "/message/disableMessage",
+        method: typeHTTP.POST,
+        body: body,
+      }).then((res) => {
+        console.log(res);
+      });
+    } catch (error) {
+      console.error(error);
     }
   };
   useEffect(() => {
@@ -153,60 +169,66 @@ const BodyChat = () => {
                   borderRadius: "16px",
                 }}
               >
-                <Typography
-                  variant="body2"
-                  color={item.user_id === data.user._id ? "#34495e" : "#34495e"}
-                >
-                  {item.typeMessage === "text" ? (
-                    <Typography>{item.information}</Typography>
-                  ) : item.information.url.includes("/image___") ? (
-                    <img
-                      src={item.information.url}
-                      style={{
-                        width: "350px",
-                        height: "350px",
-                        objectFit: "contain",
-                      }}
-                    />
-                  ) : item.information.url.includes("/video___") ? (
-                    <video
-                      controls
-                      style={{
-                        width: "350px",
-                        height: "350px",
-                        objectFit: "contain",
-                      }}
-                      src={item.information.url}
-                    />
-                  ) : (
-                    <a href={item.information.url}>
-                      <div
+                {item.disabled ? (
+                  <Typography>Tin nhắn đã thu hồi </Typography>
+                ) : (
+                  <Typography
+                    variant="body2"
+                    color={
+                      item.user_id === data.user._id ? "#34495e" : "#34495e"
+                    }
+                  >
+                    {item.typeMessage === "text" ? (
+                      <Typography>{item.information}</Typography>
+                    ) : item.information.url.includes("/image___") ? (
+                      <img
+                        src={item.information.url}
                         style={{
-                          display: "flex",
-                          alignItems: "center",
-                          gap: 10,
+                          width: "350px",
+                          height: "350px",
+                          objectFit: "contain",
                         }}
-                      >
-                        <img
-                          style={{ width: "80px" }}
-                          src={`${
-                            item.information.url
-                              .split(".ap-southeast-1.amazonaws.com/")[1]
-                              .split("___")[0]
-                          }.png`}
-                        />
+                      />
+                    ) : item.information.url.includes("/video___") ? (
+                      <video
+                        controls
+                        style={{
+                          width: "350px",
+                          height: "350px",
+                          objectFit: "contain",
+                        }}
+                        src={item.information.url}
+                      />
+                    ) : (
+                      <a href={item.information.url}>
                         <div
-                          style={{ display: "flex", flexDirection: "column" }}
+                          style={{
+                            display: "flex",
+                            alignItems: "center",
+                            gap: 10,
+                          }}
                         >
-                          <span>{item.information.name}</span>
-                          <span>
-                            {(item.information.size / 1024).toFixed(2)} MB
-                          </span>
+                          <img
+                            style={{ width: "80px" }}
+                            src={`${
+                              item.information.url
+                                .split(".ap-southeast-1.amazonaws.com/")[1]
+                                .split("___")[0]
+                            }.png`}
+                          />
+                          <div
+                            style={{ display: "flex", flexDirection: "column" }}
+                          >
+                            <span>{item.information.name}</span>
+                            <span>
+                              {(item.information.size / 1024).toFixed(2)} MB
+                            </span>
+                          </div>
                         </div>
-                      </div>
-                    </a>
-                  )}
-                </Typography>
+                      </a>
+                    )}
+                  </Typography>
+                )}
               </Box>
               <Box
                 // aria-label="more"
@@ -219,7 +241,7 @@ const BodyChat = () => {
                   position: "relative",
                   width: "40px",
                   height: "40px",
-                  top:"16px",
+                  top: "16px",
                   cursor: "pointer",
                   // backgroundColor: "red",
                   display: "flex",
@@ -244,15 +266,12 @@ const BodyChat = () => {
                   },
                 }}
               >
-                {options.map((option) => (
-                  <MenuItem
-                    key={option}
-                    selected={option === "Pyxis"}
-                    onClick={handleClose}
-                  >
-                    {option}
-                  </MenuItem>
-                ))}
+                <MenuItem
+                  // key={item._id}
+                  onClick={() => handleSendDisable(item._id)}
+                >
+                  Thu hồi tin nhắn
+                </MenuItem>
               </Menu>
             </Stack>
           ))}
