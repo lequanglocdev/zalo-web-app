@@ -35,7 +35,11 @@ const HeadingChat = () => {
             >
               <img
                 alt="Cindy Baker"
-                src={data.currentRoom.image}
+                src={
+                  data.currentRoom.image
+                    ? data.currentRoom.image
+                    : "https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745"
+                }
                 style={{
                   width: "40px",
                   height: "40px",

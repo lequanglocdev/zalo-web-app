@@ -165,7 +165,7 @@ const BodyChat = () => {
                 m={1.5}
                 sx={{
                   backgroundColor:
-                    item.user_id === data.user._id ? "#ecf0f1" : "#34495e",
+                    item.user_id === data.user._id ? "#ecf0f1" : "#ecf0f1",
                   borderRadius: "16px",
                 }}
               >

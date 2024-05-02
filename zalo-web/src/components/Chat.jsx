@@ -5,7 +5,7 @@ import { getRemainUserForSingleRoom } from "../utils/getRemainUserForSingleRoom"
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Avatar from "@mui/material/Avatar";
-
+import { faker } from "@faker-js/faker";
 const Chat = () => {
   const { data, handler } = useContext(globalContext);
 
@@ -52,7 +52,11 @@ const Chat = () => {
           >
             <img
               alt="Cindy Baker"
-              src={room.image}
+              src={
+                room.image
+                  ? room.image
+                  : "https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745"
+              }
               style={{
                 width: "40px",
                 height: "40px",
@@ -66,14 +70,14 @@ const Chat = () => {
                 flexDirection: "column",
               }}
             >
-              <Typography variant="span">
+              <Typography variant="span" sx={{fontSize:"14px",fontWeight:"bold"}}>
                 {room.type === "single"
                   ? getRemainUserForSingleRoom(room, data.user?._id)?.username
                   : room.name.length > 30
                   ? `${room.name.substring(0, 30)}...`
                   : room.name}
               </Typography>
-              <Typography>abc</Typography>
+              <Typography sx={{fontSize:"12px"}}>tin nhắn cuối cùng</Typography>
             </Box>
           </Box>
         ))}
