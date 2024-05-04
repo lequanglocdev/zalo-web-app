@@ -185,7 +185,7 @@ export default function InfoRoom({ navigation, route }) {
           <Pressable
             onPress={() => {
               globalHandler.setCurrentRoom(room);
-              navigation.navigate("DataUser", {
+              navigation.navigate("DataFriend", {
                 room: room,
               });
             }}

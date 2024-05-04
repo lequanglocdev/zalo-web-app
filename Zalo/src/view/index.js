@@ -28,6 +28,7 @@ import ResetPassword from "./ResetPassword";
 import VideoMedia from "./VideoMedia";
 import Recorder from "./Recorder";
 import AudioPlayer from "./AudioPlayer";
+import DataFriend from "./DataFriend";
 
 export {
   Message,
@@ -60,4 +61,5 @@ export {
   VideoMedia,
   Recorder,
   AudioPlayer,
+  DataFriend,
 };

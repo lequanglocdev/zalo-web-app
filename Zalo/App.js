@@ -36,6 +36,7 @@ import {
   VideoMedia,
   Recorder,
   AudioPlayer,
+  DataFriend,
 } from "./src/view";
 
 import { GlobalContext } from "./src/context/globalContext";
@@ -193,6 +194,7 @@ export default function App() {
           <Stack.Screen name="MessageItem" component={MessageItem} />
           <Stack.Screen name="ReadWord" component={ReadWord} />
           <Stack.Screen name="InfoRoom" component={InfoRoom} />
+          <Stack.Screen name="DataFriend" component={DataFriend} />
           <Stack.Screen name="AddFriendGroup" component={AddFriendGroup} />
           <Stack.Screen name="ViewGroupMembers" component={ViewGroupMembers} />
           <Stack.Screen
