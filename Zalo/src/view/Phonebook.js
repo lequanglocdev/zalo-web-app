@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect, useContext } from "react";
 import {
   View,
   Text,
@@ -14,6 +14,8 @@ import { FontAwesome5 } from "@expo/vector-icons";
 import { FontAwesome } from "@expo/vector-icons";
 import { Ionicons } from "@expo/vector-icons";
 import { MaterialIcons } from "@expo/vector-icons";
+import { getRemainUserForSingleRoom } from "../utils/getRemainUserForSingleRoom";
+import { globalContext } from "../context/globalContext";
 
 export default function Phonebook({ navigation }) {
   const [activeForm, setActiveForm] = useState("friend");
@@ -21,6 +23,7 @@ export default function Phonebook({ navigation }) {
   // Thêm state mới để lưu trữ kí tự hiện tại được chọn
   const [selectedChar, setSelectedChar] = useState(null);
   const [showCharBar, setShowCharBar] = useState(true); // Thêm state mới
+  const { globalData, globalHandler } = useContext(globalContext);
 
   // Mảng chứa các kí tự từ A đến Z
   const alphabet = Array.from({ length: 26 }, (_, i) =>
@@ -236,9 +239,71 @@ export default function Phonebook({ navigation }) {
         {formToShow1 === "all" && (
           <View>
             {/* Hiển thị nội dung của tab "Tất cả" */}
-            <Text style={{ marginLeft: 20, fontSize: 20, marginTop: 10 }}>
-              Hiển thị nội dung
-            </Text>
+            <Pressable>
+              {globalData.rooms.map((room, index) => {
+                return (
+                  <Pressable
+                    onPress={() => globalHandler.setCurrentRoom(room)}
+                    key={index}
+                    style={{
+                      flexDirection: "row",
+                      alignItems: "center",
+                      marginTop: 20,
+                    }}
+                  >
+                    <Pressable
+                      onPress={() => {
+                        globalHandler.setCurrentRoom(room);
+                        navigation.navigate("SendMessager", {
+                          room: room,
+                        });
+                      }}
+                      style={{
+                        flexDirection: "row",
+                        alignItems: "center",
+                      }}
+                    >
+                      <View>
+                        <Image
+                          source={{
+                            uri:
+                              room.type !== "group" &&
+                              getRemainUserForSingleRoom(
+                                room,
+                                globalData.user?._id
+                              )?.image,
+                          }}
+                          style={{
+                            width: 50,
+                            height: 50,
+                            marginLeft: 20,
+                            borderRadius: 90,
+                          }}
+                        ></Image>
+                      </View>
+
+                      <View
+                        style={{
+                          width: 300,
+                          height: 60,
+                          marginLeft: 20,
+                          justifyContent: "center",
+                        }}
+                      >
+                        <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+                          {
+                            getRemainUserForSingleRoom(
+                              room,
+                              globalData.user?._id
+                            )?.username
+                          }
+                        </Text>
+                      </View>
+                    </Pressable>
+                  </Pressable>
+                );
+              })}
+            </Pressable>
             {/* Thêm nội dung khác của tab "Tất cả" nếu cần */}
           </View>
         )}
@@ -322,7 +387,11 @@ export default function Phonebook({ navigation }) {
               >
                 <AntDesign name="addusergroup" size={30} color="#00BFFF" />
               </View>
-              <View>
+              <Pressable
+                onPress={() => {
+                  navigation.navigate("CreateGroup");
+                }}
+              >
                 <Text
                   style={{
                     fontSize: 18,
@@ -334,7 +403,7 @@ export default function Phonebook({ navigation }) {
                 >
                   Tạo nhóm mới
                 </Text>
-              </View>
+              </Pressable>
             </View>
 
             <View
@@ -495,6 +564,114 @@ export default function Phonebook({ navigation }) {
                   Hoạt động cuối
                 </Text>
               </View>
+
+              <View>
+                <Pressable>
+                  {globalData.rooms.map((room, index) => {
+                    return (
+                      <Pressable
+                        onPress={() => globalHandler.setCurrentRoom(room)}
+                        key={index}
+                        style={{
+                          marginTop: -40,
+                        }}
+                      >
+                        <Pressable
+                          onPress={() => {
+                            globalHandler.setCurrentRoom(room);
+                            navigation.navigate("SendMessager", {
+                              room: room,
+                            });
+                          }}
+                          style={{
+                            flexDirection: "row",
+                            alignItems: "center",
+                          }}
+                        >
+                          <View>
+                            <Image
+                              source={{ uri: room.image }}
+                              style={{
+                                width: 50,
+                                height: 50,
+                                marginLeft: 20,
+                                borderRadius: 90,
+                              }}
+                            ></Image>
+                          </View>
+
+                          <View
+                            style={{
+                              width: 300,
+                              height: 60,
+                              marginLeft: 20,
+                              justifyContent: "center",
+                            }}
+                          >
+                            <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+                              {room.type === "group" && room.name}
+                            </Text>
+                          </View>
+                        </Pressable>
+                      </Pressable>
+                    );
+                  })}
+                </Pressable>
+              </View>
+            </View>
+
+            <View>
+              <Pressable>
+                {globalData.rooms.map((room, index) => {
+                  return (
+                    <Pressable
+                      onPress={() => globalHandler.setCurrentRoom(room)}
+                      key={index}
+                      style={{
+                        marginTop: -45,
+                      }}
+                    >
+                      <Pressable
+                        onPress={() => {
+                          globalHandler.setCurrentRoom(room);
+                          navigation.navigate("SendMessager", {
+                            room: room,
+                          });
+                        }}
+                        style={{
+                          flexDirection: "row",
+                          alignItems: "center",
+                        }}
+                      >
+                        <View>
+                          <Image
+                            source={{ uri: room.image }}
+                            style={{
+                              width: 50,
+                              height: 50,
+                              marginLeft: 20,
+                              borderRadius: 90,
+                            }}
+                          ></Image>
+                        </View>
+
+                        <View
+                          style={{
+                            width: 300,
+                            height: 60,
+                            marginLeft: 20,
+                            justifyContent: "center",
+                          }}
+                        >
+                          <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+                            {room.type === "group" && room.name}
+                          </Text>
+                        </View>
+                      </Pressable>
+                    </Pressable>
+                  );
+                })}
+              </Pressable>
             </View>
           </View>
         )}
