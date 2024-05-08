@@ -94,8 +94,7 @@ class MessageController {
         { new: true }
       );
       console.log(messageUpdate);
-
-      // return res.status(400).json("Xóa tin nhắn không thành công")
+      return res.status(400).json("Xóa tin nhắn không thành công")
     } catch (error) {
       return res.status(500).json(error.Message);
     }

@@ -5,10 +5,9 @@ import TextField from "@mui/material/TextField";
 import Avatar from "@mui/material/Avatar";
 import Button from "@mui/material/Button";
 
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { globalContext } from "../context/globalContext";
 import { api, typeHTTP } from "../utils/api";
-
 const style = {};
 const AddFriend = ({ handleCloseModalAddFriend }) => {
   const [phone, setPhone] = useState("");
@@ -16,6 +15,7 @@ const AddFriend = ({ handleCloseModalAddFriend }) => {
   const { data } = useContext(globalContext);
   const [error, setError] = useState(false);
   const [openModal, setOpenModal] = React.useState(false);
+  const [isFriend, setIsFriend] = useState(false);
   const handleOpenModal = (event) => {
     handleCloseModalAddFriend(event);
   };
@@ -41,7 +41,6 @@ const AddFriend = ({ handleCloseModalAddFriend }) => {
       setError(true);
     }
   };
-
   const handleSendRequestAddFriend = (toUser) => {
     const body = {
       fromUser: data.user,
@@ -55,7 +54,6 @@ const AddFriend = ({ handleCloseModalAddFriend }) => {
       console.log(res);
     });
   };
-
   const handleRefuse = (toUser) => {
     const body = {
       fromUser: data.user,

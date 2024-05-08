@@ -24,7 +24,7 @@ router.get("/", getUsers);
 router.post("/send-request-add-friend", sendRequestAddFriend);
 router.post("/refuse-request", refuseRequest);
 router.post("/accept-request", acceptRequest);
-router.post("/unfriend", authenticateJWT, unFriend);
+router.post("/unfriend", unFriend);
 router.post("/update", authenticateJWT, updateUser);
 router.put("/update-mobile/:id", updateUserMobile);
 router.put("/update-avatar-mobile/:id", updateAvatarMobile);

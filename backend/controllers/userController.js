@@ -106,6 +106,7 @@ const refuseRequest = async (req, res) => {
 const acceptRequest = async (req, res) => {
   try {
     const { fromUser, toUser } = req.body;
+  
     fromUser.friends = fromUser.friends.map((item) => {
       if (item.friendId === toUser._id) {
         item.status = "accepted";
@@ -138,7 +139,7 @@ const acceptRequest = async (req, res) => {
 const unFriend = async (req, res) => {
   try {
     const { fromUser, toUser } = req.body
-
+    console.log(fromUser)
     const userUpdated = await User.findByIdAndUpdate(
       fromUser._id,
       { $pull: { friends: { friendId: toUser._id } } },
@@ -153,7 +154,7 @@ const unFriend = async (req, res) => {
 
     return res.status(200).json(userUpdated)
   } catch (error) {
-    return res.status(500).json(error.Message);
+    return res.status(500).json(error);
   }
 
 }
