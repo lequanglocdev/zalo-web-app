@@ -16,7 +16,7 @@ import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import IconButton from "@mui/material/IconButton";
-
+import Picker from "emoji-picker-react";
 const socket = io.connect(baseURLOrigin);
 
 const heightBody = "592px";
@@ -35,6 +35,7 @@ const BodyChat = () => {
   const fileRef = useRef();
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+  const [showPicker, setShowPicker] = useState(false);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -120,7 +121,12 @@ const BodyChat = () => {
       socket.emit("send_message_with_file", res);
     });
   };
-
+  const onEmojiClick = ( emojiObject) => {
+    // setMessage(prevMessage => prevMessage + emojiObject.emoji);
+    const emoji = emojiObject.emoji
+    setMessage(message + emoji)
+    setShowPicker(false);
+  };
   return (
     <Box
       sx={{
@@ -296,6 +302,7 @@ const BodyChat = () => {
           />
           <AttachFileSharpIcon onClick={() => fileRef.current.click()} />
         </Box>
+
         <Box
           sx={{
             width: "100%",
@@ -304,6 +311,7 @@ const BodyChat = () => {
             outline: "none",
             display: "flex",
             justifyContent: "space-between",
+            alignItems: "center",
           }}
         >
           <TextField
@@ -314,37 +322,40 @@ const BodyChat = () => {
             onChange={(e) => setMessage(e.target.value)}
             value={message}
             onKeyPress={handleKeyPress}
-            InputProps={{
-              startAdornment: (
-                <Box
-                  sx={{
-                    display: "flex",
-                    justifyContent: "flex-end",
-                    alignItems: "center",
-                    position: "absolute",
-                    right: 0,
-                  }}
-                >
-                  <InsertEmoticonIcon
-                    sx={{ marginRight: "20px", cursor: "pointer" }}
-                  />
-                  <Button
-                    sx={{ paddingX: "10px" }}
-                    variant="contained"
-                    onClick={() => handleSendMessage()}
-                  >
-                    Gửi
-                  </Button>
-                </Box>
-              ),
-            }}
-            sx={
-              {
-                // maxHeight: "80px", // Thay đổi giá trị tùy theo nhu cầu
-                // overflowY: "auto", // Thiết lập cuộn dọc khi văn bản vượt quá chiều cao
-              }
-            }
           />
+          <Box
+            sx={{
+              display: "flex",
+              justifyContent: "flex-end",
+              alignItems: "center",
+              position: "absolute",
+              right: 0,
+            }}
+          >
+            <InsertEmoticonIcon
+              onClick={() => setShowPicker((val) => !val)}
+              sx={{
+                position: "relative",
+                marginRight: "20px",
+                cursor: "pointer",
+              }}
+            />
+            {showPicker && (
+              <Picker
+                pickerStyle={{
+                  width: "100%",
+                }} // Đặt vị trí của Picker ở phía trên
+                onEmojiClick={onEmojiClick}
+              />
+            )}
+            <Button
+              sx={{ paddingX: "10px" }}
+              variant="contained"
+              onClick={() => handleSendMessage()}
+            >
+              Gửi
+            </Button>
+          </Box>
         </Box>
       </Box>
     </Box>

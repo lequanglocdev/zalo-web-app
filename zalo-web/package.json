@@ -19,6 +19,7 @@
     "@reduxjs/toolkit": "^2.2.2",
     "axios": "^1.6.7",
     "emoji-mart": "^5.5.2",
+    "emoji-picker-react": "^4.9.2",
     "firebase": "^10.9.0",
     "phosphor-react": "^1.4.1",
     "query-string": "^9.0.0",
