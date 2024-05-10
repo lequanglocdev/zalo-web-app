@@ -3,7 +3,7 @@ const jwt = require("jsonwebtoken");
 const generateAccessToken = (user) =>
   jwt.sign(
     {
-      _id: user._id,
+      id: user._id, // của updeta
       phone: user.phone,
     },
     process.env.JWT_ACCESS_KEY,

@@ -68,6 +68,10 @@ const Info = () => {
         console.error("API Error:", error);
       }
 };
+
+//sửa lý anh 
+
+
  
   const style = {
     position: "absolute",
@@ -309,7 +313,9 @@ const Info = () => {
                   <Typography sx={{ fontSize: "17px", marginTop: "20px", marginLeft:"20px" }}>
                       Ảnh đại diện
                     </Typography>
-                     <input type="file" name="IMG" id="IMG" style={{ fontSize: "17px", marginTop: "20px", marginLeft:"20px" }}  />
+                     <input type="file" name="IMG" id="IMG" style={{ fontSize: "17px", marginTop: "20px", marginLeft:"20px" }} 
+                   
+                     />
                   <br /> <br /> <br />
                   <hr />
                   <Box display="flex" flexDirection={"row-reverse"} margin={"15px"}>
