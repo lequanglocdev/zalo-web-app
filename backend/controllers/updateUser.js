@@ -37,6 +37,8 @@ const updateUser = async (req, res) => {
   }
 };
 
+
+
 const updateUserMobile = async (req, res) => {
   try {
     const { id } = req.params;
@@ -88,5 +90,6 @@ const updateAvatarMobile = async (req, res) => {
     return res.status(500).json({ error: "Error updating user information" });
   }
 };
+
 
 module.exports = { updateUser, updateUserMobile, updateAvatarMobile };
