@@ -12,6 +12,7 @@ import { globalContext } from "../context/globalContext";
 import { api, typeHTTP } from "../utils/api";
 import { Feather } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker"; // Import thư viện image picker
+import { getRemainUserForSingleRoom } from "../utils/getRemainUserForSingleRoom";
 
 export default function CreateGroup({ navigation }) {
   const { globalData, globalHandler } = useContext(globalContext);
@@ -178,9 +179,7 @@ export default function CreateGroup({ navigation }) {
             }}
           >
             <Image
-              source={{
-                uri: "https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg",
-              }}
+              source={{ uri: user?.image }}
               height={40}
               width={40}
               style={{ borderRadius: 20 }}
@@ -264,13 +263,12 @@ export default function CreateGroup({ navigation }) {
             }}
           >
             <Image
-              source={{
-                uri: "https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg",
-              }}
+              source={{ uri: user?.image }} // Sử dụng ảnh của người dùng từ kết quả tìm kiếm
               height={40}
               width={40}
               style={{ borderRadius: 20 }}
             />
+
             <Text style={{ fontSize: 16, fontWeight: "bold", marginLeft: 15 }}>
               {user?.username}
             </Text>

@@ -16,7 +16,7 @@ import { globalContext } from "../context/globalContext";
 
 export default function ScreenLogin({ navigation, route }) {
   const { selectedLanguage } = route.params || { selectedLanguage: "vi" };
-  const [data, setData] = useState({ phone: "0941432773", password: "123456" });
+  const [data, setData] = useState({ phone: "0941432773", password: "454631" });
   const { globalHandler } = useContext(globalContext);
   const [showPassword, setShowPassword] = useState(false);
   const [language, setLanguage] = useState(selectedLanguage);
@@ -78,7 +78,7 @@ export default function ScreenLogin({ navigation, route }) {
 
     try {
       const response = await axios.post(
-        "http://192.168.1.67:5000/v1/auth/login",
+        "http://192.168.0.73:5000/v1/auth/login",
         data,
         {
           headers: { "Content-type": "application/json" },

@@ -241,69 +241,73 @@ export default function Phonebook({ navigation }) {
             {/* Hiển thị nội dung của tab "Tất cả" */}
             <Pressable>
               {globalData.rooms.map((room, index) => {
-                return (
-                  <Pressable
-                    onPress={() => globalHandler.setCurrentRoom(room)}
-                    key={index}
-                    style={{
-                      flexDirection: "row",
-                      alignItems: "center",
-                      marginTop: 20,
-                    }}
-                  >
+                // Kiểm tra loại của phòng, chỉ hiển thị nếu là "single"
+                if (room.type === "single") {
+                  return (
                     <Pressable
-                      onPress={() => {
-                        globalHandler.setCurrentRoom(room);
-                        navigation.navigate("SendMessager", {
-                          room: room,
-                        });
-                      }}
+                      onPress={() => globalHandler.setCurrentRoom(room)}
+                      key={index}
                       style={{
                         flexDirection: "row",
                         alignItems: "center",
+                        marginTop: 20,
                       }}
                     >
-                      <View>
-                        <Image
-                          source={{
-                            uri:
-                              room.type !== "group" &&
-                              getRemainUserForSingleRoom(
+                      <Pressable
+                        onPress={() => {
+                          globalHandler.setCurrentRoom(room);
+                          navigation.navigate("SendMessager", {
+                            room: room,
+                          });
+                        }}
+                        style={{
+                          flexDirection: "row",
+                          alignItems: "center",
+                        }}
+                      >
+                        <View>
+                          <Image
+                            source={{
+                              uri: getRemainUserForSingleRoom(
                                 room,
                                 globalData.user?._id
                               )?.image,
-                          }}
-                          style={{
-                            width: 50,
-                            height: 50,
-                            marginLeft: 20,
-                            borderRadius: 90,
-                          }}
-                        ></Image>
-                      </View>
+                            }}
+                            style={{
+                              width: 50,
+                              height: 50,
+                              marginLeft: 20,
+                              borderRadius: 90,
+                            }}
+                          ></Image>
+                        </View>
 
-                      <View
-                        style={{
-                          width: 300,
-                          height: 60,
-                          marginLeft: 20,
-                          justifyContent: "center",
-                        }}
-                      >
-                        <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-                          {
-                            getRemainUserForSingleRoom(
-                              room,
-                              globalData.user?._id
-                            )?.username
-                          }
-                        </Text>
-                      </View>
+                        <View
+                          style={{
+                            width: 300,
+                            height: 60,
+                            marginLeft: 20,
+                            justifyContent: "center",
+                          }}
+                        >
+                          <Text style={{ fontSize: 20, fontWeight: "bold" }}>
+                            {
+                              getRemainUserForSingleRoom(
+                                room,
+                                globalData.user?._id
+                              )?.username
+                            }
+                          </Text>
+                        </View>
+                      </Pressable>
                     </Pressable>
-                  </Pressable>
-                );
+                  );
+                } else {
+                  return null; // Không hiển thị phòng không phải là phòng cá nhân
+                }
               })}
             </Pressable>
+
             {/* Thêm nội dung khác của tab "Tất cả" nếu cần */}
           </View>
         )}
@@ -430,9 +434,6 @@ export default function Phonebook({ navigation }) {
               <View style={{ flex: 2, flexDirection: "row", marginTop: 10 }}>
                 <View style={{ flexDirection: "column" }}>
                   <Pressable
-                    onPress={() => {
-                      navigation.navigate("");
-                    }}
                     style={{
                       width: 65,
                       height: 65,
@@ -564,17 +565,17 @@ export default function Phonebook({ navigation }) {
                   Hoạt động cuối
                 </Text>
               </View>
+            </View>
 
-              <View>
-                <Pressable>
-                  {globalData.rooms.map((room, index) => {
+            <View style={{ marginTop: 10 }}>
+              <Pressable>
+                {globalData.rooms.map((room, index) => {
+                  // Kiểm tra loại của phòng, chỉ hiển thị nếu là "group"
+                  if (room.type === "group") {
                     return (
                       <Pressable
                         onPress={() => globalHandler.setCurrentRoom(room)}
                         key={index}
-                        style={{
-                          marginTop: -40,
-                        }}
                       >
                         <Pressable
                           onPress={() => {
@@ -609,67 +610,15 @@ export default function Phonebook({ navigation }) {
                             }}
                           >
                             <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-                              {room.type === "group" && room.name}
+                              {room.name}
                             </Text>
                           </View>
                         </Pressable>
                       </Pressable>
                     );
-                  })}
-                </Pressable>
-              </View>
-            </View>
-
-            <View>
-              <Pressable>
-                {globalData.rooms.map((room, index) => {
-                  return (
-                    <Pressable
-                      onPress={() => globalHandler.setCurrentRoom(room)}
-                      key={index}
-                      style={{
-                        marginTop: -45,
-                      }}
-                    >
-                      <Pressable
-                        onPress={() => {
-                          globalHandler.setCurrentRoom(room);
-                          navigation.navigate("SendMessager", {
-                            room: room,
-                          });
-                        }}
-                        style={{
-                          flexDirection: "row",
-                          alignItems: "center",
-                        }}
-                      >
-                        <View>
-                          <Image
-                            source={{ uri: room.image }}
-                            style={{
-                              width: 50,
-                              height: 50,
-                              marginLeft: 20,
-                              borderRadius: 90,
-                            }}
-                          ></Image>
-                        </View>
-
-                        <View
-                          style={{
-                            width: 300,
-                            height: 60,
-                            marginLeft: 20,
-                            justifyContent: "center",
-                          }}
-                        >
-                          <Text style={{ fontSize: 20, fontWeight: "bold" }}>
-                            {room.type === "group" && room.name}
-                          </Text>
-                        </View>
-                      </Pressable>
-                    </Pressable>
-                  );
+                  } else {
+                    return null; // Không hiển thị phòng không phải là nhóm
+                  }
                 })}
               </Pressable>
             </View>
