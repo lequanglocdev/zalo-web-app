@@ -158,7 +158,29 @@ const unFriend = async (req, res) => {
   }
 
 }
+const getFriendRequests = async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const user = await User.findById(userId).populate('friends.friendId');
+    
+    if (!user) {
+      return res.status(404).json({ error: "Người dùng không tồn tại" });
+    }
 
+    const friendRequests = user.friends.filter(
+      (friend) => friend.status === "request"
+    ).map(friend => ({
+      friendId: friend.friendId._id,
+      username: friend.friendId.username, // Assuming username is a field in the User model
+      status: friend.status
+    }));
+
+    res.status(200).json(friendRequests);
+  } catch (error) {
+    console.log(error);
+    res.status(500).json(error);
+  }
+};
 module.exports = {
   verificationUpdate,
   findUser,
@@ -167,5 +189,6 @@ module.exports = {
   sendRequestAddFriend,
   refuseRequest,
   acceptRequest,
-  unFriend
+  unFriend,
+  getFriendRequests
 };
