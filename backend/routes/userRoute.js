@@ -8,6 +8,7 @@ const {
   refuseRequest,
   acceptRequest,
   unFriend,
+  getFriendRequests
 } = require("../controllers/userController");
 const { verifyToken } = require("../middlewares/verifyToken");
 const { authenticateJWT } = require("../middlewares/authenticateJWT");
@@ -31,5 +32,5 @@ router.post("/updateAvatar/:id",updateAvatar);
 
 router.put("/update-mobile/:id", updateUserMobile);
 router.put("/update-avatar-mobile/:id", updateAvatarMobile);
-
+router.get("/friend-requests/:userId",getFriendRequests )
 module.exports = router;

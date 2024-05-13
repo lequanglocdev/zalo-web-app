@@ -1,136 +1,100 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import Box from "@mui/material/Box";
-
-import { globalContext } from "../../../../../context/globalContext";
-import { api, typeHTTP } from "../../../../../utils/api";
 import Typography from "@mui/material/Typography";
 import Button from "@mui/material/Button";
-import { Avatar } from "@mui/material";
+import { globalContext } from "../../../../../context/globalContext";
+import { api, typeHTTP } from "../../../../../utils/api";
+import { da } from "@faker-js/faker";
 
 const BodyInvitaPhone = () => {
-  const { data } = useContext(globalContext);
-  const [results, setResult] = useState([]);
+  const { data, handler } = useContext(globalContext);
+  const [friendRequests, setFriendRequests] = useState([]);
 
-  const handleRefuse = (toUser) => {
-    const body = {
-      fromUser: data.user,
-      toUser,
-    };
+  useEffect(() => {
     api({
-      body: body,
-      url: "/user/refuse-request",
-      method: typeHTTP.POST,
+      url: `/user/friend-requests/${data.user?._id}`,
+      method: typeHTTP.GET,
     }).then((res) => {
-      console.log(res);
+      console.log(res)
+     setFriendRequests(res)
     });
-  };
+  }, [data.user]);
 
-  const handleAccept = (toUser) => {
-    const body = {
-      fromUser: data.user,
-      toUser,
-    };
-    api({
-      body: body,
-      url: "/user/accept-request",
-      method: typeHTTP.POST,
-    }).then((res) => {
-      console.log(res);
-    });
-  };
-  const checkRelationship = (otherUser) => {
-    if (
-      data.user.friends.map((item) => item.friendId).includes(otherUser._id)
-    ) {
-      const friend = data.user.friends.filter(
-        (item) => item.friendId === otherUser._id
-      )[0];
-      if (friend.status === "pending") {
-        return (
-          <>
-            <Button variant="contained">Đã gửi lời mời kết bạn</Button>;
-          </>
-        );
-      } else {
-        if (friend.status === "request") {
-          return (
-            <>
-              <Button
-                variant="contained"
-                onClick={() => handleAccept(otherUser)}
-              >
-                Chap Nhan
-              </Button>
-              <Button
-                variant="contained"
-                onClick={() => handleRefuse(otherUser)}
-              >
-                Tu Choi
-              </Button>
-            </>
-          );
-        } else {
-          return <Button variant="contained">Ban bè</Button>;
-        }
-      }
-    } else {
-      return (
-        <Button
-          variant="contained"
-          onClick={() => handleSendRequestAddFriend(otherUser)}
-        >
-          Gửi lời mời kết bạn
-        </Button>
+  const handleAccept = async (friendRequest) => {
+    try {
+      // Gửi yêu cầu chấp nhận lời mời kết bạn đến backend
+      await api({
+        url: "/user/accept-request",
+        method: typeHTTP.POST,
+        body: { fromUser: friendRequest.fromUser, toUser: data.user },
+      });
+      // Cập nhật danh sách lời mời kết bạn sau khi chấp nhận
+      setFriendRequests((prevRequests) =>
+        prevRequests.filter((request) => request._id !== friendRequest._id)
       );
+    } catch (error) {
+      console.error("Lỗi khi chấp nhận lời mời kết bạn:", error);
     }
   };
-  const handleSendRequestAddFriend = (toUser) => {
-    const body = {
-      fromUser: data.user,
-      toUser,
-    };
-    api({
-      body: body,
-      url: "/user/send-request-add-friend",
-      method: typeHTTP.POST,
-    }).then((res) => {
-      console.log(res);
-    });
+
+  const handleRefuse = async (friendRequest) => {
+    try {
+      // Gửi yêu cầu từ chối lời mời kết bạn đến backend
+      await api({
+        url: "/user/refuse-request",
+        method: typeHTTP.POST,
+        body: { fromUser: friendRequest.fromUser, toUser: data.user },
+      });
+      // Cập nhật danh sách lời mời kết bạn sau khi từ chối
+      setFriendRequests((prevRequests) =>
+        prevRequests.filter((request) => request._id !== friendRequest._id)
+      );
+    } catch (error) {
+      console.error("Lỗi khi từ chối lời mời kết bạn:", error);
+    }
   };
+
   return (
     <Box
       sx={{
         padding: "16px",
         display: "flex",
         flexDirection: "column",
-        height: (theme) => theme.zalo.heightList,
         gap: 1,
-        overflow: "hidden",
         overflowY: "auto",
-        "&::-webkit-scrollbar": {
-          width: "8px",
-        },
-        "&::-webkit-scrollbar-thumb": {
-          backgroundColor: "#ccc",
-          borderRadius: "4px",
-        },
-        "&::-webkit-scrollbar-thumb:hover": {
-          backgroundColor: "#ccc",
-        },
-        "&::-webkit-scrollbar-track": {
-          backgroundColor: "#ddd",
-          borderRadius: "8px",
-        },
+        height: "calc(100vh - 64px)",
       }}
     >
-      {checkRelationship(results) ? (
-        <Box>
-          {results.map((results, index) => (
-            <Box key={index}>
-              <Typography>{results.username}</Typography>
+      {friendRequests && friendRequests.length > 0 ? (
+        friendRequests.map((request,index) => (
+          <Box
+            key={index}
+            sx={{
+              display: "flex",
+              justifyContent: "space-between",
+              alignItems: "center",
+              borderBottom: "1px solid #ccc",
+              padding: "8px 0",
+            }}
+          >
+            <Typography>{request?.username}</Typography>
+            <Typography>{request?.length}</Typography>
+            <Box>
+              <Button
+                variant="contained"
+                onClick={() => handleAccept(request)}
+              >
+                Chấp nhận
+              </Button>
+              <Button
+                variant="contained"
+                onClick={() => handleRefuse(request)}
+              >
+                Từ chối
+              </Button>
             </Box>
-          ))}
-        </Box>
+          </Box>
+        ))
       ) : (
         <Box
           sx={{
@@ -138,17 +102,15 @@ const BodyInvitaPhone = () => {
             flexDirection: "column",
             justifyContent: "center",
             alignItems: "center",
+            height: "100%",
           }}
         >
-          <img
-            src="https://nghithao.vn/assets/images/no-cart.png"
-            style={{ width: "200px" }}
-          />
           <Typography sx={{ color: "#b2bec3", margin: "20px" }}>
-            Bạn không có lời mời nào
+            Bạn không có lời mời kết bạn nào.
           </Typography>
         </Box>
       )}
+      
     </Box>
   );
 };
