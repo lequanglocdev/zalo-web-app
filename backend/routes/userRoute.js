@@ -14,7 +14,7 @@ const { authenticateJWT } = require("../middlewares/authenticateJWT");
 const {
   updateUser,
   updateUserMobile,
-  updateAvatarMobile,
+  updateAvatarMobile,updateAvatar
 } = require("../controllers/updateUser");
 
 router.post("/verification", verificationUpdate);
@@ -27,6 +27,7 @@ router.post("/accept-request", acceptRequest);
 router.post("/unfriend", unFriend);
 
 router.post("/update", authenticateJWT, updateUser);
+router.post("/updateAvatar/:id",updateAvatar);
 
 router.put("/update-mobile/:id", updateUserMobile);
 router.put("/update-avatar-mobile/:id", updateAvatarMobile);

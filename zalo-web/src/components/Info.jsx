@@ -1,5 +1,5 @@
 
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
@@ -18,13 +18,26 @@ import {
   Input
 } from "@mui/material";
 import { api, typeHTTP } from "../utils/api";
+import { styled } from "@mui/material/styles";
+import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
+const VisuallyHiddenInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
+  height: 1,
+  overflow: "hidden",
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  whiteSpace: "nowrap",
+  width: 1,
+});
 
 const Info = () => {
   const { data, handler } = useContext(globalContext); // Lấy dữ liệu từ global context
   const username = data.user?.username;
   const phone = data.user?.phone;
   const gender = data.user?.gender;
-  const image = data.user?.image;
+  const image1 = data.user?.image;
   const birthday = new Date(data.user?.birthday).toLocaleDateString("vi-VN");
 
   const [openModal, setOpenModal] = useState(false);
@@ -33,15 +46,17 @@ const Info = () => {
   const [newDay, setNewDay] = useState("");
   const [newMonth, setNewMonth] = useState("");
   const [newYear, setNewYear] = useState("");
-  const [newIMG, setIMG] = useState("");
-  
+  const [image, setImage] = useState("");
+  const [imageUrl, setImageUrl] = useState("");
 
   const updateUser = async () => {
     const body = {
       username: newUsername || username,
       gender: newGender || gender,
       birthday: `${newDay || new Date(birthday).getDate()}/${newMonth || new Date(birthday).getMonth() + 1}/${newYear || new Date(birthday).getFullYear()}`,
-      image : newIMG || image,
+      image: image || image1,
+      
+     
     };
     console.log("Dau vao:", body);
     const token = localStorage.getItem("accessToken");
@@ -69,10 +84,50 @@ const Info = () => {
       }
 };
 
-//sửa lý anh 
+
+const handleFile = async (e) => {
+  try { 
+    const files = e.target.files;
+    setImage(files[0]);
+    const imageUrl = URL.createObjectURL(files[0]);
+    setImageUrl(imageUrl);
+    
+    // Nếu có tệp được chọn
+    if (files[0]) {
+      const formData = new FormData();
+      formData.append("image", files[0]); 
+      console.log("formData", formData);
+      
+      // Lấy token từ local storage
+      const token = localStorage.getItem("accessToken");
+      if (!token) {
+        // Nếu không có token, hiển thị thông báo lỗi và thoát khỏi hàm
+        console.log("Access token is missing");
+        return;
+      }
+      
+      // Gửi token trong tiêu đề và gửi dữ liệu hình ảnh đến API
+      try {
+        const res = await api({
+          url: `/user/updateAvatar/${data.user?._id}`,
+          method: typeHTTP.POST,
+          body: formData,
+          sendToken: true,
+        });
+        console.log("Response from API:", res);
+        alert("Upload ảnh thành công ");
+      } catch (error) {
+        // Xử lý lỗi nếu gặp phải khi gọi API
+        console.error("Error uploading image:", error);
+      }
+    }
+  } catch (error) {
+    // Xử lý lỗi nếu có lỗi khi chọn hình ảnh
+    console.error("Error picking images:", error);
+  }
+};
 
 
- 
   const style = {
     position: "absolute",
     top: "50%",
@@ -134,7 +189,7 @@ const Info = () => {
           >
             <Avatar
               alt="Remy Sharp"
-              src={image}
+              src={imageUrl}
               sx={{
                 width: 70,
                 height: 70,
@@ -142,10 +197,21 @@ const Info = () => {
                 top: "-6px",
                 right: "-30px",
               }}
+              
             />
+            <Button component="label" role={undefined} sx={{width:"5px", paddingRight:"40px", m:0  }} >
+            <VisuallyHiddenInput
+              type="file"
+              accept="image/*"
+              onChange={handleFile}
+            />
+
+              <PhotoCameraIcon sx={{ marginTop:"30px" }} />
+            
+          </Button>
             <Typography
               id="modal-modal-description"
-              sx={{ marginLeft: "50px", fontSize: "20px", fontWeight: "bold" }}
+              sx={{fontSize: "20px", fontWeight: "bold" }}
             >
               {username}
               <BorderColorIcon
@@ -310,13 +376,8 @@ const Info = () => {
                       </FormControl>
                     </Box>
                   </Box>
-                  <Typography sx={{ fontSize: "17px", marginTop: "20px", marginLeft:"20px" }}>
-                      Ảnh đại diện
-                    </Typography>
-                     <input type="file" name="IMG" id="IMG" style={{ fontSize: "17px", marginTop: "20px", marginLeft:"20px" }} 
-                   
-                     />
-                  <br /> <br /> <br />
+                
+                  <br /> <br /> <br /> <br /> <br />
                   <hr />
                   <Box display="flex" flexDirection={"row-reverse"} margin={"15px"}>
                   <Button sx={{width:"100px", height:"40px", backgroundColor:"#80ccff" , color:"black" , fontSize:"18px" , marginLeft:"5px", fontWeight:"bold"}}

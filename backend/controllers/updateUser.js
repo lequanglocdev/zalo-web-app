@@ -41,7 +41,9 @@ const updateUser = async (req, res) => {
 
 const updateUserMobile = async (req, res) => {
   try {
+    
     const { id } = req.params;
+    
     const user = await User.findById(id);
     if (!user) {
       return res.status(404).json({ error: "User not found !!!" });
@@ -65,7 +67,8 @@ const updateAvatarMobile = async (req, res) => {
     console.log(avatar);
     const user = await User.findById(id);
     if (!user) {
-      return res.status(404).json({ error: "User not found !!!" });
+     
+ return res.status(404).json({ error: "User not found !!!" });
     }
     if (avatar) {
       avatar.buffer = await formatBase64ToBuffer(avatar.base64);
@@ -91,5 +94,45 @@ const updateAvatarMobile = async (req, res) => {
   }
 };
 
+const updateAvatar = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const  image = req.file;
+    console.log("id", id);
+    console.log("req.body",req.file)
+    console.log("image ", image );
+    const user = await User.findById(id);
+    if (!user) {
+      return res.status(404).json({ error: "User not found !!!" });
+    }
+    if (image ) {
+      //image .buffer = await formatBase64ToBuffer(image .base64);
+      const result = await uploadToS3(
+        `${
+          image.mimetype.split("/")[0] !== "application"
+            ? image.mimetype.split("/")[0]
+            : image.originalname.split(".")[
+                image.originalname.split(".").length - 1
+              ]
+        }___${Date.now().toString()}_${image.originalname.split(".")[0]}`,
+        image.buffer,
+        image .mimetype,
+        image .originalname.split(".")[0],
+        image .size / 1024
+      );
+      console.log(result);
+      user.image = result.url;
+    }
 
-module.exports = { updateUser, updateUserMobile, updateAvatarMobile };
+    const updatedUser = await user.save();
+
+    return res.status(200).json(updatedUser);
+  } catch (error) {
+    console.log(error);
+    return res.status(500).json({ error: "Error updating user information" });
+  }
+};
+
+
+
+module.exports = { updateUser,updateAvatar, updateUserMobile, updateAvatarMobile };

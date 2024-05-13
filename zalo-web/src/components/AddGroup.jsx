@@ -75,6 +75,7 @@ const AddGroup = ({ handleCloseModalAddGroup }) => {
       formData.append("name", groupName);
       formData.append("type", "group");
       formData.append("image", image);
+      console.log("formData", formData);
       participants.forEach((item) => {
         formData.append("users", item._id);
       });
