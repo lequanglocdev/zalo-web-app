@@ -60,7 +60,12 @@ export default function Phonebook({ navigation }) {
           formToShow1 === "recent") && (
           <View>
             {/* Hiển thị nội dung của tab "Bạn bè" và "Tất cả" */}
-            <Pressable style={{ flexDirection: "row" }}>
+            <Pressable
+              style={{ flexDirection: "row" }}
+              onPress={() => {
+                navigation.navigate("InviteFriend");
+              }}
+            >
               <View
                 style={{
                   width: 37,

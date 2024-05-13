@@ -29,6 +29,7 @@ import VideoMedia from "./VideoMedia";
 import Recorder from "./Recorder";
 import AudioPlayer from "./AudioPlayer";
 import DataFriend from "./DataFriend";
+import InviteFriend from "./InviteFriend";
 
 export {
   Message,
@@ -62,4 +63,5 @@ export {
   Recorder,
   AudioPlayer,
   DataFriend,
+  InviteFriend,
 };
