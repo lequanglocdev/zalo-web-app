@@ -1,4 +1,6 @@
 const router = require("express").Router();
+const multer = require('multer');
+const upload = multer();
 const {
   verificationUpdate,
   findUser,
@@ -28,7 +30,7 @@ router.post("/accept-request", acceptRequest);
 router.post("/unfriend", unFriend);
 
 router.post("/update", authenticateJWT, updateUser);
-router.post("/updateAvatar/:id",updateAvatar);
+router.post("/updateAvatar/:id",upload.single('image'),updateAvatar);
 
 router.put("/update-mobile/:id", updateUserMobile);
 router.put("/update-avatar-mobile/:id", updateAvatarMobile);

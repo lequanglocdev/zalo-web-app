@@ -46,8 +46,8 @@ const Info = () => {
   const [newDay, setNewDay] = useState("");
   const [newMonth, setNewMonth] = useState("");
   const [newYear, setNewYear] = useState("");
-  const [image, setImage] = useState("");
-  const [imageUrl, setImageUrl] = useState("");
+  const [image, setImage] = useState([]);
+  const [imageUrl, setImageUrl] = useState(image1);
 
   const updateUser = async () => {
     const body = {
@@ -64,7 +64,7 @@ const Info = () => {
       console.log("Access token is missing");
       return;
     }
-    console.log("accessToken of update:", token);
+    //console.log("accessToken of update:", token);
       try {
         const res = await api({
           method: typeHTTP.POST,
@@ -105,7 +105,7 @@ const handleFile = async (e) => {
         console.log("Access token is missing");
         return;
       }
-      
+
       // Gửi token trong tiêu đề và gửi dữ liệu hình ảnh đến API
       try {
         const res = await api({
@@ -113,9 +113,10 @@ const handleFile = async (e) => {
           method: typeHTTP.POST,
           body: formData,
           sendToken: true,
+          
         });
-        console.log("Response from API:", res);
-        alert("Upload ảnh thành công ");
+        //console.log("Response from API:", res);
+        console.log("Upload ảnh thành công ");
       } catch (error) {
         // Xử lý lỗi nếu gặp phải khi gọi API
         console.error("Error uploading image:", error);
@@ -189,7 +190,7 @@ const handleFile = async (e) => {
           >
             <Avatar
               alt="Remy Sharp"
-              src={imageUrl}
+              src={imageUrl || image1}
               sx={{
                 width: 70,
                 height: 70,

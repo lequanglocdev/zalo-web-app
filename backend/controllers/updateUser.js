@@ -99,7 +99,6 @@ const updateAvatar = async (req, res) => {
     const { id } = req.params;
     const  image = req.file;
     console.log("id", id);
-    console.log("req.body",req.file)
     console.log("image ", image );
     const user = await User.findById(id);
     if (!user) {
