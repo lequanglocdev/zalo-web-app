@@ -90,7 +90,7 @@ const BodyGroupPhone = () => {
   }, [sortingOption, matchingRooms]);
   
   const handleSortChange = (event) => {
-    setSortingOption(event.target.value); // Cập nhật giá trị của biến sortingOption khi người dùng thay đổi tùy chọn sắp xếp
+    setSortingOption(event.target.value); // sortingOption khi người dùng thay đổi tùy chọn sắp xếp
   };
 
   return (
