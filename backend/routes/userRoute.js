@@ -35,4 +35,7 @@ router.post("/updateAvatar/:id",upload.single('image'),updateAvatar);
 router.put("/update-mobile/:id", updateUserMobile);
 router.put("/update-avatar-mobile/:id", updateAvatarMobile);
 router.get("/friend-requests/:userId",getFriendRequests )
+
+
+
 module.exports = router;

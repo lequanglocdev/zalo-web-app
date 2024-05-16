@@ -114,7 +114,7 @@ const BodyGroupPhone = () => {
             onChange={handleChange}
           >
             <MenuItem value={10}>Tên (A-Z)</MenuItem>
-            <MenuItem value={20}>Tên (Z-A)</MenuItem>
+           
           </Select>
         </FormControl>
         <FormControl sx={{ m: 1, minWidth: "260px" }} size="small">
@@ -197,7 +197,7 @@ const BodyGroupPhone = () => {
             alignItems: "center",
           }}
         >
-          <Avatar sx={{ bgcolor: deepOrange[500] }}>A</Avatar>
+          <Avatar sx={{ bgcolor: deepOrange[500] }}></Avatar>
           <Typography sx={{ paddingX: 2 }}>An</Typography>
 
           <IconButton
@@ -357,7 +357,7 @@ const BodyGroupPhone = () => {
           }}
         >
           <Avatar sx={{ bgcolor: deepOrange[500] }}>A</Avatar>
-          <Typography sx={{ paddingX: 2 }}>An</Typography>
+          <Typography sx={{ paddingX: 2 }}>Anh Yeu</Typography>
 
           <IconButton
             aria-label="more"
