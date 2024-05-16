@@ -8,13 +8,15 @@ import MarkEmailReadIcon from "@mui/icons-material/MarkEmailRead";
 import TextField from "@mui/material/TextField";
 import Button from "@mui/material/Button";
 import { api, typeHTTP } from "../../utils/api";
-import Login from "../Auth/Login";
+//import Login from "../Auth/Login";
+import { useNavigate } from "react-router-dom";
 const VerificationPage = () => {
   const { data } = useContext(globalContext);
   const [confirmation, setConfirmation] = useState();
   const [otp, setOtp] = useState("");
   const [verificationMessage, setVerificationMessage] = useState("");
   const [authenticated, setAuthenticated] = useState(false);
+  const nav = useNavigate();
 
   // useEffect(() => {
   //   const recaptcha = new RecaptchaVerifier(auth, "recaptcha", {});
@@ -59,9 +61,13 @@ const VerificationPage = () => {
           url: "/user/verification",
           body: { phone: data.user?.phone },
         }).then((res) => {
-          setVerificationMessage("Xác thực thành công");
+          setVerificationMessage("Đăng Ký Thành Công. Hãy Đăng Nhập Lại !");
           console.log(res);
           setAuthenticated(true);
+          setTimeout(()=> {
+            nav("/");
+          }, 5000);
+         
         });
       })
       .catch((error) => {
