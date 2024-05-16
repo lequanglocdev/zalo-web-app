@@ -14,6 +14,7 @@ export const GlobalContext = ({ children }) => {
     friends
   };
   //console.log( "Data" ,data);
+  console.log( "rooms" ,rooms);
   useEffect(() => {
    // Khôi phục thông tin người dùng từ Local Storage khi trang được tải lại
     const userData = JSON.parse(localStorage.getItem("user"));
@@ -22,6 +23,13 @@ export const GlobalContext = ({ children }) => {
       setUser(userData);
     }
   }, []);
+  useEffect(() => {
+    // Khôi phục thông tin người dùng từ Local Storage khi trang được tải lại
+     const roomsData = JSON.parse(localStorage.getItem("rooms"));
+     if (roomsData) {
+      setRooms(roomsData);
+     }
+   }, []);
   const handler = { setUser, setRooms, setCurrentRoom ,setfriend};
 
   return (

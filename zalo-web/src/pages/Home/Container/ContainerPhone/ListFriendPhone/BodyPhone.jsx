@@ -29,8 +29,8 @@ const BodyPhone = () => {
   const [name, setName] = useState("");
 
   //const [friendId, setFriendId] = useState("");
- // console.log("friendId", friendId)
-  //console.log("setFriendId", setFriendId)
+  //console.log("friendId", friendId)
+ // console.log("setFriendId", setFriendId)
   const handleChange = (event) => {
     setName(event.target.value);
   };
@@ -42,9 +42,9 @@ const BodyPhone = () => {
   const { data, handler } = useContext(globalContext);
   const userFriend = data.user?._id; 
   useEffect(() => {
-    console.log("Danh sách bạn bè:");
+    //console.log("Danh sách bạn bè:");
     data.user.friends.forEach((friend, index) => {
-      console.log(`Bạn bè ${index + 1} Có friendId: ${friend.friendId}`);
+      //console.log(`Bạn bè ${index + 1} Có friendId: ${friend.friendId}`);
     });
   }, [data]);
 
@@ -59,26 +59,47 @@ const BodyPhone = () => {
         }
       });
       setResult(arr);
+      setInitialResults(arr)
     });
   }, [userFriend]);
   const [result, setResult] = useState([]);
+  const [initialResults, setInitialResults] = useState([]);
+
  
   // Log ra thông tin của các người dùng được tìm thấy
   useEffect(() => {
-    console.log("Kết quả tìm kiếm:", result);
+    //console.log("Kết quả tìm kiếm:", result);
     result.forEach((user, index) => {
-      console.log(`Thông tin người dùng ${index + 1}:`);
+      //console.log(`Thông tin người dùng ${index + 1}:`);
       //console.log("_id:", user._id);
-      console.log("Username:", user.username);
-      console.log("Image:", user.image);
-   
-      
+      //console.log("Username:", user.username);
+      //console.log("Image:", user.image);
     });
-  }, [result]);
+  }, [result] ,[setInitialResults]);
 
   
   const handleClose = () => {
     setAnchorEl(null);
+  };
+  // tim
+  const handleSearchChange = (event) => {
+    const { value } = event.target;
+    setSearchValue(value);
+    const filteredResults = initialResults.filter((user) =>
+      user.username.toLowerCase().includes(value.toLowerCase())
+    );
+    setResult(filteredResults);
+  };
+  // săp sep
+  const [sortingOption, setSortingOption] = useState(""); 
+  useEffect(() => {
+    if (sortingOption === "Tên (A-Z)") { // Nếu người dùng chọn sắp xếp theo tên (A-Z)
+      const sortedResults = [...result].sort((a, b) => a.username.localeCompare(b.username)); // Sắp xếp danh sách theo tên (A-Z)
+      setResult(sortedResults); // Cập nhật danh sách bạn bè với danh sách đã sắp xếp
+    }
+  }, [sortingOption, result]);
+  const handleSortChange = (event) => {
+    setSortingOption(event.target.value); // Cập nhật giá trị của biến sortingOption khi người dùng thay đổi tùy chọn sắp xếp
   };
   return (
     <Box
@@ -124,7 +145,8 @@ const BodyPhone = () => {
           type="text"
           size="small"
           value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
+         // onChange={(e) => setSearchValue(e.target.value)}
+         onChange={handleSearchChange}
           InputProps={{
             startAdornment: (
               <InputAdornment
@@ -153,12 +175,12 @@ const BodyPhone = () => {
           <Select
             labelId="demo-select-small-label"
             id="demo-select-small"
-            value={name}
+            value={sortingOption}
             label="Tên (A-Z)"
-            onChange={handleChange}
+            onChange={handleSortChange}
           >
-            <MenuItem value={10}>Tên (A-Z)</MenuItem>
-            <MenuItem value={20}>Tên (Z-A)</MenuItem>
+            <MenuItem value="Tên (A-Z)">Tên (A-Z)</MenuItem>
+           
           </Select>
         </FormControl>
         <FormControl sx={{ m: 1, minWidth: "260px" }} size="small">
@@ -171,29 +193,29 @@ const BodyPhone = () => {
             onChange={handleChange}
           >
             <MenuItem value={10}>Tất cả</MenuItem>
-            <MenuItem value={20}>Phân loại</MenuItem>
           </Select>
         </FormControl>
       </Box>
 
 
 <Box>
-  <Typography
-    sx={{ height: "32px", display: "flex", alignItems: "center" }}
-  >
-  </Typography>
+  
   {result.map((user, index) => (
     <Box key={index}>
+      <Typography
+    sx={{ height: "32px", display: "flex", alignItems: "center" }}
+  >{user.username.charAt(0).toUpperCase()}
+  </Typography>
       <Box
         sx={{
           display: "flex",
           alignItems: "center",
         }}
       >
-        <Avatar src={user.image}  sx={{ bgcolor: deepOrange[500],  marginTop:"10px"}}>
+        <Avatar src={user.image}  sx={{ bgcolor: deepOrange[500]}}>
           {user.username[0]}
         </Avatar>
-        <Typography sx={{ paddingX: 2  ,marginTop:"10px"}}>{user.username}</Typography>
+        <Typography sx={{ paddingX: 2 }}>{user.username}</Typography>
         <IconButton
           aria-label="more"
           id={`long-button-${index}`}

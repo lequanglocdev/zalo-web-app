@@ -6,7 +6,7 @@ import SearchIcon from "@mui/icons-material/Search";
 import InputAdornment from "@mui/material/InputAdornment";
 import CloseIcon from "@mui/icons-material/Close";
 
-import { useState } from "react";
+import { useState , useContext, useEffect } from "react";
 import InputLabel from "@mui/material/InputLabel";
 import MenuItem from "@mui/material/MenuItem";
 import FormControl from "@mui/material/FormControl";
@@ -16,6 +16,8 @@ import { deepOrange, deepPurple } from "@mui/material/colors";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 import IconButton from "@mui/material/IconButton";
 import Menu from "@mui/material/Menu";
+import { globalContext } from "../../../../../context/globalContext";
+import { api, typeHTTP } from "../../../../../utils/api";
 const options = [
   "Đánh dấu tin nhắn đã đọc",
   "Gửi tin đồng thời",
@@ -36,6 +38,61 @@ const BodyGroupPhone = () => {
   const handleClose = () => {
     setAnchorEl(null);
   };
+
+  const { data, handler } = useContext(globalContext);
+  const [matchingRooms, setMatchingRooms] = useState([]);
+  const [initialMatchingRooms, setInitialMatchingRooms] = useState([]);
+  const currentUser = data.user?._id;
+  // console.log("user",currentUser);
+   //const Rooms  = data.rooms;
+  // console.log("Rooms",Rooms);
+
+  useEffect(() => {
+    if (data?.rooms) {
+     // console.log("Rooms data:", data.rooms); // Debugging statement to ensure rooms data is available
+      const sl = data.rooms.filter(room => 
+        room.type === "group" && room.users.some(user => user._id === currentUser)
+      );
+      setMatchingRooms(sl);
+      setInitialMatchingRooms(sl);
+      //console.log("Số nhóm : ", sl.length);
+
+      matchingRooms.forEach(room => {
+       // console.log("Group ID:", room._id);
+       // console.log("Group Name:", room.name);
+       // console.log("Group Image:", room.image);
+      });
+      
+    } else {
+      console.log("No rooms data available."); // Debugging statement if rooms data is not available
+    }
+  }, [data]);
+//Tìm
+  const handleSearchChange = (event) => {
+    const { value } = event.target;
+    setSearchValue(value);
+    if (value === "") {
+      setMatchingRooms(initialMatchingRooms);
+    } else {
+      const results = initialMatchingRooms.filter((room) =>
+        room.name.toLowerCase().includes(value.toLowerCase())
+      );
+      setMatchingRooms(results);
+    }
+  };
+  // Sắp xếp từu A-Z
+  const [sortingOption, setSortingOption] = useState(""); 
+  useEffect(() => {
+    if (sortingOption === "Tên (A-Z)") { // Nếu người dùng chọn sắp xếp theo tên (A-Z)
+      const sortedRooms = [...matchingRooms].sort((a, b) => a.name.localeCompare(b.name)); // Sắp xếp danh sách theo tên (A-Z)
+      setMatchingRooms(sortedRooms); // Cập nhật danh sách matchingRooms với danh sách đã sắp xếp
+    }
+  }, [sortingOption, matchingRooms]);
+  
+  const handleSortChange = (event) => {
+    setSortingOption(event.target.value); // Cập nhật giá trị của biến sortingOption khi người dùng thay đổi tùy chọn sắp xếp
+  };
+
   return (
     <Box
       sx={{
@@ -63,7 +120,7 @@ const BodyGroupPhone = () => {
       }}
     >
       <Box sx={{ height: "64px" }}>
-        <Typography>Bạn bè </Typography>
+        <Typography>Nhóm ({matchingRooms.length}) </Typography>
       </Box>
 
       <Box
@@ -76,11 +133,11 @@ const BodyGroupPhone = () => {
       >
         <TextField
           id="outlined-search"
-          label="Tìm bạn "
+          label="Tìm nhóm "
           type="text"
           size="small"
           value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
+         onChange={handleSearchChange}
           InputProps={{
             startAdornment: (
               <InputAdornment
@@ -109,11 +166,12 @@ const BodyGroupPhone = () => {
           <Select
             labelId="demo-select-small-label"
             id="demo-select-small"
-            value={name}
+            value={sortingOption}
             label="Tên (A-Z)"
-            onChange={handleChange}
+           // onChange={handleChange}
+           onChange={handleSortChange}
           >
-            <MenuItem value={10}>Tên (A-Z)</MenuItem>
+            <MenuItem value="Tên (A-Z)">Tên (A-Z)</MenuItem>
            
           </Select>
         </FormControl>
@@ -127,16 +185,18 @@ const BodyGroupPhone = () => {
             onChange={handleChange}
           >
             <MenuItem value={10}>Tất cả</MenuItem>
-            <MenuItem value={20}>Phân loại</MenuItem>
+        
           </Select>
         </FormControl>
       </Box>
-
+      
+      {matchingRooms.map((room, index) => (
+        <Box key={index}>
       <Box>
         <Typography
           sx={{ height: "32px", display: "flex", alignItems: "center" }}
         >
-          A
+          {room.name.charAt(0).toUpperCase()}
         </Typography>
         <Box
           sx={{
@@ -144,8 +204,8 @@ const BodyGroupPhone = () => {
             alignItems: "center",
           }}
         >
-          <Avatar sx={{ bgcolor: deepOrange[500] }}>A</Avatar>
-          <Typography sx={{ paddingX: 2 }}>An</Typography>
+          <Avatar src={room.image} sx={{ bgcolor: deepOrange[500] }}>A</Avatar>
+          <Typography sx={{ paddingX: 2 }}>{room.name}</Typography>
 
           <IconButton
             aria-label="more"
@@ -185,377 +245,8 @@ const BodyGroupPhone = () => {
           </Menu>
         </Box>
       </Box>
-      <Box>
-        <Typography
-          sx={{ height: "32px", display: "flex", alignItems: "center" }}
-        >
-          A
-        </Typography>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          <Avatar sx={{ bgcolor: deepOrange[500] }}></Avatar>
-          <Typography sx={{ paddingX: 2 }}>An</Typography>
-
-          <IconButton
-            aria-label="more"
-            id="long-button"
-            aria-controls={open ? "long-menu" : undefined}
-            aria-expanded={open ? "true" : undefined}
-            aria-haspopup="true"
-            onClick={handleClick}
-            sx={{ position: "relative", right: "0" }}
-          >
-            <MoreHorizIcon sx={{ fontSize: "16px" }} />
-          </IconButton>
-          <Menu
-            id="long-menu"
-            MenuListProps={{
-              "aria-labelledby": "long-button",
-            }}
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            PaperProps={{
-              style: {
-                maxHeight: ITEM_HEIGHT * 4.5,
-                width: "26ch",
-              },
-            }}
-          >
-            {options.map((option) => (
-              <MenuItem
-                key={option}
-                selected={option === "Pyxis"}
-                onClick={handleClose}
-              >
-                {option}
-              </MenuItem>
-            ))}
-          </Menu>
-        </Box>
       </Box>
-      <Box>
-        <Typography
-          sx={{ height: "32px", display: "flex", alignItems: "center" }}
-        >
-          A
-        </Typography>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          <Avatar sx={{ bgcolor: deepOrange[500] }}>A</Avatar>
-          <Typography sx={{ paddingX: 2 }}>An</Typography>
-
-          <IconButton
-            aria-label="more"
-            id="long-button"
-            aria-controls={open ? "long-menu" : undefined}
-            aria-expanded={open ? "true" : undefined}
-            aria-haspopup="true"
-            onClick={handleClick}
-            sx={{ position: "relative", right: "0" }}
-          >
-            <MoreHorizIcon sx={{ fontSize: "16px" }} />
-          </IconButton>
-          <Menu
-            id="long-menu"
-            MenuListProps={{
-              "aria-labelledby": "long-button",
-            }}
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            PaperProps={{
-              style: {
-                maxHeight: ITEM_HEIGHT * 4.5,
-                width: "26ch",
-              },
-            }}
-          >
-            {options.map((option) => (
-              <MenuItem
-                key={option}
-                selected={option === "Pyxis"}
-                onClick={handleClose}
-              >
-                {option}
-              </MenuItem>
-            ))}
-          </Menu>
-        </Box>
-      </Box>
-      <Box>
-        <Typography
-          sx={{ height: "32px", display: "flex", alignItems: "center" }}
-        >
-          A
-        </Typography>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          <Avatar sx={{ bgcolor: deepOrange[500] }}>A</Avatar>
-          <Typography sx={{ paddingX: 2 }}>An</Typography>
-
-          <IconButton
-            aria-label="more"
-            id="long-button"
-            aria-controls={open ? "long-menu" : undefined}
-            aria-expanded={open ? "true" : undefined}
-            aria-haspopup="true"
-            onClick={handleClick}
-            sx={{ position: "relative", right: "0" }}
-          >
-            <MoreHorizIcon sx={{ fontSize: "16px" }} />
-          </IconButton>
-          <Menu
-            id="long-menu"
-            MenuListProps={{
-              "aria-labelledby": "long-button",
-            }}
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            PaperProps={{
-              style: {
-                maxHeight: ITEM_HEIGHT * 4.5,
-                width: "26ch",
-              },
-            }}
-          >
-            {options.map((option) => (
-              <MenuItem
-                key={option}
-                selected={option === "Pyxis"}
-                onClick={handleClose}
-              >
-                {option}
-              </MenuItem>
-            ))}
-          </Menu>
-        </Box>
-      </Box>
-      <Box>
-        <Typography
-          sx={{ height: "32px", display: "flex", alignItems: "center" }}
-        >
-          A
-        </Typography>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          <Avatar sx={{ bgcolor: deepOrange[500] }}>A</Avatar>
-          <Typography sx={{ paddingX: 2 }}>Anh Yeu</Typography>
-
-          <IconButton
-            aria-label="more"
-            id="long-button"
-            aria-controls={open ? "long-menu" : undefined}
-            aria-expanded={open ? "true" : undefined}
-            aria-haspopup="true"
-            onClick={handleClick}
-            sx={{ position: "relative", right: "0" }}
-          >
-            <MoreHorizIcon sx={{ fontSize: "16px" }} />
-          </IconButton>
-          <Menu
-            id="long-menu"
-            MenuListProps={{
-              "aria-labelledby": "long-button",
-            }}
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            PaperProps={{
-              style: {
-                maxHeight: ITEM_HEIGHT * 4.5,
-                width: "26ch",
-              },
-            }}
-          >
-            {options.map((option) => (
-              <MenuItem
-                key={option}
-                selected={option === "Pyxis"}
-                onClick={handleClose}
-              >
-                {option}
-              </MenuItem>
-            ))}
-          </Menu>
-        </Box>
-      </Box>
-      <Box>
-        <Typography
-          sx={{ height: "32px", display: "flex", alignItems: "center" }}
-        >
-          A
-        </Typography>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          <Avatar sx={{ bgcolor: deepOrange[500] }}>A</Avatar>
-          <Typography sx={{ paddingX: 2 }}>An</Typography>
-
-          <IconButton
-            aria-label="more"
-            id="long-button"
-            aria-controls={open ? "long-menu" : undefined}
-            aria-expanded={open ? "true" : undefined}
-            aria-haspopup="true"
-            onClick={handleClick}
-            sx={{ position: "relative", right: "0" }}
-          >
-            <MoreHorizIcon sx={{ fontSize: "16px" }} />
-          </IconButton>
-          <Menu
-            id="long-menu"
-            MenuListProps={{
-              "aria-labelledby": "long-button",
-            }}
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            PaperProps={{
-              style: {
-                maxHeight: ITEM_HEIGHT * 4.5,
-                width: "26ch",
-              },
-            }}
-          >
-            {options.map((option) => (
-              <MenuItem
-                key={option}
-                selected={option === "Pyxis"}
-                onClick={handleClose}
-              >
-                {option}
-              </MenuItem>
-            ))}
-          </Menu>
-        </Box>
-      </Box>
-      <Box>
-        <Typography
-          sx={{ height: "32px", display: "flex", alignItems: "center" }}
-        >
-          A
-        </Typography>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          <Avatar sx={{ bgcolor: deepOrange[500] }}>A</Avatar>
-          <Typography sx={{ paddingX: 2 }}>An</Typography>
-
-          <IconButton
-            aria-label="more"
-            id="long-button"
-            aria-controls={open ? "long-menu" : undefined}
-            aria-expanded={open ? "true" : undefined}
-            aria-haspopup="true"
-            onClick={handleClick}
-            sx={{ position: "relative", right: "0" }}
-          >
-            <MoreHorizIcon sx={{ fontSize: "16px" }} />
-          </IconButton>
-          <Menu
-            id="long-menu"
-            MenuListProps={{
-              "aria-labelledby": "long-button",
-            }}
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            PaperProps={{
-              style: {
-                maxHeight: ITEM_HEIGHT * 4.5,
-                width: "26ch",
-              },
-            }}
-          >
-            {options.map((option) => (
-              <MenuItem
-                key={option}
-                selected={option === "Pyxis"}
-                onClick={handleClose}
-              >
-                {option}
-              </MenuItem>
-            ))}
-          </Menu>
-        </Box>
-      </Box>
-      <Box>
-        <Typography
-          sx={{ height: "32px", display: "flex", alignItems: "center" }}
-        >
-          A
-        </Typography>
-        <Box
-          sx={{
-            display: "flex",
-            alignItems: "center",
-          }}
-        >
-          <Avatar sx={{ bgcolor: deepOrange[500] }}>A</Avatar>
-          <Typography sx={{ paddingX: 2 }}>An</Typography>
-
-          <IconButton
-            aria-label="more"
-            id="long-button"
-            aria-controls={open ? "long-menu" : undefined}
-            aria-expanded={open ? "true" : undefined}
-            aria-haspopup="true"
-            onClick={handleClick}
-            sx={{ position: "relative", right: "0" }}
-          >
-            <MoreHorizIcon sx={{ fontSize: "16px" }} />
-          </IconButton>
-          <Menu
-            id="long-menu"
-            MenuListProps={{
-              "aria-labelledby": "long-button",
-            }}
-            anchorEl={anchorEl}
-            open={open}
-            onClose={handleClose}
-            PaperProps={{
-              style: {
-                maxHeight: ITEM_HEIGHT * 4.5,
-                width: "26ch",
-              },
-            }}
-          >
-            {options.map((option) => (
-              <MenuItem
-                key={option}
-                selected={option === "Pyxis"}
-                onClick={handleClose}
-              >
-                {option}
-              </MenuItem>
-            ))}
-          </Menu>
-        </Box>
-      </Box>
+    ))}
     </Box>
   );
 };
