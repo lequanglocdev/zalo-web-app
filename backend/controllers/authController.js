@@ -52,7 +52,6 @@ const userRegister = async (req, res) => {
       });
     } else {
       try {
-     
         //Create new user
         const newUser = new User({
           username: username,

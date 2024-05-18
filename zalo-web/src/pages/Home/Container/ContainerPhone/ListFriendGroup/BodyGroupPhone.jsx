@@ -204,7 +204,7 @@ const BodyGroupPhone = () => {
             alignItems: "center",
           }}
         >
-          <Avatar src={room.image} sx={{ bgcolor: deepOrange[500] }}>A</Avatar>
+          <Avatar sx={{ bgcolor: deepOrange[500] }}>A</Avatar>
           <Typography sx={{ paddingX: 2 }}>{room.name}</Typography>
 
           <IconButton

@@ -121,10 +121,10 @@ const BodyChat = () => {
       socket.emit("send_message_with_file", res);
     });
   };
-  const onEmojiClick = ( emojiObject) => {
+  const onEmojiClick = (emojiObject) => {
     // setMessage(prevMessage => prevMessage + emojiObject.emoji);
-    const emoji = emojiObject.emoji
-    setMessage(message + emoji)
+    const emoji = emojiObject.emoji;
+    setMessage(message + emoji);
     setShowPicker(false);
   };
   return (
@@ -183,9 +183,17 @@ const BodyChat = () => {
                     color={
                       item.user_id === data.user._id ? "#34495e" : "#34495e"
                     }
+                    sx={{ width: "100%" }}
                   >
                     {item.typeMessage === "text" ? (
-                      <Typography>{item.information}</Typography>
+                      <Typography
+                        sx={{
+                          width:
+                            item.information.length > 100 ? "400px" : "auto",
+                        }}
+                      >
+                        {item.information}
+                      </Typography>
                     ) : item.information.url.includes("/image___") ? (
                       <img
                         src={item.information.url}
@@ -317,11 +325,16 @@ const BodyChat = () => {
           <TextField
             fullWidth
             placeholder="nhập tin nhắn"
-            // multiline // Đánh dấu TextField là nhiều dòng
-            // maxRows={5} // Giới hạn số dòng hiển thị (thay đổi giá trị tùy theo nhu cầu)
+            multiline // Đánh dấu TextField là nhiều dòng
+            maxRows={5} // Giới hạn số dòng hiển thị (thay đổi giá trị tùy theo nhu cầu)
             onChange={(e) => setMessage(e.target.value)}
             value={message}
             onKeyPress={handleKeyPress}
+            sx={{
+              "& .MuiInputBase-root": {
+                paddingRight: "50px", // Ensure space for the emoji picker and button
+              },
+            }}
           />
           <Box
             sx={{
@@ -341,12 +354,16 @@ const BodyChat = () => {
               }}
             />
             {showPicker && (
-              <Picker
-                pickerStyle={{
-                  width: "100%",
-                }} // Đặt vị trí của Picker ở phía trên
-                onEmojiClick={onEmojiClick}
-              />
+              <Box
+                sx={{
+                  position: "absolute",
+                  bottom: "50px", // Adjust this value to move the Picker component
+                  right: 0,
+                  zIndex: 10,
+                }}
+              >
+                <Picker onEmojiClick={onEmojiClick} />
+              </Box>
             )}
             <Button
               sx={{ paddingX: "10px" }}
