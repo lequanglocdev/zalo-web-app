@@ -12,6 +12,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { globalContext } from "../context/globalContext";
 import { api, typeHTTP } from "../utils/api";
 import Toast from "react-native-toast-message";
+import { getRemainUserForSingleRoom } from "../utils/getRemainUserForSingleRoom";
 
 export default function AddFriend({ navigation, route }) {
   const [userData, setUserData] = useState({ username: "" });
@@ -94,10 +95,6 @@ export default function AddFriend({ navigation, route }) {
           type: "success",
           text1: "Chấp nhận lời mời kết bạn thành công",
         });
-        // const updatedUser = { ...globalData.user };
-        // updatedUser.friends.push({ friendId: toUser._id, status: "friend" });
-        // const updatedGlobalData = { ...globalData, user: updatedUser };
-        // globalHandler.setUser(updatedGlobalData);
         updateResultsAfterAction(toUser._id);
       })
       .catch((error) => {
@@ -265,48 +262,7 @@ export default function AddFriend({ navigation, route }) {
           </View>
         </View>
       </ImageBackground>
-      <View>
-        <View
-          style={{
-            alignItems: "center",
-            justifyContent: "center",
-            marginTop: -50,
-          }}
-        >
-          <View
-            style={{
-              width: 100,
-              height: 100,
-              backgroundColor: "#DCDCDC",
-              borderRadius: 90,
-              alignItems: "center",
-              justifyContent: "center",
-            }}
-          >
-            <Image
-              source={require("../image/hinhcanhan.png")}
-              style={{
-                width: 100,
-                height: 100,
-                borderRadius: 90,
-              }}
-            />
-          </View>
-        </View>
-      </View>
-      {results.map((result, index) => (
-        <View key={index} style={{ alignItems: "center" }}>
-          <Text
-            style={{
-              marginTop: 10,
-              fontSize: 20,
-              fontWeight: 400,
-            }}
-          >
-            {result.username}
-          </Text>
-        </View>
-      ))}
+
       <View
         style={{
           alignItems: "center",
@@ -327,15 +283,40 @@ export default function AddFriend({ navigation, route }) {
           >
             <View
               style={{
-                flexDirection: "row",
+                alignItems: "center",
               }}
             >
-              {checkRelationship(result)}
+              <View
+                style={{
+                  width: 100,
+                  height: 100,
+                  backgroundColor: "#DCDCDC",
+                  borderRadius: 90,
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Image
+                  source={
+                    result.image
+                      ? { uri: result.image }
+                      : require("../image/ảnh nền.png")
+                  }
+                  style={{
+                    width: 100,
+                    height: 100,
+                    borderRadius: 90,
+                  }}
+                />
+              </View>
+              <Text style={{ fontSize: 20, marginTop: 20 }}>
+                {result.username}
+              </Text>
+              <View style={{ marginTop: 10 }}>{checkRelationship(result)}</View>
             </View>
           </View>
         ))}
       </View>
-      <Toast ref={(ref) => Toast.setRef(ref)} />
     </ScrollView>
   );
 }
