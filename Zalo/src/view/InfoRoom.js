@@ -35,7 +35,6 @@ export default function InfoRoom({ navigation, route }) {
   };
 
   const handleUnFriend = (toUser) => {
-    // Xử lý xóa kết bạn
     const body = {
       fromUser: globalData.user,
       toUser,
@@ -52,7 +51,6 @@ export default function InfoRoom({ navigation, route }) {
           type: "success",
           text1: "Đã xóa kết bạn thành công",
         });
-        // Cập nhật giao diện sau khi xóa kết bạn
         updateResultsAfterAction(toUser._id);
       })
       .catch((error) => {
@@ -64,10 +62,27 @@ export default function InfoRoom({ navigation, route }) {
       });
   };
 
-  // Tìm kiếm thông tin của phòng dựa trên room_id
+  const handleDisbandRoomWithConfirmation = () => {
+    Alert.alert(
+      "Xác nhận",
+      "Bạn có chắc chắn muốn xóa nhóm không?",
+      [
+        {
+          text: "Hủy",
+          onPress: () => console.log("Hủy bỏ xóa nhóm"),
+          style: "cancel",
+        },
+        {
+          text: "Ok",
+          onPress: handleDisBandRoom,
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
   const room = globalData.rooms.find((room) => room._id === room_id);
 
-  // Lấy ảnh tùy thuộc vào loại phòng
   const getImageSource = () => {
     if (room_type === "group") {
       return room_image;
@@ -76,7 +91,7 @@ export default function InfoRoom({ navigation, route }) {
         room,
         globalData.user?._id
       );
-      return remainUserRoom?.image || ""; // Trả về ảnh của người dùng hoặc chuỗi rỗng nếu không có ảnh
+      return remainUserRoom?.image || "";
     }
   };
 
@@ -167,11 +182,7 @@ export default function InfoRoom({ navigation, route }) {
             >
               <AntDesign name="addusergroup" size={24} color="black" />
             </View>
-            <View
-              style={{
-                width: 100,
-              }}
-            >
+            <View style={{ width: 100 }}>
               <Text
                 style={{ fontSize: 16, marginTop: 10, textAlign: "center" }}
               >
@@ -278,11 +289,7 @@ export default function InfoRoom({ navigation, route }) {
               <AntDesign name="user" size={24} color="black" />
             </View>
 
-            <View
-              style={{
-                marginLeft: 10,
-              }}
-            >
+            <View style={{ marginLeft: 10 }}>
               <Text style={{ fontSize: 16, marginTop: 10 }}>
                 Xem thành viên nhóm
               </Text>
@@ -293,7 +300,7 @@ export default function InfoRoom({ navigation, route }) {
 
       {room_type === "group" && (
         <Pressable
-          onPress={() => handleDisBandRoom()}
+          onPress={handleDisbandRoomWithConfirmation}
           style={{
             marginTop: 40,
             marginLeft: 15,
@@ -330,7 +337,6 @@ export default function InfoRoom({ navigation, route }) {
           }}
         >
           <AntDesign name="deleteuser" size={24} color="red" />
-
           <Text
             style={{
               fontSize: 16,
