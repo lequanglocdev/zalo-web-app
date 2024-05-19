@@ -6,6 +6,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Avatar from "@mui/material/Avatar";
 import { da, faker } from "@faker-js/faker";
+
 const Chat = () => {
   const { data, handler } = useContext(globalContext);
 
@@ -24,7 +25,7 @@ const Chat = () => {
         width: "100%",
         height: "60px",
         borderRadius: 1,
-        borderRight: "1px so",
+        borderRight: "1px solid #ccc", // Updated from "1px so"
       }}
     >
       <Box>
@@ -38,57 +39,58 @@ const Chat = () => {
         </Typography>
       </Box>
       <Box>
-  {data.rooms.map((room, index) => (
-    <Box
-      onClick={() => handler.setCurrentRoom(room)}
-      key={index}
-      style={{
-        display: "flex",
-        alignItems: "center",
-        padding: "6px",
-        gap: 5,
-        cursor: "pointer",
-      }}
-    >
-      <img
-        alt="Cindy Baker"
-        src={
-          room
-            ? room?.image
-            : "https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745"
-        }
-        style={{
-          width: "40px",
-          height: "40px",
-          borderRadius: "50%",
-          objectFit: "cover",
-        }}
-      />
+        {data.rooms.map((room, index) => {
+          const otherUser = getRemainUserForSingleRoom(room, data.user?._id);
 
-      <Box
-        sx={{
-          display: "flex",
-          flexDirection: "column",
-        }}
-      >
-        <Typography
-          variant="span"
-          sx={{ fontSize: "14px", fontWeight: "bold" }}
-        >
-          {room.type === "single"
-            ? getRemainUserForSingleRoom(room, data.user?._id)?.username
-            : room.name.length > 30
-            ? `${room.name.substring(0, 30)}...`
-            : room.name}
-        </Typography>
-        <Typography sx={{ fontSize: "12px" }}>
-          tin nhắn cuối cùng
-        </Typography>
+          return (
+            <Box
+              onClick={() => handler.setCurrentRoom(room)}
+              key={index}
+              style={{
+                display: "flex",
+                alignItems: "center",
+                padding: "6px",
+                gap: 5,
+                cursor: "pointer",
+              }}
+            >
+              <img
+                alt={otherUser?.username}
+                src={
+                  otherUser?.image || "https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745"
+                }
+                style={{
+                  width: "40px",
+                  height: "40px",
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                }}
+              />
+
+              <Box
+                sx={{
+                  display: "flex",
+                  flexDirection: "column",
+                }}
+              >
+                <Typography
+                  variant="span"
+                  sx={{ fontSize: "14px", fontWeight: "bold" }}
+                >
+                  {room.type === "single"
+                    ? otherUser?.username
+                    : room.name.length > 30
+                    ? `${room.name.substring(0, 30)}...`
+                    : room.name}
+                </Typography>
+                <Typography sx={{ fontSize: "12px" }}>
+                  tin nhắn cuối cùng
+                </Typography>
+              </Box>
+            </Box>
+          );
+        })}
       </Box>
-    </Box>
-  ))}
-</Box>
-
     </Box>
   );
 };

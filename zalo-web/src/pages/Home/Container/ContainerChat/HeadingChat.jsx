@@ -34,11 +34,15 @@ const HeadingChat = () => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  
+
+  useEffect(() => {
+    console.log(data);
+  }, [data]);
+
   const handleDeleteFrend = (toUser) => {
     const body = {
       fromUser: data.user._id,
-      toUser:toUser._id
+      toUser: toUser._id,
     };
     // console.log( body)
     api({
@@ -72,11 +76,23 @@ const HeadingChat = () => {
               aria-expanded={open ? "true" : undefined}
             >
               <img
-                alt="Cindy Baker"
+                alt={
+                  data.currentRoom?.type === "single"
+                    ? getRemainUserForSingleRoom(
+                        data.currentRoom,
+                        data.user?._id
+                      )?.username
+                    : "User Avatar"
+                }
                 src={
-                  data.currentRoom.image
-                    ? data.currentRoom.image
-                    : "https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745"
+                  data.currentRoom?.type === "single"
+                    ? getRemainUserForSingleRoom(
+                        data.currentRoom,
+                        data.user?._id
+                      )?.image ||
+                      "https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745"
+                    : data.currentRoom?.image ||
+                      "https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745"
                 }
                 style={{
                   width: "40px",
@@ -129,7 +145,10 @@ const HeadingChat = () => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Box onClick={handleDeleteFrend(data.currentRoom)} sx={{ cursor: "pointer" }}>
+          <Box
+            onClick={handleDeleteFrend(data.currentRoom)}
+            sx={{ cursor: "pointer" }}
+          >
             <Typography id="modal-modal-title" variant="h6" component="h2">
               Xóa kết bạn
             </Typography>
