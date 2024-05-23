@@ -4,14 +4,10 @@ import {
   Text,
   ScrollView,
   ImageBackground,
-  TextInput,
   Pressable,
-  Alert,
   Image,
 } from "react-native";
-import axios from "axios";
-import { Ionicons, AntDesign, Entypo, Feather } from "@expo/vector-icons";
-import localStorage from "@react-native-async-storage/async-storage";
+import { Ionicons } from "@expo/vector-icons";
 import { globalContext } from "../context/globalContext";
 import { api, typeHTTP } from "../utils/api";
 import Toast from "react-native-toast-message";
@@ -45,12 +41,6 @@ export default function InviteFriend({ navigation }) {
         method: typeHTTP.POST,
       })
         .then((res) => {
-          // console.log(res);
-          // Toast.show({
-          //   type: "success",
-          //   text1: "Từ chối lời mời kết bạn thành công",
-          // });
-          // updateResultsAfterAction(toUser._id);
           globalHandler.setUser(res);
         })
         .catch((error) => {
@@ -128,48 +118,60 @@ export default function InviteFriend({ navigation }) {
         {friendRequests && friendRequests.length > 0 ? (
           friendRequests.map((request, index) => (
             <View key={index}>
-              <View style={{ justifyContent: "center", alignItems: "center" }}>
+              <View
+                style={{
+                  justifyContent: "center",
+                  alignItems: "center",
+                  flexDirection: "row",
+                  marginTop: 20,
+                  marginLeft: -150,
+                }}
+              >
                 <Image
                   source={{ uri: request?.image }}
-                  style={{ height: 100, width: 100, borderRadius: 90 }}
+                  style={{ height: 50, width: 50, borderRadius: 90 }}
                 />
-                <Text style={{ fontSize: 20, marginTop: 20 }}>
+
+                <Text style={{ fontSize: 20, marginLeft: 20 }}>
                   {request?.username}
                 </Text>
               </View>
               <View
                 style={{
                   flexDirection: "row",
-                  marginTop: 20,
+                  marginTop: 10,
                   justifyContent: "center",
+                  marginLeft: 80,
                 }}
               >
                 <Pressable
                   onPress={() => handleAccept(request)}
                   style={{
-                    width: 100,
-                    height: 55,
-                    backgroundColor: "#00BFFF",
+                    width: 140,
+                    height: 45,
+                    backgroundColor: "#87CEFA",
                     alignItems: "center",
                     justifyContent: "center",
                     borderRadius: 90,
                   }}
                 >
-                  <Text style={{ fontSize: 20 }}>Chấp nhận</Text>
+                  <Text style={{ fontSize: 18, color: "#0000FF" }}>
+                    Chấp nhận
+                  </Text>
                 </Pressable>
                 <Pressable
                   onPress={() => handleRefuse(request)}
                   style={{
-                    width: 100,
-                    height: 55,
-                    backgroundColor: "#00BFFF",
+                    width: 140,
+                    height: 45,
+                    backgroundColor: "#DCDCDC",
                     alignItems: "center",
                     justifyContent: "center",
                     borderRadius: 90,
                     marginLeft: 20,
                   }}
                 >
-                  <Text style={{ fontSize: 20 }}>Từ chối</Text>
+                  <Text style={{ fontSize: 18 }}>Từ chối</Text>
                 </Pressable>
               </View>
             </View>
