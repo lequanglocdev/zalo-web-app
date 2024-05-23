@@ -16,6 +16,14 @@ var RoomSchema = new mongoose.Schema(
     image: {
       type: String,
     },
+    depute: {
+      type: [mongoose.Schema.Types.ObjectId],
+      default: [],
+    },
+    creator: {
+      type: mongoose.Schema.Types.ObjectId,
+      default: null,
+    },
   },
   { timestamps: true }
 );

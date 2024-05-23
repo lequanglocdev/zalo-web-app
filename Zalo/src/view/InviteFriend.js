@@ -19,7 +19,6 @@ import Toast from "react-native-toast-message";
 export default function InviteFriend({ navigation }) {
   const { globalData, globalHandler } = useContext(globalContext);
   const [friendRequests, setFriendRequests] = useState([]);
-  const [results, setResult] = useState([]);
 
   useEffect(() => {
     api({
@@ -32,61 +31,73 @@ export default function InviteFriend({ navigation }) {
   }, [globalData.user]);
 
   const handleRefuse = (toUser) => {
-    const body = {
-      fromUser: globalData.user,
-      toUser,
-    };
     api({
-      body: body,
-      url: "/user/refuse-request",
-      method: typeHTTP.POST,
-    })
-      .then((res) => {
-        console.log(res);
-        Toast.show({
-          type: "success",
-          text1: "Từ chối lời mời kết bạn thành công",
-        });
-        updateResultsAfterAction(toUser._id);
+      url: `/user/find/${toUser.friendId}`,
+      method: typeHTTP.GET,
+    }).then((toUserResult) => {
+      const body = {
+        fromUser: globalData.user,
+        toUser: toUserResult,
+      };
+      api({
+        body: body,
+        url: "/user/refuse-request",
+        method: typeHTTP.POST,
       })
-      .catch((error) => {
-        console.error("Error refusing friend request:", error);
-      });
+        .then((res) => {
+          // console.log(res);
+          // Toast.show({
+          //   type: "success",
+          //   text1: "Từ chối lời mời kết bạn thành công",
+          // });
+          // updateResultsAfterAction(toUser._id);
+          globalHandler.setUser(res);
+        })
+        .catch((error) => {
+          console.error("Error refusing friend request:", error);
+        });
+    });
   };
 
   const handleAccept = (toUser) => {
-    const body = {
-      fromUser: globalData.user,
-      toUser,
-    };
     api({
-      body: body,
-      url: "/user/accept-request",
-      method: typeHTTP.POST,
-    })
-      .then((res) => {
-        console.log(res);
-        if (res.status === 200) {
-          Toast.show({
-            type: "success",
-            text1: "Chấp nhận lời mời kết bạn thành công",
-          });
-          // Update local state or global context if needed
-          updateResultsAfterAction(toUser._id);
-        } else {
+      url: `/user/find/${toUser.friendId}`,
+      method: typeHTTP.GET,
+    }).then((toUserResult) => {
+      const body = {
+        fromUser: globalData.user,
+        toUser: toUserResult,
+      };
+      api({
+        body: body,
+        url: "/user/accept-request",
+        method: typeHTTP.POST,
+      })
+        .then((res) => {
+          globalHandler.setUser(res);
+          // console.log(res);
+          // if (res.status === 200) {
+          //   Toast.show({
+          //     type: "success",
+          //     text1: "Chấp nhận lời mời kết bạn thành công",
+          //   });
+          //   // Update local state or global context if needed
+          //   updateResultsAfterAction(toUser._id);
+          // } else {
+          //   Toast.show({
+          //     type: "error",
+          //     text1: "Có lỗi xảy ra khi chấp nhận lời mời kết bạn",
+          //   });
+          // }
+        })
+        .catch((error) => {
+          console.error("Error accepting friend request:", error);
           Toast.show({
             type: "error",
             text1: "Có lỗi xảy ra khi chấp nhận lời mời kết bạn",
           });
-        }
-      })
-      .catch((error) => {
-        console.error("Error accepting friend request:", error);
-        Toast.show({
-          type: "error",
-          text1: "Có lỗi xảy ra khi chấp nhận lời mời kết bạn",
         });
-      });
+    });
   };
 
   return (
@@ -118,11 +129,14 @@ export default function InviteFriend({ navigation }) {
           friendRequests.map((request, index) => (
             <View key={index}>
               <View style={{ justifyContent: "center", alignItems: "center" }}>
+                <Image
+                  source={{ uri: request?.image }}
+                  style={{ height: 100, width: 100, borderRadius: 90 }}
+                />
                 <Text style={{ fontSize: 20, marginTop: 20 }}>
                   {request?.username}
                 </Text>
               </View>
-
               <View
                 style={{
                   flexDirection: "row",

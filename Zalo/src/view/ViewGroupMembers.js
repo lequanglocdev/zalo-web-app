@@ -1,57 +1,134 @@
-import React, { useContext } from "react";
-import { View, Text, FlatList, Image, StyleSheet } from "react-native";
+import React, { useContext, useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  FlatList,
+  Image,
+  StyleSheet,
+  TouchableOpacity,
+} from "react-native";
 import { globalContext } from "../context/globalContext";
+import { api, typeHTTP } from "../utils/api";
 
-const ViewGroupMembers = ({ route }) => {
+const ViewGroupMembers = ({ route, navigation }) => {
   const { roomId } = route.params;
-  const { globalData } = useContext(globalContext);
+  const { globalData, globalHandler } = useContext(globalContext);
+  const [room, setRoom] = useState();
+  const [participants, setParticipants] = useState([]);
 
-  // Tìm phòng theo roomId
-  const room = globalData.rooms.find((room) => room._id === roomId);
+  useEffect(() => {
+    setRoom(globalData.currentRoom);
+    setParticipants(globalData.currentRoom.users);
+  }, [globalData.currentRoom]);
+
+  const handleSetDepute = (user_id) => {
+    const body = {
+      room_id: globalData.currentRoom._id,
+      user_id,
+    };
+    api({ body, method: typeHTTP.POST, url: "/room/add-depute" }).then(
+      (res) => {
+        globalHandler.setCurrentRoom({
+          ...globalData.currentRoom,
+          depute: res.depute,
+        });
+      }
+    );
+  };
+
+  const handleRemoveDepute = (user_id) => {
+    const body = {
+      room_id: globalData.currentRoom._id,
+      user_id,
+    };
+    api({ body, method: typeHTTP.POST, url: "/room/remove-depute" }).then(
+      (res) => {
+        globalHandler.setCurrentRoom({
+          ...globalData.currentRoom,
+          depute: res.depute,
+        });
+      }
+    );
+  };
+
+  const handleKick = (user_id) => {
+    const body = {
+      room_id: globalData.currentRoom._id,
+      user_id,
+    };
+    api({ body, method: typeHTTP.POST, url: "/room/kick" }).then((res) => {
+      try {
+        if (res.users.length === 1) {
+          globalHandler.setRooms(
+            globalData.rooms.filter((item) => item._id !== res._id)
+          );
+          navigation.navigate("Message");
+        } else {
+          globalHandler.setCurrentRoom({
+            ...globalData.currentRoom,
+            users: globalData.currentRoom.users.filter((item) =>
+              res.users.includes(item._id)
+            ),
+          });
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    });
+  };
 
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Thành viên trong nhóm</Text>
-      <FlatList
-        data={room.members}
-        keyExtractor={(item) => item._id}
-        renderItem={({ item }) => (
-          <View style={styles.memberContainer}>
-            <Image source={{ uri: item.avatar }} style={styles.avatar} />
-            <Text style={styles.username}>{item.username}</Text>
-          </View>
-        )}
-      />
+    <View>
+      <Text>Thành viên trong nhóm</Text>
+      <View style={{ flexDirection: "column", gap: 10, paddingHorizontal: 20 }}>
+        {participants.map((user, index) => {
+          return (
+            <View
+              style={{ flexDirection: "row", justifyContent: "space-between" }}
+            >
+              <View
+                key={index}
+                style={{ flexDirection: "row", alignItems: "center" }}
+              >
+                <Image
+                  source={{ uri: user.image }}
+                  style={{ width: 60, height: 60, borderRadius: 90 }}
+                />
+                <Text>
+                  {user.username}{" "}
+                  {room?.creator === user._id && "(Nhóm Trưởng)"}
+                </Text>
+              </View>
+              {user._id !== globalData.user._id && (
+                <>
+                  {room.depute.includes(user._id) ? (
+                    <View>
+                      <TouchableOpacity
+                        onPress={() => handleRemoveDepute(user._id)}
+                      >
+                        <Text>XPP</Text>
+                      </TouchableOpacity>
+                    </View>
+                  ) : (
+                    <View>
+                      <TouchableOpacity
+                        onPress={() => handleSetDepute(user._id)}
+                      >
+                        <Text>PP</Text>
+                      </TouchableOpacity>
+                    </View>
+                  )}
+                  <TouchableOpacity onPress={() => handleKick(user._id)}>
+                    <Text>X</Text>
+                  </TouchableOpacity>
+                </>
+              )}
+            </View>
+          );
+        })}
+      </View>
     </View>
   );
 };
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#fff",
-    paddingHorizontal: 20,
-    paddingTop: 20,
-  },
-  title: {
-    fontSize: 20,
-    fontWeight: "bold",
-    marginBottom: 10,
-  },
-  memberContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 10,
-  },
-  avatar: {
-    width: 50,
-    height: 50,
-    borderRadius: 25,
-    marginRight: 10,
-  },
-  username: {
-    fontSize: 16,
-  },
-});
 
 export default ViewGroupMembers;

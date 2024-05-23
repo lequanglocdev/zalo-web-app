@@ -12,7 +12,6 @@ import { globalContext } from "../context/globalContext";
 import { api, typeHTTP } from "../utils/api";
 import { Feather } from "@expo/vector-icons";
 import * as ImagePicker from "expo-image-picker"; // Import thư viện image picker
-import { getRemainUserForSingleRoom } from "../utils/getRemainUserForSingleRoom";
 
 export default function CreateGroup({ navigation }) {
   const { globalData, globalHandler } = useContext(globalContext);
@@ -94,6 +93,7 @@ export default function CreateGroup({ navigation }) {
         type: "group",
         users: participants.map((item) => item._id),
         image: image,
+        creator: globalData.user._id,
       };
       api({
         url: "/room/create-group-mobile",

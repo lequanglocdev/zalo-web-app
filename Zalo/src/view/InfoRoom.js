@@ -38,6 +38,7 @@ export default function InfoRoom({ navigation, route }) {
     const body = {
       fromUser: globalData.user,
       toUser,
+      room_id: globalData.currentRoom._id,
     };
 
     api({
@@ -46,12 +47,12 @@ export default function InfoRoom({ navigation, route }) {
       method: typeHTTP.POST,
     })
       .then((res) => {
-        console.log(res);
         Toast.show({
           type: "success",
           text1: "Đã xóa kết bạn thành công",
         });
-        updateResultsAfterAction(toUser._id);
+        globalHandler.setUser(res);
+        navigation.navigate("Message");
       })
       .catch((error) => {
         console.error("Lỗi khi xóa kết bạn:", error);
@@ -93,6 +94,19 @@ export default function InfoRoom({ navigation, route }) {
       );
       return remainUserRoom?.image || "";
     }
+  };
+
+  const handleLeave = () => {
+    const body = {
+      room_id: globalData.currentRoom._id,
+      user_id: globalData.user._id,
+    };
+    api({ body, method: typeHTTP.POST, url: "/room/leave" }).then((res) => {
+      globalHandler.setRooms(
+        globalData.rooms.filter((item) => item._id !== res._id)
+      );
+      navigation.navigate("Message");
+    });
   };
 
   return (
@@ -299,27 +313,50 @@ export default function InfoRoom({ navigation, route }) {
       </View>
 
       {room_type === "group" && (
-        <Pressable
-          onPress={handleDisbandRoomWithConfirmation}
-          style={{
-            marginTop: 40,
-            marginLeft: 15,
-            flexDirection: "row",
-            alignItems: "center",
-          }}
-        >
-          <AntDesign name="delete" size={24} color="red" />
-          <Text
+        <>
+          <Pressable
+            onPress={handleDisbandRoomWithConfirmation}
             style={{
-              fontSize: 16,
-              marginLeft: 10,
-              color: "red",
-              fontWeight: "bold",
+              marginTop: 40,
+              marginLeft: 15,
+              flexDirection: "row",
+              alignItems: "center",
             }}
           >
-            Xóa nhóm
-          </Text>
-        </Pressable>
+            <AntDesign name="delete" size={24} color="red" />
+            <Text
+              style={{
+                fontSize: 16,
+                marginLeft: 10,
+                color: "red",
+                fontWeight: "bold",
+              }}
+            >
+              Xóa nhóm
+            </Text>
+          </Pressable>
+          <Pressable
+            onPress={() => handleLeave()}
+            style={{
+              marginTop: 40,
+              marginLeft: 15,
+              flexDirection: "row",
+              alignItems: "center",
+            }}
+          >
+            <AntDesign name="delete" size={24} color="red" />
+            <Text
+              style={{
+                fontSize: 16,
+                marginLeft: 10,
+                color: "red",
+                fontWeight: "bold",
+              }}
+            >
+              Rời nhóm
+            </Text>
+          </Pressable>
+        </>
       )}
 
       {room_type !== "group" && (

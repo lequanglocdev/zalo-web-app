@@ -12,7 +12,6 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { globalContext } from "../context/globalContext";
 import { api, typeHTTP } from "../utils/api";
 import Toast from "react-native-toast-message";
-import { getRemainUserForSingleRoom } from "../utils/getRemainUserForSingleRoom";
 
 export default function AddFriend({ navigation, route }) {
   const [userData, setUserData] = useState({ username: "" });
