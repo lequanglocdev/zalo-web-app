@@ -14,9 +14,14 @@ import { Link } from "react-router-dom";
 import Info from "../../../../components/Info";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
-
+import CloseIcon from "@mui/icons-material/Close";
 import { globalContext } from "../../../../context/globalContext";
 import { api, typeHTTP } from "../../../../utils/api";
+import { useNavigate } from "react-router-dom";
+import { Button, CardMedia } from "@mui/material";
+import { styled } from "@mui/material/styles";
+import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
+import BorderColorIcon from "@mui/icons-material/BorderColor";
 const style = {
   position: "absolute",
   top: "50%",
@@ -25,9 +30,20 @@ const style = {
   width: 400,
   bgcolor: "background.paper",
   border: "2px solid #000",
-  boxShadow: 24,
-  p: 4,
+
+  borderRadius: "10px",
 };
+const VisuallyHiddenInput = styled("input")({
+  clip: "rect(0 0 0 0)",
+  clipPath: "inset(50%)",
+  height: 1,
+  overflow: "hidden",
+  position: "absolute",
+  bottom: 0,
+  left: 0,
+  whiteSpace: "nowrap",
+  width: 1,
+});
 
 const HeadingChat = () => {
   const { data, handler } = useContext(globalContext);
@@ -35,24 +51,24 @@ const HeadingChat = () => {
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
 
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
+  // useEffect(() => {
+  //   console.log(data);
+  // }, [data]);
 
-  const handleDeleteFrend = (toUser) => {
-    const body = {
-      fromUser: data.user._id,
-      toUser: toUser._id,
-    };
-    // console.log( body)
-    api({
-      body: body,
-      url: "/user/unfriend",
-      method: typeHTTP.POST,
-    }).then((res) => {
-      console.log(res);
-    });
-  };
+  // const handleDeleteFrend = (toUser) => {
+  //   const body = {
+  //     fromUser: data.user._id,
+  //     toUser: toUser._id,
+  //   };
+  //   // console.log( body)
+  //   api({
+  //     body: body,
+  //     url: "/user/unfriend",
+  //     method: typeHTTP.POST,
+  //   }).then((res) => {
+  //     console.log(res);
+  //   });
+  // };
   return (
     <Grid
       container
@@ -145,12 +161,45 @@ const HeadingChat = () => {
         aria-describedby="modal-modal-description"
       >
         <Box sx={style}>
-          <Box
-            onClick={handleDeleteFrend(data.currentRoom)}
-            sx={{ cursor: "pointer" }}
+          <Box>
+            <Box
+              sx={{
+                cursor: "pointer",
+                display: "flex",
+                justifyContent: "space-between",
+                padding: "6px 10px",
+              }}
+            >
+              <Typography id="modal-modal-title" variant="h6" component="h2">
+                Thông tin tài khoản
+              </Typography>
+              <CloseIcon onClick={() => handleClose()} />
+            </Box>
+          </Box>
+          <img
+            src="https://images.pexels.com/photos/17841163/pexels-photo-17841163/free-photo-of-thien-nhien-chim-bay-d-ng-v-t-an-th-t.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load"
+            style={{ width: "100%" }}
+          />
+           <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              height: 40,
+            }}
           >
-            <Typography id="modal-modal-title" variant="h6" component="h2">
-              Xóa kết bạn
+            <img
+            src="https://images.pexels.com/photos/17841163/pexels-photo-17841163/free-photo-of-thien-nhien-chim-bay-d-ng-v-t-an-th-t.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load"
+            style={{ width: "10%",borderRadius:"50%" }}
+          />
+           
+            <Typography
+              id="modal-modal-description"
+              sx={{ fontSize: "20px", fontWeight: "bold" }}
+            >
+              Minh
+              <BorderColorIcon
+                sx={{ fontSize: "15px", marginLeft: "10px", cursor: "pointer" }}
+              />
             </Typography>
           </Box>
         </Box>

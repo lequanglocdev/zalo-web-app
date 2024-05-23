@@ -4,7 +4,7 @@ import TabBar from "./TabBar/TabBar";
 
 import { useState } from "react";
 import { globalContext } from "../../context/globalContext";
-
+import { Outlet } from "react-router-dom";
 const Home = () => {
   const [selectedTabIndex, setSelectedTabIndex] = useState(1);
 
@@ -23,6 +23,7 @@ const Home = () => {
         selectedTabIndex={selectedTabIndex}
         onTabChange={(index) => setSelectedTabIndex(index)}
       />
+      <Outlet/>
     </MuiContainer>
   );
 };

@@ -12,33 +12,13 @@ const Chat = () => {
   const [lastMessages, setLastMessages] = useState({});
 
   useEffect(() => {
-    if (data.user) {
-      api({
-        url: `/room/get-by-user/${data.user._id}`,
-        method: typeHTTP.GET,
-      }).then((rooms) => {
-        handler.setRooms(rooms);
-        // Fetch the last message for each room
-        rooms.forEach((room) => {
-          api({
-            method: typeHTTP.GET,
-            url: `/message/get-last-by-room/${room._id}`,
-          }).then((message) => {
-            setLastMessages((prevMessages) => ({
-              ...prevMessages,
-              [room._id]: message,
-            }));
-          });
-        });
-      });
-      return () => {
-        data.rooms.forEach((room) => {
-          socket.off(room._id);
-        });
-      };
-    }
-  }, [data.user, handler, data.rooms]);
-
+    api({
+      url: `/room/get-by-user/${data.user?._id}`,
+      method: typeHTTP.GET,
+    }).then((res) => {
+      handler.setRooms(res);
+    });
+  }, [data.user]);
   return (
     <Box
       sx={{
@@ -121,6 +101,7 @@ const Chat = () => {
             </Box>
           );
         })}
+        
       </Box>
     </Box>
   );

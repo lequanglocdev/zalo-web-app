@@ -246,10 +246,16 @@ const Info = () => {
             </Typography>
           </Box>
           <hr />
+
           <Box
-            sx={{ marginLeft: "140px", display: "flex", alignItems: "center" }}
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "space-around",
+            }}
           >
-            <BorderColorIcon sx={{ fontSize: "15px", cursor: "pointer" }} />
+           
+
             <Button
               sx={{
                 fontSize: "20px",
@@ -258,6 +264,9 @@ const Info = () => {
                 marginTop: "2px",
               }}
               onClick={handleUpdateProFiles}
+              startIcon={
+                <BorderColorIcon sx={{ fontSize: "15px", cursor: "pointer" }} />
+              }
             >
               Cập nhật
             </Button>
@@ -399,6 +408,7 @@ const Info = () => {
                     >
                       Cập Nhật
                     </Button>
+
                     <Button
                       sx={{
                         width: "67px",

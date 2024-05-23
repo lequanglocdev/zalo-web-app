@@ -38,7 +38,10 @@ function App() {
       <Route path="/register" element={<Register />} />
       <Route path="/verification" element={<VerificationPage />} />
       <Route path="/forgetpassword" element={<ForgetPassword />} />
-      <Route path="home" element={<Home />}/>
+      <Route path="/home" element={<Home />}>
+      <Route path="info" element={<Info />} />
+
+      </Route>
       <Route path="/creating-group" element={<CreatingGroup />} />
     </Routes>
   );

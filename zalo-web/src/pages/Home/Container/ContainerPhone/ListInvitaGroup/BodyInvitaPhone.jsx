@@ -9,7 +9,10 @@ import { api, typeHTTP } from "../../../../../utils/api";
 const BodyInvitaPhone = () => {
   const { data, handler } = useContext(globalContext);
   const [friendRequests, setFriendRequests] = useState([]);
-  const [acceptStatus, setAcceptStatus] = useState({ open: false, message: "" });
+  const [acceptStatus, setAcceptStatus] = useState({
+    open: false,
+    message: "",
+  });
 
   useEffect(() => {
     api({
@@ -21,38 +24,50 @@ const BodyInvitaPhone = () => {
     });
   }, [data.user]);
 
-  const handleAccept = async (friendRequest) => {
-    try {
-      await api({
+  const handleAccept = async (toUser) => {
+    api({
+      url: `/user/find/${toUser.friendId}`,
+      method: typeHTTP.GET,
+    }).then((toUserResult) => {
+      const body = {
+        fromUser: data.user,
+        toUser: toUserResult,
+      };
+      api({
+        body: body,
         url: "/user/accept-request",
         method: typeHTTP.POST,
-        body: { fromUser: friendRequest.fromUser, toUser: data.user },
-      });
-      setFriendRequests((prevRequests) =>
-        prevRequests.filter((request) => request._id !== friendRequest._id)
-      );
-      setAcceptStatus({ open: true, message: "Bạn đã chấp nhận lời mời kết bạn thành công!" });
-    } catch (error) {
-      console.error("Lỗi khi chấp nhận lời mời kết bạn:", error);
-      setAcceptStatus({ open: true, message: "Lỗi khi chấp nhận lời mời kết bạn." });
-    }
+      })
+        .then((res) => {
+          handler.setUser(res);
+        })
+        .catch((error) => {
+          console.error("Error accepting friend request:", error);
+        });
+    });
   };
 
-  const handleRefuse = async (friendRequest) => {
-    try {
-      await api({
+  const handleRefuse = async (toUser) => {
+    api({
+      url: `/user/find/${toUser.friendId}`,
+      method: typeHTTP.GET,
+    }).then((toUserResult) => {
+      const body = {
+        fromUser: data.user,
+        toUser: toUserResult,
+      };
+      api({
+        body: body,
         url: "/user/refuse-request",
         method: typeHTTP.POST,
-        body: { fromUser: friendRequest.fromUser, toUser: data.user },
-      });
-      setFriendRequests((prevRequests) =>
-        prevRequests.filter((request) => request._id !== friendRequest._id)
-      );
-      setAcceptStatus({ open: true, message: "Bạn đã từ chối lời mời kết bạn." });
-    } catch (error) {
-      console.error("Lỗi khi từ chối lời mời kết bạn:", error);
-      setAcceptStatus({ open: true, message: "Lỗi khi từ chối lời mời kết bạn." });
-    }
+      })
+        .then((res) => {
+          handler.setUser(res);
+        })
+        .catch((error) => {
+          console.error("Error refusing friend request:", error);
+        });
+    });
   };
 
   const handleCloseSnackbar = () => {

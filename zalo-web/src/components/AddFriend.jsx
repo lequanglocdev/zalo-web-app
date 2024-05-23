@@ -1,4 +1,4 @@
-  import Box from "@mui/material/Box";
+import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import TextField from "@mui/material/TextField";
@@ -54,33 +54,7 @@ const AddFriend = ({ handleCloseModalAddFriend }) => {
       console.log(res);
     });
   };
-  const handleRefuse = (toUser) => {
-    const body = {
-      fromUser: data.user,
-      toUser,
-    };
-    api({
-      body: body,
-      url: "/user/refuse-request",
-      method: typeHTTP.POST,
-    }).then((res) => {
-      console.log(res);
-    });
-  };
 
-  const handleAccept = (toUser) => {
-    const body = {
-      fromUser: data.user,
-      toUser,
-    };
-    api({
-      body: body,
-      url: "/user/accept-request",
-      method: typeHTTP.POST,
-    }).then((res) => {
-      console.log(res);
-    });
-  };
   const checkRelationship = (otherUser) => {
     if (
       data.user.friends.map((item) => item.friendId).includes(otherUser._id)
@@ -91,26 +65,7 @@ const AddFriend = ({ handleCloseModalAddFriend }) => {
       if (friend.status === "pending") {
         return <Button variant="contained">Đã gửi lời mời kết bạn</Button>;
       } else {
-        if (friend.status === "request") {
-          return (
-            <>
-              <Button
-                variant="contained"
-                onClick={() => handleAccept(otherUser)}
-              >
-                Chap Nhan
-              </Button>
-              <Button
-                variant="contained"
-                onClick={() => handleRefuse(otherUser)}
-              >
-                Tu Choi
-              </Button>
-            </>
-          );
-        } else {
-          return <Button variant="contained">Ban bè</Button>;
-        }
+        return <Button variant="contained">Ban bè</Button>;
       }
     } else {
       return (
@@ -212,10 +167,7 @@ const AddFriend = ({ handleCloseModalAddFriend }) => {
                   }}
                 >
                   <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
-                    <Avatar
-                      alt={results.image}
-                      src={results.image}
-                    />
+                    <Avatar alt={results.image} src={results.image} />
                     <Typography>{results.username}</Typography>
                   </Box>
                   {checkRelationship(results)}
