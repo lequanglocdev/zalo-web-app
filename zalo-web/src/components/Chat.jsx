@@ -1,23 +1,67 @@
-import React, { useContext, useEffect } from "react";
-import { api, typeHTTP } from "../utils/api";
+import React, { useContext, useEffect, useState } from "react";
+import { api, typeHTTP, baseURLOrigin } from "../utils/api";
 import { globalContext } from "../context/globalContext";
 import { getRemainUserForSingleRoom } from "../utils/getRemainUserForSingleRoom";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Avatar from "@mui/material/Avatar";
 import { da, faker } from "@faker-js/faker";
-
+import { io } from "socket.io-client";
+const socket = io.connect(baseURLOrigin);
 const Chat = () => {
   const { data, handler } = useContext(globalContext);
+  const [messages, setMessages] = useState([]);
+  const [lastMessages, setLastMessages] = useState({});
+  // useEffect(() => {
+  //   api({
+  //     url: `/room/get-by-user/${data.user?._id}`,
+  //     method: typeHTTP.GET,
+  //   }).then((res) => {
+  //     handler.setRooms(res);
+  //   });
+  // }, [data.user]);
 
+  // useEffect(() => {
+  //   api({
+  //     method: typeHTTP.GET,
+  //     url: `/message/get-by-room/${data.currentRoom?._id}`,
+  //   }).then((messages) => setMessages(messages));
+  //   // console.log(data.currentRoom?._id);
+  //   socket.on(data.currentRoom?._id, (messages) => {
+  //     setMessages(messages);
+  //   });
+
+  //   return () => {
+  //     socket.off(data.currentRoom?._id);
+  //   };
+  // }, [data.currentRoom, socket]);
   useEffect(() => {
-    api({
-      url: `/room/get-by-user/${data.user?._id}`,
-      method: typeHTTP.GET,
-    }).then((res) => {
-      handler.setRooms(res);
-    });
-  }, [data.user]);
+    if (data.user) {
+      api({
+        url: `/room/get-by-user/${data.user._id}`,
+        method: typeHTTP.GET,
+      }).then((rooms) => {
+        handler.setRooms(rooms);
+        // Fetch the last message for each room
+        rooms.forEach((room) => {
+          api({
+            method: typeHTTP.GET,
+            url: `/message/get-last-by-room/${room._id}`,
+          }).then((message) => {
+            setLastMessages((prevMessages) => ({
+              ...prevMessages,
+              [room._id]: message,
+            }));
+          });
+        });
+      });
+      return () => {
+        data.rooms.forEach((room) => {
+          socket.off(room._id);
+        });
+      };
+    }
+  }, [data.user, handler, data.rooms]);
 
   return (
     <Box
@@ -40,7 +84,9 @@ const Chat = () => {
       </Box>
       <Box>
         {data.rooms.map((room, index) => {
+          console.log(room);
           const otherUser = getRemainUserForSingleRoom(room, data.user?._id);
+          const lastMessage = lastMessages[room._id];
 
           return (
             <Box
@@ -57,7 +103,8 @@ const Chat = () => {
               <img
                 alt={otherUser?.username}
                 src={
-                  otherUser?.image || "https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745"
+                  otherUser?.image ||
+                  "https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745"
                 }
                 style={{
                   width: "40px",
@@ -84,7 +131,7 @@ const Chat = () => {
                     : room.name}
                 </Typography>
                 <Typography sx={{ fontSize: "12px" }}>
-                  tin nhắn cuối cùng
+                  {lastMessage ? lastMessage?.information : "No messages yet"}
                 </Typography>
               </Box>
             </Box>

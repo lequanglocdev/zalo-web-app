@@ -213,8 +213,8 @@ const AddFriend = ({ handleCloseModalAddFriend }) => {
                 >
                   <Box sx={{ display: "flex", alignItems: "center", gap: 2 }}>
                     <Avatar
-                      alt="Cindy Baker"
-                      src="/static/images/avatar/3.jpg"
+                      alt={results.image}
+                      src={results.image}
                     />
                     <Typography>{results.username}</Typography>
                   </Box>

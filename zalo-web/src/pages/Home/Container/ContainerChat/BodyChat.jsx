@@ -61,16 +61,21 @@ const BodyChat = () => {
     if (message.disabled) {
       handleSendDisable();
     } else {
-      const body = {
-        room_id: data.currentRoom?._id,
-        information: message,
-        typeMessage: "text",
-        user_id: data.user?._id,
-        disabled: false,
-      };
+      if (/\S/.test(message)) {
+        const body = {
+          room_id: data.currentRoom?._id,
+          information: message,
+          typeMessage: "text",
+          user_id: data.user?._id,
+          disabled: false,
+        };
 
-      socket.emit("send_message", body);
-      setMessage("");
+        socket.emit("send_message", body);
+        setMessage("");
+      } else {
+        // Xử lý trường hợp không có ký tự trong thông tin tin nhắn
+        console.log("Nội dung tin nhắn không được để trống");
+      }
     }
   };
   const handleKeyPress = (event) => {
@@ -332,7 +337,8 @@ const BodyChat = () => {
             onKeyPress={handleKeyPress}
             sx={{
               "& .MuiInputBase-root": {
-                paddingRight: "50px", // Ensure space for the emoji picker and button
+                paddingRight: "50px",
+                paddingTop: "100px",
               },
             }}
           />
