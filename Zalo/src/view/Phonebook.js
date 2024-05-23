@@ -80,11 +80,10 @@ export default function Phonebook({ navigation }) {
               >
                 <FontAwesome5 name="user-friends" size={24} color="white" />
               </View>
-              <View>
+              <View style={{ marginTop: 30 }}>
                 <Text
                   style={{
                     marginLeft: 20,
-                    marginTop: 20,
                     fontSize: 20,
                     fontWeight: 400,
                   }}

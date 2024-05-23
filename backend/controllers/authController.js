@@ -26,8 +26,13 @@ const userRegister = async (req, res) => {
   if (password && password.length < 6) {
     errors.push("Mật khẩu phải ít nhất 6 ký tự");
   }
-  if (username && !/^[a-zA-Z0-9 ]+$/.test(username)) {
-    errors.push("Tên đăng nhập chỉ được chứa ký tự, số và dấu gạch dưới!");
+  if (!/^[a-zA-ZÀ-Ỹà-ỹ ]+$/.test(username)) {
+    return next(
+      errorHandler(
+        400,
+        "Tên phải bắt đầu bằng chữ cái viết hoa và chỉ chứa chữ cái"
+      )
+    );
   }
   if (phone && !/^[0-9]+$/.test(phone)) {
     errors.push("SDT chỉ được nhập số!");

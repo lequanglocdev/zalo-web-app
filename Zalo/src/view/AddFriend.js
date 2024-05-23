@@ -50,57 +50,6 @@ export default function AddFriend({ navigation, route }) {
     fetchUserData();
   }, []);
 
-  const updateResultsAfterAction = (userId) => {
-    const updatedResults = results.filter((user) => user._id !== userId);
-    setResult(updatedResults);
-  };
-
-  const handleRefuse = (toUser) => {
-    const body = {
-      fromUser: globalData.user,
-      toUser,
-    };
-    api({
-      body: body,
-      url: "/user/refuse-request",
-      method: typeHTTP.POST,
-    })
-      .then((res) => {
-        console.log(res);
-        Toast.show({
-          type: "success",
-          text1: "Từ chối lời mời kết bạn thành công",
-        });
-        updateResultsAfterAction(toUser._id);
-      })
-      .catch((error) => {
-        console.error("Error refusing friend request:", error);
-      });
-  };
-
-  const handleAccept = (toUser) => {
-    const body = {
-      fromUser: globalData.user,
-      toUser,
-    };
-    api({
-      body: body,
-      url: "/user/accept-request",
-      method: typeHTTP.POST,
-    })
-      .then((res) => {
-        console.log(res);
-        Toast.show({
-          type: "success",
-          text1: "Chấp nhận lời mời kết bạn thành công",
-        });
-        updateResultsAfterAction(toUser._id);
-      })
-      .catch((error) => {
-        console.error("Error accepting friend request:", error);
-      });
-  };
-
   const handleSendRequestAddFriend = (toUser) => {
     const body = {
       fromUser: globalData.user,
@@ -143,74 +92,27 @@ export default function AddFriend({ navigation, route }) {
             </Pressable>
           );
         } else {
-          if (friend.status === "request") {
-            return (
-              <>
-                <Pressable
-                  onPress={() => handleAccept(otherUser)}
-                  style={{
-                    width: 100,
-                    height: 55,
-                    backgroundColor: "#00BFFF",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    borderRadius: 90,
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontSize: 20,
-                      fontWeight: 400,
-                    }}
-                  >
-                    Chấp Nhận
-                  </Text>
-                </Pressable>
-                <Pressable
-                  onPress={() => handleRefuse(otherUser)}
-                  style={{
-                    width: 100,
-                    height: 55,
-                    backgroundColor: "#00BFFF",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    borderRadius: 90,
-                  }}
-                >
-                  <Text
-                    style={{
-                      fontSize: 20,
-                      fontWeight: 400,
-                    }}
-                  >
-                    Từ Chối
-                  </Text>
-                </Pressable>
-              </>
-            );
-          } else {
-            return (
-              <Pressable
+          return (
+            <Pressable
+              style={{
+                width: 100,
+                height: 55,
+                backgroundColor: "#00BFFF",
+                alignItems: "center",
+                justifyContent: "center",
+                borderRadius: 90,
+              }}
+            >
+              <Text
                 style={{
-                  width: 100,
-                  height: 55,
-                  backgroundColor: "#00BFFF",
-                  alignItems: "center",
-                  justifyContent: "center",
-                  borderRadius: 90,
+                  fontSize: 20,
+                  fontWeight: 400,
                 }}
               >
-                <Text
-                  style={{
-                    fontSize: 20,
-                    fontWeight: 400,
-                  }}
-                >
-                  Bạn bè
-                </Text>
-              </Pressable>
-            );
-          }
+                Bạn bè
+              </Text>
+            </Pressable>
+          );
         }
       } else {
         return (
