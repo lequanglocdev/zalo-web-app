@@ -4,37 +4,13 @@ import { globalContext } from "../context/globalContext";
 import { getRemainUserForSingleRoom } from "../utils/getRemainUserForSingleRoom";
 import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
-import Avatar from "@mui/material/Avatar";
-import { da, faker } from "@faker-js/faker";
 import { io } from "socket.io-client";
 const socket = io.connect(baseURLOrigin);
 const Chat = () => {
   const { data, handler } = useContext(globalContext);
   const [messages, setMessages] = useState([]);
   const [lastMessages, setLastMessages] = useState({});
-  // useEffect(() => {
-  //   api({
-  //     url: `/room/get-by-user/${data.user?._id}`,
-  //     method: typeHTTP.GET,
-  //   }).then((res) => {
-  //     handler.setRooms(res);
-  //   });
-  // }, [data.user]);
 
-  // useEffect(() => {
-  //   api({
-  //     method: typeHTTP.GET,
-  //     url: `/message/get-by-room/${data.currentRoom?._id}`,
-  //   }).then((messages) => setMessages(messages));
-  //   // console.log(data.currentRoom?._id);
-  //   socket.on(data.currentRoom?._id, (messages) => {
-  //     setMessages(messages);
-  //   });
-
-  //   return () => {
-  //     socket.off(data.currentRoom?._id);
-  //   };
-  // }, [data.currentRoom, socket]);
   useEffect(() => {
     if (data.user) {
       api({
@@ -103,8 +79,16 @@ const Chat = () => {
               <img
                 alt={otherUser?.username}
                 src={
-                  otherUser?.image ||
-                  "https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745"
+                  // otherUser?.image ||
+                  // "https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745"
+
+                  room.type === "single"
+                    ? otherUser?.image ||
+                      "https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745"
+                    : room.type === "group"
+                    ? room?.image ||
+                      "https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745"
+                    : "https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745"
                 }
                 style={{
                   width: "40px",
