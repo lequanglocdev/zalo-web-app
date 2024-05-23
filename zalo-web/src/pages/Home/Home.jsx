@@ -9,7 +9,16 @@ const Home = () => {
   const [selectedTabIndex, setSelectedTabIndex] = useState(1);
 
   return (
-    <MuiContainer disableGutters maxWidth={false}>
+    <MuiContainer
+      disableGutters
+      maxWidth={false}
+      sx={{
+        height: "100vh",
+        display: "flex",
+        flexDirection: "column",
+        overflow: "hidden",
+      }}
+    >
       <TabBar
         selectedTabIndex={selectedTabIndex}
         onTabChange={(index) => setSelectedTabIndex(index)}
