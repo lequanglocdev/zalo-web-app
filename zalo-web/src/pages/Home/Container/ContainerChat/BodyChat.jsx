@@ -36,6 +36,7 @@ const BodyChat = () => {
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
   const [showPicker, setShowPicker] = useState(false);
+  const [hasContent, setHasContent] = useState(false);
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
@@ -338,7 +339,8 @@ const BodyChat = () => {
             sx={{
               "& .MuiInputBase-root": {
                 paddingRight: "50px",
-                paddingTop: "100px",
+                // paddingTop: "100px",
+                // overflow: "hidden",
               },
             }}
           />
@@ -371,13 +373,6 @@ const BodyChat = () => {
                 <Picker onEmojiClick={onEmojiClick} />
               </Box>
             )}
-            <Button
-              sx={{ paddingX: "10px" }}
-              variant="contained"
-              onClick={() => handleSendMessage()}
-            >
-              Gửi
-            </Button>
           </Box>
         </Box>
       </Box>

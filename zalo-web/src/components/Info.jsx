@@ -1,4 +1,3 @@
-
 import React, { useContext, useState, useEffect } from "react";
 import Box from "@mui/material/Box";
 import Button from "@mui/material/Button";
@@ -15,7 +14,7 @@ import {
   MenuItem,
   FormControl,
   InputLabel,
-  Input
+  Input,
 } from "@mui/material";
 import { api, typeHTTP } from "../utils/api";
 import { styled } from "@mui/material/styles";
@@ -53,10 +52,10 @@ const Info = () => {
     const body = {
       username: newUsername || username,
       gender: newGender || gender,
-      birthday: `${newDay || new Date(birthday).getDate()}/${newMonth || new Date(birthday).getMonth() + 1}/${newYear || new Date(birthday).getFullYear()}`,
+      birthday: `${newDay || new Date(birthday).getDate()}/${
+        newMonth || new Date(birthday).getMonth() + 1
+      }/${newYear || new Date(birthday).getFullYear()}`,
       image: image || image1,
-      
-     
     };
     console.log("Dau vao:", body);
     const token = localStorage.getItem("accessToken");
@@ -65,69 +64,66 @@ const Info = () => {
       return;
     }
     //console.log("accessToken of update:", token);
-      try {
-        const res = await api({
-          method: typeHTTP.POST,
-          url: "/user/update",
-          body : body,
-          sendToken: true,
-        })
-        if (res.error) {
-          console.error("API Error:", res.error);
-          return;
-        }
-        handler.setUser(res);
-        console.log("dau ra update", res);
-        handleCloseModal1();
-      } catch (error) {
-        console.error("API Error:", error);
-      }
-};
-
-
-const handleFile = async (e) => {
-  try { 
-    const files = e.target.files;
-    setImage(files[0]);
-    const imageUrl = URL.createObjectURL(files[0]);
-    setImageUrl(imageUrl);
-    
-    // Nếu có tệp được chọn
-    if (files[0]) {
-      const formData = new FormData();
-      formData.append("image", files[0]); 
-      console.log("formData", formData);
-      
-      // Lấy token từ local storage
-      const token = localStorage.getItem("accessToken");
-      if (!token) {
-        // Nếu không có token, hiển thị thông báo lỗi và thoát khỏi hàm
-        console.log("Access token is missing");
+    try {
+      const res = await api({
+        method: typeHTTP.POST,
+        url: "/user/update",
+        body: body,
+        sendToken: true,
+      });
+      if (res.error) {
+        console.error("API Error:", res.error);
         return;
       }
-
-      // Gửi token trong tiêu đề và gửi dữ liệu hình ảnh đến API
-      try {
-        const res = await api({
-          url: `/user/updateAvatar/${data.user?._id}`,
-          method: typeHTTP.POST,
-          body: formData,
-          sendToken: true,
-          
-        });
-        //console.log("Response from API:", res);
-        console.log("Upload ảnh thành công ");
-      } catch (error) {
-        // Xử lý lỗi nếu gặp phải khi gọi API
-        console.error("Error uploading image:", error);
-      }
+      handler.setUser(res);
+      console.log("dau ra update", res);
+      handleCloseModal1();
+    } catch (error) {
+      console.error("API Error:", error);
     }
-  } catch (error) {
-    // Xử lý lỗi nếu có lỗi khi chọn hình ảnh
-    console.error("Error picking images:", error);
-  }
-};
+  };
 
+  const handleFile = async (e) => {
+    try {
+      const files = e.target.files;
+      setImage(files[0]);
+      const imageUrl = URL.createObjectURL(files[0]);
+      setImageUrl(imageUrl);
+
+      // Nếu có tệp được chọn
+      if (files[0]) {
+        const formData = new FormData();
+        formData.append("image", files[0]);
+        console.log("formData", formData);
+
+        // Lấy token từ local storage
+        const token = localStorage.getItem("accessToken");
+        if (!token) {
+          // Nếu không có token, hiển thị thông báo lỗi và thoát khỏi hàm
+          console.log("Access token is missing");
+          return;
+        }
+
+        // Gửi token trong tiêu đề và gửi dữ liệu hình ảnh đến API
+        try {
+          const res = await api({
+            url: `/user/updateAvatar/${data.user?._id}`,
+            method: typeHTTP.POST,
+            body: formData,
+            sendToken: true,
+          });
+          //console.log("Response from API:", res);
+          console.log("Upload ảnh thành công ");
+        } catch (error) {
+          // Xử lý lỗi nếu gặp phải khi gọi API
+          console.error("Error uploading image:", error);
+        }
+      }
+    } catch (error) {
+      // Xử lý lỗi nếu có lỗi khi chọn hình ảnh
+      console.error("Error picking images:", error);
+    }
+  };
 
   const style = {
     position: "absolute",
@@ -152,7 +148,6 @@ const handleFile = async (e) => {
 
   const handleUpdateProFiles = () => {
     handleOpenModal();
-    
   };
   return (
     <div>
@@ -198,21 +193,23 @@ const handleFile = async (e) => {
                 top: "-6px",
                 right: "-30px",
               }}
-              
             />
-            <Button component="label" role={undefined} sx={{width:"5px", paddingRight:"40px", m:0  }} >
-            <VisuallyHiddenInput
-              type="file"
-              accept="image/*"
-              onChange={handleFile}
-            />
+            <Button
+              component="label"
+              role={undefined}
+              sx={{ width: "5px", paddingRight: "40px", m: 0 }}
+            >
+              <VisuallyHiddenInput
+                type="file"
+                accept="image/*"
+                onChange={handleFile}
+              />
 
-              <PhotoCameraIcon sx={{ marginTop:"30px" }} />
-            
-          </Button>
+              <PhotoCameraIcon sx={{ marginTop: "30px" }} />
+            </Button>
             <Typography
               id="modal-modal-description"
-              sx={{fontSize: "20px", fontWeight: "bold" }}
+              sx={{ fontSize: "20px", fontWeight: "bold" }}
             >
               {username}
               <BorderColorIcon
@@ -297,8 +294,8 @@ const handleFile = async (e) => {
                       placeholder={username}
                       label={"Tên"}
                       value={newUsername}
-                     onChange={(e) => setNewUsername(e.target.value)}
-                      sx={{ margin: "5px", width: "340px", height:"50px" }}
+                      onChange={(e) => setNewUsername(e.target.value)}
+                      sx={{ margin: "5px", width: "340px", height: "50px" }}
                     ></Input>
                     <Typography sx={{ fontWeight: "bold", fontSize: "17px" }}>
                       Thông tin cá nhân
@@ -330,35 +327,39 @@ const handleFile = async (e) => {
                       Ngày sinh
                     </Typography>
                     <Box display="flex">
-                    <FormControl sx={{ m: 1, width: "100px" }}>
+                      <FormControl sx={{ m: 1, width: "100px" }}>
                         <InputLabel id="month-label">Ngày</InputLabel>
                         <Select
                           labelId="month-label"
                           value={newMonth}
                           onChange={(e) => setNewMonth(e.target.value)}
                         >
-                          {Array.from({ length: 31 }, (_, i) => i + 1).map((m) => (
-                            <MenuItem key={m} value={m}>
-                              {m}
-                            </MenuItem>
-                          ))}
+                          {Array.from({ length: 31 }, (_, i) => i + 1).map(
+                            (m) => (
+                              <MenuItem key={m} value={m}>
+                                {m}
+                              </MenuItem>
+                            )
+                          )}
                         </Select>
                       </FormControl>
-                    <FormControl sx={{ m: 1, width: "100px" }}>
+                      <FormControl sx={{ m: 1, width: "100px" }}>
                         <InputLabel id="day-label">Tháng</InputLabel>
                         <Select
                           labelId="day-label"
                           value={newDay}
                           onChange={(e) => setNewDay(e.target.value)}
                         >
-                          {Array.from({ length: 12 }, (_, i) => i + 1).map((d) => (
-                            <MenuItem key={d} value={d}>
-                              {d}
-                            </MenuItem>
-                          ))}
+                          {Array.from({ length: 12 }, (_, i) => i + 1).map(
+                            (d) => (
+                              <MenuItem key={d} value={d}>
+                                {d}
+                              </MenuItem>
+                            )
+                          )}
                         </Select>
                       </FormControl>
-                    <FormControl sx={{ m: 1, width: "100px" }}>
+                      <FormControl sx={{ m: 1, width: "100px" }}>
                         <InputLabel id="year-label">Năm</InputLabel>
                         <Select
                           labelId="year-label"
@@ -377,14 +378,39 @@ const handleFile = async (e) => {
                       </FormControl>
                     </Box>
                   </Box>
-                
                   <br /> <br /> <br /> <br /> <br />
                   <hr />
-                  <Box display="flex" flexDirection={"row-reverse"} margin={"15px"}>
-                  <Button sx={{width:"100px", height:"40px", backgroundColor:"#80ccff" , color:"black" , fontSize:"18px" , marginLeft:"5px", fontWeight:"bold"}}
-                   onClick={updateUser}
-                   >Cập Nhật</Button>
-                    <Button sx={{width:"67px", height:"40px", backgroundColor:"#e6e6e6" , color:"black" , fontSize:"18px", fontWeight:"bold"}}>Hủy</Button>
+                  <Box
+                    display="flex"
+                    flexDirection={"row-reverse"}
+                    margin={"15px"}
+                  >
+                    <Button
+                      sx={{
+                        width: "100px",
+                        height: "40px",
+                        backgroundColor: "#80ccff",
+                        color: "black",
+                        fontSize: "18px",
+                        marginLeft: "5px",
+                        fontWeight: "bold",
+                      }}
+                      onClick={updateUser}
+                    >
+                      Cập Nhật
+                    </Button>
+                    <Button
+                      sx={{
+                        width: "67px",
+                        height: "40px",
+                        backgroundColor: "#e6e6e6",
+                        color: "black",
+                        fontSize: "18px",
+                        fontWeight: "bold",
+                      }}
+                    >
+                      Hủy
+                    </Button>
                   </Box>
                 </Box>
               </div>
