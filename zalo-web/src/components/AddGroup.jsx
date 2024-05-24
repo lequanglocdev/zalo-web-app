@@ -120,7 +120,6 @@ const AddGroup = ({ handleCloseModalAddGroup }) => {
       </Box>
       <Box
         sx={{
-        
           display: "flex",
           justifyContent: "center",
           alignItems: "center",
@@ -254,7 +253,7 @@ const AddGroup = ({ handleCloseModalAddGroup }) => {
                   }}
                 >
                   <img
-                    src={faker.image.avatar()}
+                    src={user?.image}
                     height={"40px"}
                     width={"40px"}
                     style={{ borderRadius: "50%" }}

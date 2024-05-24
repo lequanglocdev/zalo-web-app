@@ -97,8 +97,26 @@ const BodyInvitaPhone = () => {
               padding: "8px 0",
             }}
           >
-            <Typography>{request?.username}</Typography>
-            <Box>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+                gap: 4,
+               
+              }}
+            >
+              <img
+                src={request?.image}
+                style={{
+                  width: "80px",
+                  height: "80px",
+                  borderRadius: "50%",
+                  objectFit: "cover",
+                }}
+              />
+              <Typography>{request?.username}</Typography>
+            </Box>
+            <Box sx={{display:"flex",gap:4}}>
               <Button variant="contained" onClick={() => handleAccept(request)}>
                 Chấp nhận
               </Button>

@@ -6,7 +6,7 @@ import Typography from "@mui/material/Typography";
 import Search from "~/components/Search";
 import React, { useState } from "react";
 import Badge from "@mui/material/Badge";
-const ListPhone = ({ onSelect,friendRequests }) => {
+const ListPhone = ({ onSelect, friendRequests }) => {
   const [activeTab, setActiveTab] = useState("friends");
   const handleTabClick = (tab) => {
     setActiveTab(tab);
@@ -68,12 +68,11 @@ const ListPhone = ({ onSelect,friendRequests }) => {
           }}
           onClick={() => handleTabClick("invitations")}
         >
-          <Badge badgeContent={1} color="primary">
+          {/* <Badge badgeContent={1} color="primary">
             <DraftsIcon />
-          </Badge>
-
+          </Badge> */}
+          <DraftsIcon />
           <Typography sx={{ marginLeft: "20px" }}>Lời mời kết bạn</Typography>
-
         </Box>
       </Box>
     </Box>

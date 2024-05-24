@@ -1,27 +1,21 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext, useState } from "react";
 import Box from "@mui/material/Box";
-import Avatar from "@mui/material/Avatar";
 import Tooltip from "@mui/material/Tooltip";
 import IconButton from "@mui/material/IconButton";
-import PersonAddAltIcon from "@mui/icons-material/PersonAddAlt";
 import SearchIcon from "@mui/icons-material/Search";
 import PhoneIcon from "@mui/icons-material/Phone";
 import VideocamIcon from "@mui/icons-material/Videocam";
 import { getRemainUserForSingleRoom } from "../../../../utils/getRemainUserForSingleRoom";
 
 import Grid from "@mui/material/Grid";
-import { Link } from "react-router-dom";
-import Info from "../../../../components/Info";
 import Modal from "@mui/material/Modal";
 import Typography from "@mui/material/Typography";
 import CloseIcon from "@mui/icons-material/Close";
 import { globalContext } from "../../../../context/globalContext";
 import { api, typeHTTP } from "../../../../utils/api";
-import { useNavigate } from "react-router-dom";
-import { Button, CardMedia } from "@mui/material";
-import { styled } from "@mui/material/styles";
-import PhotoCameraIcon from "@mui/icons-material/PhotoCamera";
+import Button from "@mui/material/Button";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
+import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 const style = {
   position: "absolute",
   top: "50%",
@@ -33,42 +27,76 @@ const style = {
 
   borderRadius: "10px",
 };
-const VisuallyHiddenInput = styled("input")({
-  clip: "rect(0 0 0 0)",
-  clipPath: "inset(50%)",
-  height: 1,
-  overflow: "hidden",
-  position: "absolute",
-  bottom: 0,
-  left: 0,
-  whiteSpace: "nowrap",
-  width: 1,
-});
-
 const HeadingChat = () => {
   const { data, handler } = useContext(globalContext);
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
+  const [friendshipStatus, setFriendshipStatus] = useState(
+    data.users?.friends?.status === "accepted" ? "Người lạ" : "Bạn bè"
+  );
+  const handleUnFriend = (toUser) => {
+    const body = {
+      fromUser: data.user,
+      toUser,
+      room_id: data.currentRoom._id,
+    };
 
-  // useEffect(() => {
-  //   console.log(data);
-  // }, [data]);
+    api({
+      body: body,
+      url: "/user/unfriend",
+      method: typeHTTP.POST,
+    })
+      .then((res) => {
+        handler.setUser(res);
+        setFriendshipStatus("Người lạ");
+      })
+      .catch((error) => {
+        console.error("Lỗi khi xóa kết bạn:", error);
+      });
+  };
+  const handleSendRequestAddFriend = (toUser) => {
+    const body = {
+      fromUser: data.user,
+      toUser,
+    };
+    api({
+      body: body,
+      url: "/user/send-request-add-friend",
+      method: typeHTTP.POST,
+    }).then((res) => {
+      console.log(res);
+    });
+  };
 
-  // const handleDeleteFrend = (toUser) => {
-  //   const body = {
-  //     fromUser: data.user._id,
-  //     toUser: toUser._id,
-  //   };
-  //   // console.log( body)
-  //   api({
-  //     body: body,
-  //     url: "/user/unfriend",
-  //     method: typeHTTP.POST,
-  //   }).then((res) => {
-  //     console.log(res);
-  //   });
-  // };
+  const checkRelationship = (otherUser) => {
+    if (
+      data.user.friends.map((item) => item.friendId).includes(otherUser._id)
+    ) {
+      const friend = data.user.friends.filter(
+        (item) => item.friendId === otherUser._id
+      )[0];
+      if (friend.status === "pending") {
+        return <Button variant="contained">Đã gửi lời mời kết bạn</Button>;
+      } else {
+        return <Button variant="contained">Ban bè</Button>;
+      }
+    } else {
+      return (
+        <Button
+          variant="contained"
+          onClick={() => handleSendRequestAddFriend(otherUser)}
+        >
+          Gửi lời mời kết bạn
+        </Button>
+      );
+    }
+  };
+  const otherUser = getRemainUserForSingleRoom(
+    data.currentRoom,
+    data.user?._id
+  );
+  console.log("kkkk", otherUser);
   return (
     <Grid
       container
@@ -129,12 +157,29 @@ const HeadingChat = () => {
                 textOverflow: "ellipsis",
               }}
             >
-              {data.currentRoom?.type === "single"
-                ? getRemainUserForSingleRoom(data.currentRoom, data.user?._id)
-                    ?.username
-                : data.currentRoom.name.length > 30
-                ? `${data.currentRoom.name.substring(0, 30)}...`
-                : data.currentRoom.name}
+              <Box sx={{ display: "flex", gap: 6 }}>
+                <Typography>
+                  {data.currentRoom?.type === "single"
+                    ? getRemainUserForSingleRoom(
+                        data.currentRoom,
+                        data.user?._id
+                      )?.username
+                    : data.currentRoom.name.length > 30
+                    ? `${data.currentRoom.name.substring(0, 30)}...`
+                    : data.currentRoom.name}
+                </Typography>
+
+                <Typography
+                  sx={{
+                    color: "#fff",
+                    backgroundColor: "#74b9ff",
+                    padding: "2px 20px",
+                    borderRadius: "6px",
+                  }}
+                >
+                  {friendshipStatus}
+                </Typography>
+              </Box>
             </Box>
             <Box style={{ fontSize: "14px", color: "#7589A3" }}>
               {data.currentRoom?.type === "group"
@@ -180,7 +225,7 @@ const HeadingChat = () => {
             src="https://images.pexels.com/photos/17841163/pexels-photo-17841163/free-photo-of-thien-nhien-chim-bay-d-ng-v-t-an-th-t.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load"
             style={{ width: "100%" }}
           />
-           <Box
+          <Box
             sx={{
               display: "flex",
               alignItems: "center",
@@ -188,19 +233,82 @@ const HeadingChat = () => {
             }}
           >
             <img
-            src="https://images.pexels.com/photos/17841163/pexels-photo-17841163/free-photo-of-thien-nhien-chim-bay-d-ng-v-t-an-th-t.jpeg?auto=compress&cs=tinysrgb&w=600&lazy=load"
-            style={{ width: "10%",borderRadius:"50%" }}
-          />
-           
+              alt={
+                data.currentRoom?.type === "single"
+                  ? getRemainUserForSingleRoom(data.currentRoom, data.user?._id)
+                      ?.username
+                  : "User Avatar"
+              }
+              src={
+                data.currentRoom?.type === "single"
+                  ? getRemainUserForSingleRoom(data.currentRoom, data.user?._id)
+                      ?.image ||
+                    "https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745"
+                  : data.currentRoom?.image ||
+                    "https://ps.w.org/user-avatar-reloaded/assets/icon-256x256.png?rev=2540745"
+              }
+              style={{
+                width: "80px",
+                height: "80px",
+                borderRadius: "50%",
+                objectFit: "cover",
+                position: "relative",
+                top: "-26px",
+                left: "20px",
+              }}
+            />
+
             <Typography
               id="modal-modal-description"
-              sx={{ fontSize: "20px", fontWeight: "bold" }}
+              sx={{ fontSize: "20px", fontWeight: "bold", marginLeft: "40px" }}
             >
-              Minh
+              {data.currentRoom?.type === "single"
+                ? getRemainUserForSingleRoom(data.currentRoom, data.user?._id)
+                    ?.username
+                : data.currentRoom.name.length > 30
+                ? `${data.currentRoom.name.substring(0, 30)}...`
+                : data.currentRoom.name}
               <BorderColorIcon
                 sx={{ fontSize: "15px", marginLeft: "10px", cursor: "pointer" }}
               />
             </Typography>
+          </Box>
+          <Box
+            sx={{
+              margin: "20px",
+              padding: "6px 10px",
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              gap: 8,
+            }}
+          >
+            <Button
+              variant="contained"
+              sx={{ fontWeight: "bold" }}
+              onClick={() => handleSendRequestAddFriend(otherUser)}
+            >
+              {friendshipStatus === "Người lạ" ? "Kết bạn" : "Gọi điện"}
+            </Button>
+            <Button variant="contained" onClick={() => handleClose()}>
+              Nhắn tin
+            </Button>
+          </Box>
+          <Box
+            sx={{
+              display: "flex",
+              alignItems: "center",
+              padding: "20px",
+              cursor: "pointer",
+            }}
+            onClick={() =>
+              handleUnFriend(
+                getRemainUserForSingleRoom(data.currentRoom, data.user?._id)
+              )
+            }
+          >
+            <DeleteOutlineIcon />
+            <Typography>Xóa khỏi danh sách bạn bè</Typography>
           </Box>
         </Box>
       </Modal>
