@@ -14,7 +14,7 @@ import InputBase from "@mui/material/InputBase";
 import CheckIcon from "@mui/icons-material/Check";
 import AddCircleOutlineIcon from "@mui/icons-material/AddCircleOutline";
 import RemoveCircleOutlineIcon from "@mui/icons-material/RemoveCircleOutline";
-import { faker } from "@faker-js/faker";
+
 const VisuallyHiddenInput = styled("input")({
   clip: "rect(0 0 0 0)",
   clipPath: "inset(50%)",
@@ -256,7 +256,7 @@ const AddGroup = ({ handleCloseModalAddGroup }) => {
                     src={user?.image}
                     height={"40px"}
                     width={"40px"}
-                    style={{ borderRadius: "50%" }}
+                    style={{ borderRadius: "50%",objectFit:"cover" }}
                   />
                   <Typography>{user?.username}</Typography>
                 </Box>
@@ -314,10 +314,10 @@ const AddGroup = ({ handleCloseModalAddGroup }) => {
                 }}
               >
                 <img
-                  src={faker.image.avatar()}
+                  src={user?.image}
                   height={"40px"}
                   width={"40px"}
-                  style={{ borderRadius: "50%" }}
+                  style={{ borderRadius: "50%" ,objectFit:"cover"}}
                 />
                 <Typography variant="span">
                   {user?.username.length > 10
