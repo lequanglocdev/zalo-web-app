@@ -25,6 +25,13 @@ export default function Phonebook({ navigation }) {
   const [showCharBar, setShowCharBar] = useState(true); // Thêm state mới
   const { globalData, globalHandler } = useContext(globalContext);
 
+  const countFriends = () => {
+    return globalData.rooms.filter((room) => room.type === "single").length;
+  };
+
+  const countRooms = () => {
+    return globalData.rooms.filter((room) => room.type === "group").length;
+  };
   // Mảng chứa các kí tự từ A đến Z
   const alphabet = Array.from({ length: 26 }, (_, i) =>
     String.fromCharCode("A".charCodeAt(0) + i)
@@ -195,6 +202,16 @@ export default function Phonebook({ navigation }) {
                     ]}
                   >
                     Tất cả
+                  </Text>
+                  <Text
+                    style={{
+                      marginLeft: 70,
+                      marginTop: -19,
+                      fontSize: 16,
+                      fontWeight: 700,
+                    }}
+                  >
+                    {countFriends()}
                   </Text>
                 </Pressable>
               </View>
@@ -550,10 +567,20 @@ export default function Phonebook({ navigation }) {
                 >
                   Nhóm đang tham gia
                 </Text>
+                <Text
+                  style={{
+                    marginLeft: 175,
+                    marginTop: -18,
+                    fontSize: 16,
+                    fontWeight: 700,
+                  }}
+                >
+                  ({countRooms()})
+                </Text>
               </View>
 
               <View style={{ flexDirection: "row" }}>
-                <View style={{ marginLeft: 100, marginTop: 15 }}>
+                <View style={{ marginLeft: 80, marginTop: 14 }}>
                   <Image
                     source={require("../image/Vector1.png")}
                     style={{ width: 15, height: 15 }}
@@ -563,7 +590,7 @@ export default function Phonebook({ navigation }) {
                   style={{
                     fontSize: 15,
                     marginLeft: 5,
-                    marginTop: 10,
+                    marginTop: 11,
                   }}
                 >
                   Hoạt động cuối

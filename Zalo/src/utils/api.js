@@ -1,6 +1,6 @@
 import axios from "axios";
-export const baseURLOrigin = "http://192.168.0.43:5000";
-const baseURL = "http://192.168.0.43:5000/v1";
+export const baseURLOrigin = "https://zalo-web-app.online";
+const baseURL = "https://zalo-web-app.online/v1";
 
 export const typeHTTP = {
   POST: "post",

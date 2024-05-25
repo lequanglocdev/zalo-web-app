@@ -124,7 +124,7 @@ export default function InviteFriend({ navigation }) {
                   alignItems: "center",
                   flexDirection: "row",
                   marginTop: 20,
-                  marginLeft: -150,
+                  marginLeft: -140,
                 }}
               >
                 <Image
