@@ -17,6 +17,8 @@ import Button from "@mui/material/Button";
 import BorderColorIcon from "@mui/icons-material/BorderColor";
 import DeleteOutlineIcon from "@mui/icons-material/DeleteOutline";
 import OutputIcon from "@mui/icons-material/Output";
+import { Menu, MenuItem } from "@mui/material";
+import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
 const style = {
   position: "absolute",
   top: "50%",
@@ -33,7 +35,14 @@ const HeadingChat = () => {
   const [open, setOpen] = React.useState(false);
   const handleOpen = () => setOpen(true);
   const handleClose = () => setOpen(false);
-  console.log(data?.currentRoom?.users);
+  const [anchorEl, setAnchorEl] = useState(null);
+  const openMenu = Boolean(anchorEl);
+  const handleClickMenu = () => {
+    setAnchorEl(event.currentTarget);
+  };
+  const handleCloseMenu = () => {
+    setAnchorEl(null);
+  };
   const [friendshipStatus, setFriendshipStatus] = useState(
     data.users?.friends?.status === "accepted" ? "Người lạ" : "Bạn bè"
   );
@@ -289,6 +298,38 @@ const HeadingChat = () => {
                     }}
                   />
                   <Typography>{user?.username}</Typography>
+                  <div>
+                    <Button
+                      id="demo-positioned-button"
+                      aria-controls={openMenu ? "demo-positioned-menu" : undefined}
+                      aria-haspopup="true"
+                      aria-expanded={openMenu ? "true" : undefined}
+                      onClick={handleClickMenu}
+                      sx={{ position: "relative" }}
+                    >
+                      <MoreHorizIcon/>
+                    </Button>
+                    <Menu
+                      id="demo-positioned-menu"
+                      aria-labelledby="demo-positioned-button"
+                      anchorEl={anchorEl}
+                      open={openMenu}
+                      onClose={handleCloseMenu}
+                      // anchorOrigin={{
+                      //   vertical: 'top',
+                      //   horizontal: 'left',
+                      // }}
+                      // transformOrigin={{
+                      //   vertical: 'top',
+                      //   horizontal: 'left',
+                      // }}
+                      sx={{position: "absolute"}}
+                    >
+                      <MenuItem onClick={handleCloseMenu}>Profile</MenuItem>
+                      <MenuItem onClick={handleCloseMenu}>My account</MenuItem>
+                      <MenuItem onClick={handleCloseMenu}>Logout</MenuItem>
+                    </Menu>
+                  </div>
                 </Box>
               ))}
             </Box>

@@ -30,7 +30,7 @@ const BodyPhone = () => {
 
   //const [friendId, setFriendId] = useState("");
   //console.log("friendId", friendId)
- // console.log("setFriendId", setFriendId)
+  // console.log("setFriendId", setFriendId)
   const handleChange = (event) => {
     setName(event.target.value);
   };
@@ -40,7 +40,7 @@ const BodyPhone = () => {
     setAnchorEl(event.currentTarget);
   };
   const { data, handler } = useContext(globalContext);
-  const userFriend = data.user?._id; 
+  const userFriend = data.user?._id;
   useEffect(() => {
     //console.log("Danh sách bạn bè:");
     data.user.friends.forEach((friend, index) => {
@@ -50,34 +50,39 @@ const BodyPhone = () => {
 
   useEffect(() => {
     // Thực hiện truy vấn API khi friendId thay đổi
-   
+
     api({ url: "/user/find", method: typeHTTP.GET }).then((res) => {
       const arr = [];
       res.forEach((item) => {
-        if (item.friends && item.friends.some((friend) => friend.friendId === userFriend )) {
+        if (
+          item.friends &&
+          item.friends.some((friend) => friend.friendId === userFriend)
+        ) {
           arr.push(item);
         }
       });
       setResult(arr);
-      setInitialResults(arr)
+      setInitialResults(arr);
     });
   }, [userFriend]);
   const [result, setResult] = useState([]);
   const [initialResults, setInitialResults] = useState([]);
 
- 
   // Log ra thông tin của các người dùng được tìm thấy
-  useEffect(() => {
-    //console.log("Kết quả tìm kiếm:", result);
-    result.forEach((user, index) => {
-      //console.log(`Thông tin người dùng ${index + 1}:`);
-      //console.log("_id:", user._id);
-      //console.log("Username:", user.username);
-      //console.log("Image:", user.image);
-    });
-  }, [result] ,[setInitialResults]);
+  useEffect(
+    () => {
+      //console.log("Kết quả tìm kiếm:", result);
+      result.forEach((user, index) => {
+        //console.log(`Thông tin người dùng ${index + 1}:`);
+        //console.log("_id:", user._id);
+        //console.log("Username:", user.username);
+        //console.log("Image:", user.image);
+      });
+    },
+    [result],
+    [setInitialResults]
+  );
 
-  
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -91,10 +96,13 @@ const BodyPhone = () => {
     setResult(filteredResults);
   };
   // săp sep
-  const [sortingOption, setSortingOption] = useState(""); 
+  const [sortingOption, setSortingOption] = useState("");
   useEffect(() => {
-    if (sortingOption === "Tên (A-Z)") { // Nếu người dùng chọn sắp xếp theo tên (A-Z)
-      const sortedResults = [...result].sort((a, b) => a.username.localeCompare(b.username)); // Sắp xếp danh sách theo tên (A-Z)
+    if (sortingOption === "Tên (A-Z)") {
+      // Nếu người dùng chọn sắp xếp theo tên (A-Z)
+      const sortedResults = [...result].sort((a, b) =>
+        a.username.localeCompare(b.username)
+      ); // Sắp xếp danh sách theo tên (A-Z)
       setResult(sortedResults); // Cập nhật danh sách bạn bè với danh sách đã sắp xếp
     }
   }, [sortingOption, result]);
@@ -145,8 +153,8 @@ const BodyPhone = () => {
           type="text"
           size="small"
           value={searchValue}
-         // onChange={(e) => setSearchValue(e.target.value)}
-         onChange={handleSearchChange}
+          // onChange={(e) => setSearchValue(e.target.value)}
+          onChange={handleSearchChange}
           InputProps={{
             startAdornment: (
               <InputAdornment
@@ -180,7 +188,6 @@ const BodyPhone = () => {
             onChange={handleSortChange}
           >
             <MenuItem value="Tên (A-Z)">Tên (A-Z)</MenuItem>
-           
           </Select>
         </FormControl>
         <FormControl sx={{ m: 1, minWidth: "260px" }} size="small">
@@ -197,66 +204,64 @@ const BodyPhone = () => {
         </FormControl>
       </Box>
 
-
-<Box>
-  
-  {result.map((user, index) => (
-    <Box key={index}>
-      <Typography
-    sx={{ height: "32px", display: "flex", alignItems: "center" }}
-  >{user.username.charAt(0).toUpperCase()}
-  </Typography>
-      <Box
-        sx={{
-          display: "flex",
-          alignItems: "center",
-        }}
-      >
-        <Avatar src={user.image}  sx={{ bgcolor: deepOrange[500]}}>
-          {user.username[0]}
-        </Avatar>
-        <Typography sx={{ paddingX: 2 }}>{user.username}</Typography>
-        <IconButton
-          aria-label="more"
-          id={`long-button-${index}`}
-          aria-controls={open ? `long-menu-${index}` : undefined}
-          aria-expanded={open ? "true" : undefined}
-          aria-haspopup="true"
-          onClick={handleClick}
-          sx={{ position: "relative", right: "0" }}
-        >
-          <MoreHorizIcon sx={{ fontSize: "16px" }} />
-        </IconButton>
-        <Menu
-          id={`long-menu-${index}`}
-          MenuListProps={{
-            "aria-labelledby": `long-button-${index}`,
-          }}
-          anchorEl={anchorEl}
-          open={open}
-          onClose={handleClose}
-          PaperProps={{
-            style: {
-              maxHeight: ITEM_HEIGHT * 4.5,
-              width: "26ch",
-            },
-          }}
-        >
-          {options.map((option) => (
-            <MenuItem
-              key={option}
-              selected={option === "Pyxis"}
-              onClick={handleClose}
+      <Box>
+        {result.map((user, index) => (
+          <Box key={index}>
+            <Typography
+              sx={{ height: "32px", display: "flex", alignItems: "center" }}
             >
-              {option}
-            </MenuItem>
-          ))}
-        </Menu>
+              {user.username.charAt(0).toUpperCase()}
+            </Typography>
+            <Box
+              sx={{
+                display: "flex",
+                alignItems: "center",
+              }}
+            >
+              <Avatar src={user.image} sx={{ bgcolor: deepOrange[500] }}>
+                {user.username[0]}
+              </Avatar>
+              <Typography sx={{ paddingX: 2 }}>{user.username}</Typography>
+              <IconButton
+                aria-label="more"
+                id={`long-button-${index}`}
+                aria-controls={open ? `long-menu-${index}` : undefined}
+                aria-expanded={open ? "true" : undefined}
+                aria-haspopup="true"
+                onClick={handleClick}
+                sx={{ position: "relative", right: "0" }}
+              >
+                <MoreHorizIcon sx={{ fontSize: "16px" }} />
+              </IconButton>
+              <Menu
+                id={`long-menu-${index}`}
+                MenuListProps={{
+                  "aria-labelledby": `long-button-${index}`,
+                }}
+                anchorEl={anchorEl}
+                open={open}
+                onClose={handleClose}
+                PaperProps={{
+                  style: {
+                    maxHeight: ITEM_HEIGHT * 4.5,
+                    width: "26ch",
+                  },
+                }}
+              >
+                {options.map((option) => (
+                  <MenuItem
+                    key={option}
+                    selected={option === "Pyxis"}
+                    onClick={handleClose}
+                  >
+                    {option}
+                  </MenuItem>
+                ))}
+              </Menu>
+            </Box>
+          </Box>
+        ))}
       </Box>
-    </Box>
-  ))}
-</Box>
-        
     </Box>
   );
 };
