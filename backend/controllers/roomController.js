@@ -141,6 +141,20 @@ class RoomController {
     }
   };
 
+  add = async (req, res) => {
+    try {
+      const { room_id, user_id } = req.body;
+      const roomUpdated = await Room.findOneAndUpdate(
+        { _id: room_id },
+        { $addToSet: { users: user_id } },
+        { new: true }
+      );
+      return res.status(200).json(roomUpdated);
+    } catch (error) {
+      return res.status(500).json(error.Message);
+    }
+  }
+
   kick = async (req, res) => {
     try {
       const { room_id, user_id } = req.body;

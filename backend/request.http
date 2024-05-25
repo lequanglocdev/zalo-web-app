@@ -13,7 +13,16 @@ POST http://localhost:5000/v1/auth/login
 Content-Type: application/json
 
 {
-    "phone": "0907990310",
+    "phone": "0907990317",
+    "password": "Smile_1802"
+}
+
+###
+POST http://localhost:5000/v1/auth/login
+Content-Type: application/json
+
+{
+    "phone": "0335732906",
     "password": "123456"
 }
 
@@ -55,3 +64,13 @@ Content-Type: application/json
     "message_id": "662613d67469b19bd44f3ad6"
 
 }
+
+###
+POST http://localhost:5000/v1/room/kick
+Content-Type: application/json
+
+{
+    "room_id": "66515ca2672ec01aaa66e563",
+    "user_id": "66515f2bcd5e648df9cd2c74"
+}
+

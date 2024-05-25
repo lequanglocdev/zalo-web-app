@@ -60,7 +60,7 @@ export default function ScreenRegister({ navigation, route }) {
 
     try {
       const response = await axios.post(
-        "http://192.168.1.4:5000/v1/auth/register",
+        "http://192.168.0.43:5000/v1/auth/register",
         data,
         {
           headers: { "Content-type": "application/json" },
