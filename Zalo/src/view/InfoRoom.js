@@ -314,48 +314,74 @@ export default function InfoRoom({ navigation, route }) {
 
       {room_type === "group" && (
         <>
-          <Pressable
-            onPress={handleDisbandRoomWithConfirmation}
-            style={{
-              marginTop: 40,
-              marginLeft: 15,
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
-            <AntDesign name="delete" size={24} color="red" />
-            <Text
+          {globalData.user?._id === room?.creator ? (
+            <>
+              <Pressable
+                onPress={handleDisbandRoomWithConfirmation}
+                style={{
+                  marginTop: 40,
+                  marginLeft: 15,
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <AntDesign name="delete" size={24} color="red" />
+                <Text
+                  style={{
+                    fontSize: 16,
+                    marginLeft: 10,
+                    color: "red",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Xóa nhóm
+                </Text>
+              </Pressable>
+              <Pressable
+                onPress={() => handleLeave()}
+                style={{
+                  marginTop: 40,
+                  marginLeft: 15,
+                  flexDirection: "row",
+                  alignItems: "center",
+                }}
+              >
+                <AntDesign name="delete" size={24} color="red" />
+                <Text
+                  style={{
+                    fontSize: 16,
+                    marginLeft: 10,
+                    color: "red",
+                    fontWeight: "bold",
+                  }}
+                >
+                  Rời nhóm
+                </Text>
+              </Pressable>
+            </>
+          ) : (
+            <Pressable
+              onPress={() => handleLeave()}
               style={{
-                fontSize: 16,
-                marginLeft: 10,
-                color: "red",
-                fontWeight: "bold",
+                marginTop: 40,
+                marginLeft: 15,
+                flexDirection: "row",
+                alignItems: "center",
               }}
             >
-              Xóa nhóm
-            </Text>
-          </Pressable>
-          <Pressable
-            onPress={() => handleLeave()}
-            style={{
-              marginTop: 40,
-              marginLeft: 15,
-              flexDirection: "row",
-              alignItems: "center",
-            }}
-          >
-            <AntDesign name="delete" size={24} color="red" />
-            <Text
-              style={{
-                fontSize: 16,
-                marginLeft: 10,
-                color: "red",
-                fontWeight: "bold",
-              }}
-            >
-              Rời nhóm
-            </Text>
-          </Pressable>
+              <AntDesign name="delete" size={24} color="red" />
+              <Text
+                style={{
+                  fontSize: 16,
+                  marginLeft: 10,
+                  color: "red",
+                  fontWeight: "bold",
+                }}
+              >
+                Rời nhóm
+              </Text>
+            </Pressable>
+          )}
         </>
       )}
 

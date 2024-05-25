@@ -41,7 +41,7 @@ export default function SendMessager({ navigation, route }) {
   const [record, setRecord] = useState(false);
   const [sendMessage] = useState(false);
 
-  const handleAddFriend = () => {
+  const handleRender = () => {
     api({
       method: typeHTTP.GET,
       url: `/room/get-by-user/${globalData.user?._id}`,
@@ -245,7 +245,7 @@ export default function SendMessager({ navigation, route }) {
     } catch (error) {
       console.error(error);
     }
-    handleAddFriend();
+    handleRender();
   };
 
   return (
