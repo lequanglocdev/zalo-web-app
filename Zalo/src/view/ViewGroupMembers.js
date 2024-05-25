@@ -13,23 +13,19 @@ import { globalContext } from "../context/globalContext";
 import { api, typeHTTP } from "../utils/api";
 import { Ionicons } from "@expo/vector-icons";
 
-const ViewGroupMembers = ({ route, navigation }) => {
+const ViewGroupMembers = ({ navigation }) => {
+  const handleRender = () => {
+    api({
+      method: typeHTTP.GET,
+      url: `/room/get-by-user/${globalData.user?._id}`,
+    }).then((rooms) => {
+      globalHandler.setRooms(rooms);
+      navigation.navigate("Message");
+    });
+  };
+
   const [modalVisible, setModalVisible] = useState(false);
   const [selectedUserId, setSelectedUserId] = useState(null);
-
-  const handlePressMember = (userId, isCreator) => {
-    if (isCreator) {
-      navigation.navigate("DataUser");
-    } else {
-      setSelectedUserId(userId);
-      setModalVisible(true);
-    }
-  };
-
-  const closeModal = () => {
-    setModalVisible(false);
-    setSelectedUserId(null);
-  };
 
   const { globalData, globalHandler } = useContext(globalContext);
   const [room, setRoom] = useState();
@@ -39,6 +35,27 @@ const ViewGroupMembers = ({ route, navigation }) => {
     setRoom(globalData.currentRoom);
     setParticipants(globalData.currentRoom.users);
   }, [globalData.currentRoom]);
+
+  useEffect(() => {
+    // Mở modal nếu có người được chọn
+    if (selectedUserId) {
+      setModalVisible(true);
+    } else {
+      setModalVisible(false);
+    }
+  }, [selectedUserId]);
+
+  const handlePressMember = (userId) => {
+    if (userId !== globalData.user._id) {
+      setSelectedUserId(userId);
+      setModalVisible(true);
+    }
+  };
+
+  const closeModal = () => {
+    setModalVisible(false);
+    setSelectedUserId(null);
+  };
 
   const handleSetDepute = (user_id) => {
     Alert.alert(
@@ -117,6 +134,7 @@ const ViewGroupMembers = ({ route, navigation }) => {
                         res.users.includes(item._id)
                       ),
                     });
+                    closeModal();
                   }
                 } catch (error) {
                   console.log(error);
@@ -140,7 +158,7 @@ const ViewGroupMembers = ({ route, navigation }) => {
           <View style={{ flexDirection: "row", marginTop: 60 }}>
             <Pressable
               onPress={() => {
-                navigation.goBack();
+                handleRender();
               }}
               style={{ marginLeft: 20 }}
             >
@@ -173,6 +191,7 @@ const ViewGroupMembers = ({ route, navigation }) => {
       >
         {participants.map((user, index) => {
           const isCreator = room?.creator === user._id;
+          const isDepute = room?.depute.includes(user._id);
           return (
             <View
               key={user._id}
@@ -180,7 +199,7 @@ const ViewGroupMembers = ({ route, navigation }) => {
             >
               <View style={{ flexDirection: "row", alignItems: "center" }}>
                 <TouchableOpacity
-                  onPress={() => handlePressMember(user._id, isCreator)}
+                  onPress={() => handlePressMember(user._id)}
                   style={{ flexDirection: "row", alignItems: "center" }}
                 >
                   <Image
@@ -202,6 +221,7 @@ const ViewGroupMembers = ({ route, navigation }) => {
                       style={{ marginTop: 5, color: "#808080", fontSize: 15 }}
                     >
                       {isCreator && "(Nhóm Trưởng)"}
+                      {isDepute && "(Phó Nhóm)"}
                     </Text>
                   </View>
                 </TouchableOpacity>
@@ -296,35 +316,46 @@ const ViewGroupMembers = ({ route, navigation }) => {
               </View>
             </View>
 
-            {room && room.depute.includes(selectedUserId) ? (
-              <View style={{ marginTop: 20, marginLeft: -190 }}>
-                <TouchableOpacity
-                  onPress={() => {
-                    handleRemoveDepute(selectedUserId);
-                  }}
-                >
-                  <Text>Xóa bổ nhiệm làm phó nhóm</Text>
-                </TouchableOpacity>
-              </View>
-            ) : (
-              <View style={{ marginTop: 20, marginLeft: -220 }}>
-                <TouchableOpacity
-                  onPress={() => {
-                    handleSetDepute(selectedUserId);
-                  }}
-                >
-                  <Text>Bổ nhiệm làm phó nhóm</Text>
-                </TouchableOpacity>
-              </View>
+            {room && room.creator === globalData.user._id && (
+              <>
+                {room.depute.includes(selectedUserId) ? (
+                  <View style={{ marginTop: 20, marginLeft: -190 }}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        handleRemoveDepute(selectedUserId);
+                      }}
+                    >
+                      <Text>Xóa bổ nhiệm làm phó nhóm</Text>
+                    </TouchableOpacity>
+                  </View>
+                ) : (
+                  <View style={{ marginTop: 20, marginLeft: -220 }}>
+                    <TouchableOpacity
+                      onPress={() => {
+                        handleSetDepute(selectedUserId);
+                      }}
+                    >
+                      <Text>Bổ nhiệm làm phó nhóm</Text>
+                    </TouchableOpacity>
+                  </View>
+                )}
+              </>
             )}
-            <TouchableOpacity
-              onPress={() => {
-                handleKick(selectedUserId);
-              }}
-              style={{ marginTop: 20, marginLeft: -272 }}
-            >
-              <Text style={{ fontSize: 15, color: "red" }}>Xóa khỏi nhóm</Text>
-            </TouchableOpacity>
+
+            {room &&
+              (room.creator === globalData.user._id ||
+                room.depute.includes(globalData.user._id)) && (
+                <TouchableOpacity
+                  onPress={() => {
+                    handleKick(selectedUserId);
+                  }}
+                  style={{ marginTop: 20, marginLeft: -272 }}
+                >
+                  <Text style={{ fontSize: 15, color: "red" }}>
+                    {room.creator !== selectedUserId ? "Xóa khỏi nhóm" : ""}
+                  </Text>
+                </TouchableOpacity>
+              )}
           </View>
         </TouchableOpacity>
       </Modal>
