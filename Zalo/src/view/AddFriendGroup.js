@@ -1,26 +1,27 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useState, useContext } from "react";
 import {
   View,
   Text,
-  ScrollView,
-  Image,
-  ImageBackground,
-  Pressable,
   TextInput,
+  Pressable,
+  Image,
   Alert,
+  FlatList,
+  ImageBackground,
 } from "react-native";
 import { globalContext } from "../context/globalContext";
-import { Ionicons } from "@expo/vector-icons";
 import { api, typeHTTP } from "../utils/api";
+import { Ionicons } from "@expo/vector-icons";
 
 export default function AddFriendGroup({ navigation }) {
   const { globalData, globalHandler } = useContext(globalContext);
-  const [result, setResult] = useState([]);
   const [phone, setPhone] = useState("");
-  const [participants, setParticipants] = useState([]);
-  const [image, setImage] = useState(null);
+  const [result, setResult] = useState([]);
+  const [participants, setParticipants] = useState(
+    globalData.currentRoom.users || []
+  );
 
-  const handleRoom = () => {
+  const handleRender = () => {
     api({
       method: typeHTTP.GET,
       url: `/room/get-by-user/${globalData.user?._id}`,
@@ -30,14 +31,11 @@ export default function AddFriendGroup({ navigation }) {
     });
   };
 
-  useEffect(() => setParticipants([globalData.user]), [globalData.user]);
-
   const handleSearch = () => {
-    // Kiểm tra độ dài của số điện thoại
     if (phone.length < 9 || phone.length > 10) {
       Alert.alert(
         "Thông báo",
-        "Số điện thoại không có trong danh sách bạn bè, số phải có độ dài từ 9 đến 10 chữ số.",
+        "Số điện thoại không hợp lệ, số phải có độ dài từ 9 đến 10 chữ số.",
         [{ text: "OK", onPress: () => console.log("OK Pressed") }],
         { cancelable: false }
       );
@@ -46,15 +44,92 @@ export default function AddFriendGroup({ navigation }) {
 
     setResult([]);
     api({ url: "/user/find", method: typeHTTP.GET }).then((res) => {
-      const arr = res.filter((item) =>
-        item.phone.includes(phone.toLowerCase())
-      );
-      setResult(arr);
+      const friends = res.filter((item) => item.phone.includes(phone));
+      if (friends.length === 0) {
+        Alert.alert(
+          "Thông báo",
+          "Số điện thoại không có trong danh sách bạn bè.",
+          [{ text: "OK", onPress: () => console.log("OK Pressed") }],
+          { cancelable: false }
+        );
+      } else {
+        setResult(friends);
+      }
     });
   };
 
+  const handleAdd = (user_id) => {
+    Alert.alert(
+      "Xác nhận",
+      "Bạn có chắc chắn muốn thêm thành viên này vào nhóm?",
+      [
+        {
+          text: "Hủy",
+          style: "cancel",
+        },
+        {
+          text: "Thêm",
+          onPress: () => {
+            const body = {
+              room_id: globalData.currentRoom._id,
+              user_id,
+            };
+            api({ body, method: typeHTTP.POST, url: "/room/add" }).then(
+              (res) => {
+                try {
+                  globalHandler.setCurrentRoom({
+                    ...globalData.currentRoom,
+                    users: res.users,
+                  });
+                  Alert.alert(
+                    "Thành công",
+                    "Thành viên đã được thêm vào nhóm."
+                  );
+                } catch (error) {
+                  console.log(error);
+                }
+              }
+            );
+          },
+        },
+      ],
+      { cancelable: false }
+    );
+  };
+
+  const renderUser = ({ item }) => (
+    <View
+      key={item._id}
+      style={{
+        flexDirection: "row",
+        marginLeft: 15,
+        marginTop: 20,
+        alignItems: "center",
+      }}
+    >
+      <Image
+        source={{ uri: item.image }} // Use user's image from search result
+        style={{ width: 40, height: 40, borderRadius: 20 }}
+      />
+      <Text style={{ fontSize: 16, fontWeight: "bold", marginLeft: 15 }}>
+        {item.username}
+      </Text>
+      {participants.map((participant) => participant._id).includes(item._id) ? (
+        <Text style={{ fontSize: 16, fontWeight: "bold", marginLeft: 15 }}>
+          Đã trong nhóm
+        </Text>
+      ) : (
+        <Pressable onPress={() => handleAdd(item._id)}>
+          <Text style={{ fontSize: 16, fontWeight: "bold", marginLeft: 15 }}>
+            +
+          </Text>
+        </Pressable>
+      )}
+    </View>
+  );
+
   return (
-    <ScrollView>
+    <View>
       <ImageBackground
         source={require("../image/Untitled.png")}
         style={{ width: 420, height: 100 }}
@@ -63,7 +138,7 @@ export default function AddFriendGroup({ navigation }) {
           <View style={{ flexDirection: "row", marginTop: 60 }}>
             <Pressable
               onPress={() => {
-                navigation.goBack();
+                handleRender();
               }}
               style={{ marginLeft: 20 }}
             >
@@ -73,7 +148,7 @@ export default function AddFriendGroup({ navigation }) {
               <Text
                 style={{ fontSize: 16, fontWeight: "bold", color: "white" }}
               >
-                Thêm vào nhóm
+                Thêm Thành Viên
               </Text>
             </View>
           </View>
@@ -113,79 +188,21 @@ export default function AddFriendGroup({ navigation }) {
         </Pressable>
       </View>
 
-      {participants.map((user, index) => (
-        <View
-          key={index}
-          style={{
-            flexDirection: "row",
-            alignItems: "center",
-            marginLeft: 15,
-            marginTop: 20,
-          }}
-        >
-          <Image
-            source={{
-              uri: "https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg",
-            }}
-            height={40}
-            width={40}
-            style={{ borderRadius: 20 }}
-          />
-          <Text style={{ fontSize: 16, fontWeight: "bold", marginLeft: 15 }}>
-            {user?.username}
-          </Text>
-          <Text style={{ fontSize: 16, fontWeight: "bold", marginLeft: 15 }}>
-            Đã trong nhóm
-          </Text>
-        </View>
-      ))}
-
       <View style={{ marginLeft: 15, marginTop: 20 }}>
         <Text style={{ fontSize: 16, fontWeight: "bold" }}>
           Người dùng tìm thấy
         </Text>
-        {result.map((user, index) => (
-          <View
-            key={index}
-            style={{
-              flexDirection: "row",
-              marginLeft: 15,
-              marginTop: 20,
-              alignItems: "center",
-            }}
-          >
-            <Image
-              source={{
-                uri: "https://letsenhance.io/static/8f5e523ee6b2479e26ecc91b9c25261e/1015f/MainAfter.jpg",
-              }}
-              height={40}
-              width={40}
-              style={{ borderRadius: 20 }}
-            />
-            <Text style={{ fontSize: 16, fontWeight: "bold", marginLeft: 15 }}>
-              {user?.username}
+        <FlatList
+          data={result}
+          keyExtractor={(item) => item._id}
+          renderItem={renderUser}
+          ListEmptyComponent={() => (
+            <Text style={{ textAlign: "center", marginTop: 20 }}>
+              Không tìm thấy bạn bè
             </Text>
-            {participants.map((item) => item._id).includes(user._id) ? (
-              <Text
-                style={{ fontSize: 16, fontWeight: "bold", marginLeft: 15 }}
-              >
-                Đã trong nhóm
-              </Text>
-            ) : (
-              // Kiểm tra xem người dùng đã có trong nhóm chưa, nếu chưa thì hiển thị dấu cộng
-              <Pressable
-                onPress={() => setParticipants([...participants, user])}
-              >
-                <Text
-                  style={{ fontSize: 16, fontWeight: "bold", marginLeft: 15 }}
-                >
-                  +
-                </Text>
-              </Pressable>
-            )}
-          </View>
-        ))}
+          )}
+        />
       </View>
-    </ScrollView>
+    </View>
   );
 }
