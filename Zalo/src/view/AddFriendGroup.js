@@ -17,6 +17,7 @@ export default function AddFriendGroup({ navigation }) {
   const { globalData, globalHandler } = useContext(globalContext);
   const [phone, setPhone] = useState("");
   const [result, setResult] = useState([]);
+
   const [participants, setParticipants] = useState(
     globalData.currentRoom.users || []
   );
