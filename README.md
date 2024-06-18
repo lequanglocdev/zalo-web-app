@@ -13,11 +13,11 @@
 1. Sao chép dự án về máy
     git clone https://github.com/lequanglocdev/zalo-web-app.git
 2. Di chuyển vào thư mục dự án
-     cd zalo-web
+    ## cd zalo-web
    Cài đặt các package
-     npm install
+     ## npm install
 3. Sử dụng
-   npm run dev
+   ## npm run dev
 
 
 
