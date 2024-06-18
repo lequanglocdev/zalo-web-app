@@ -3,7 +3,7 @@
 - Người dùng có thể cập nhật thông tin cá nhân của mình
 - Có thể kết bạn với nhau thông qua số điện thoại 
 - Tạo nhóm trò chuyện với nhiều người
-- Cho phép gửi tin nhắn, sticker, emoji, hình ảnh và video với nhau và thu hồi.
+- Cho phép gửi tin nhắn, sticker, emoji, hình ảnh và video với nhau
 ## Công nghệ sử dụng
 ![image](https://github.com/lequanglocdev/zalo-web-app/assets/107296302/44b46bf0-ab6c-4827-bfb2-b638564a93e0)
 ![image](https://github.com/lequanglocdev/zalo-web-app/assets/107296302/380fcd0a-87b2-4d80-8944-e2be7e128d35)
